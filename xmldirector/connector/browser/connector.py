@@ -57,7 +57,7 @@ class RawConnector(BrowserView):
 
     @property
     def subpath(self):
-        return '/'.join(self._subpath)
+        return '/'.join(self._subpath) or '.'
 
     def __call__(self):
         """ Download given file """
@@ -80,9 +80,49 @@ class RawConnector(BrowserView):
 
 
 @implementer(IPublishTraverse)
+class HighlightConnector(RawConnector):
+
+    template = ViewPageTemplateFile('connector_highlight.pt')
+
+    @property
+    def mimetype(self):
+        """ Mimetype of references file """
+        return mimetypes.guess_type(self.subpath)[0]
+
+    @property
+    def content(self):
+        """ Return references content """
+        handle = self.context.get_handle()
+        with handle.open(self.subpath) as fp:
+            return fp.read()
+
+    def __call__(self, *args, **kw):
+        return self.template()
+
+
+@implementer(IPublishTraverse)
 class Connector(RawConnector):
+
+    template = ViewPageTemplateFile('connector_view.pt')
+
+    def breadcrumbs(self):
+        """ Breadcrumbs """
+
+        current_url = self.context.absolute_url()
+        result = list()
+        for i in range(len(self._subpath)):
+            sp = '/'.join(self._subpath[:i+1])
+            href = f'{current_url}/view/{sp}'
+            result.append(dict(href=href, title=self._subpath[i]))
+
+        return result
 
     def get_entries(self):
         handle = self.context.get_handle()
-        result =  handle.filterdir(self.subpath)
+        result =  list(handle.filterdir(self.subpath,namespaces=['basic', 'access', 'details']))
+        result = sorted(result, key=operator.attrgetter('name'))
         return result
+
+
+    def __call__(self, *args, **kw):
+        return self.template()

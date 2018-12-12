@@ -1,0 +1,39 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="view"
+        class=".connector.Connector"
+        template="connector_view.pt"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="raw"
+        class=".connector.RawConnector"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="highlight"
+        class=".connector.HighlightConnector"
+        template="connector_highlight.pt"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:resourceDirectory
+        name="xmldirector.connector"
+        directory="resources"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+</configure>
