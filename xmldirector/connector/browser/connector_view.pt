@@ -7,7 +7,7 @@
       i18n:domain="xmldirector.connector">
 <body>
 
-    <metal:main fill-slot="main" tal:define="subpath view/subpath">
+  <metal:main fill-slot="main" tal:define="subpath view/subpath; entries view/get_entries">
 
     <table>
         <caption>
@@ -27,7 +27,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr tal:repeat="entry view/get_entries">
+            <tr tal:condition="not: entries">
+                <td colspan="4" i18n:translate="">No entries</td>
+            </tr>
+
+            <tr tal:repeat="entry entries">
                 <td>
                     <a tal:condition="entry/raw/basic/is_dir"
                        tal:attributes="href string:${context/absolute_url}/view/${subpath}/${entry/name}">
@@ -61,7 +65,7 @@
             </tr>
         </tbody>
     </table>
-</metal:main>
+  </metal:main>
 
 </body>
 </html>
