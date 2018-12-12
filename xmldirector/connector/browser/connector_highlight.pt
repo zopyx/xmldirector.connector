@@ -9,8 +9,12 @@
 
     <metal:main fill-slot="main" tal:define="subpath view/subpath">
 
+        <!-- Google prettify -->
+        <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
         <h2 tal:content="subpath"/>
         <pre tal:attributes="mimetype view/mimetype"
+             class="prettyprint"
              tal:content="view/content"/>
 
 </metal:main>
