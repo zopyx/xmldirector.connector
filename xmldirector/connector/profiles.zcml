@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+    <genericsetup:registerProfile
+        name="default"
+        title="XML-Director Connector"
+        directory="profiles/default"
+        description="XML-Director Connector"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
+    <genericsetup:registerProfile
+        name="testing"
+        title="XML-Director Connector (testing)"
+        directory="profiles/testing"
+        description="XML-Director Connector (testing)"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
+</configure>

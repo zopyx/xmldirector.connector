@@ -9,7 +9,7 @@
 import os
 import sys
 
-from xmldirector.connector import LOG
+from xmldirector.connector.logger import LOG
 
 
 # Check filesystem encoding
