@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="xmldirector.connector">
+<body>
+
+    <metal:main fill-slot="main" tal:define="subpath view/subpath">
+
+    <table>
+        <caption>
+            <span i18n:translate="">Path:</span>
+            <span tal:content="subpath"/>
+        </caption>
+        <thead>
+            <tr>
+                <th i18n:translate="">Name</th>
+                <th i18n:translate="">Modified</th>
+                <th i18n:translate="">Size</th>
+                <th i18n:translate="">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="entry view/get_entries">
+                <td>
+                    <a tal:condition="entry/raw/basic/is_dir"
+                       tal:attributes="href string:${context/absolute_url}/view/${subpath}/${entry/name}">
+                        <span tal:content="entry/name"/>
+                    </a>
+                    <a tal:condition="not: entry/raw/basic/is_dir"
+                       tal:attributes="href string:${context/absolute_url}/raw/${subpath}/${entry/name}">
+                        <span tal:content="entry/name"/>
+                    </a>
+                </td>
+                <td>
+                    <span tal:content="python: entry.modified.isoformat()"/>
+                </td>
+                <td>
+                    <tal:if condition="not: entry/raw/basic/is_dir">
+                        <span tal:content="python: entry.size"/>
+                    </tal:if>
+                </td>
+                <td>
+                    <tal:if condition="not: entry/raw/basic/is_dir">
+                        <a tal:condition="not: entry/raw/basic/is_dir"
+                           tal:attributes="href string:${context/absolute_url}/highlight/${subpath}/${entry/name}">
+                           <span i18n:translate="">View</span>
+                        </a>
+                        <a tal:condition="not: entry/raw/basic/is_dir"
+                           tal:attributes="href string:${context/absolute_url}/raw/${subpath}/${entry/name}">
+                           <span i18n:translate="">Download</span>
+                        </a>
+                    </tal:if>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</metal:main>
+
+</body>
+</html>
+
