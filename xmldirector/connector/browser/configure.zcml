@@ -6,6 +6,15 @@
 
     <browser:page
         for="xmldirector.connector.connector.IConnector"
+        name="connector-folder-contents"
+        class=".connector.Connector"
+        attribute="folder_contents"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
         name="view"
         class=".connector.Connector"
         template="connector_view.pt"

@@ -123,6 +123,41 @@ class Connector(RawConnector):
         result = sorted(result, key=operator.attrgetter('name'))
         return result
 
+    def folder_contents(self, subpath='.'):
+        """" REST endpoint  """
+
+        handle = self.context.get_handle()
+        entries = list(handle.filterdir(subpath,namespaces=['basic', 'access', 'details']))
+        result = []
+        context_url = self.context.absolute_url()
+        for row in sorted(entries, key=operator.attrgetter('name')):
+
+            user = group = ''
+            if 'access' in row.namespaces:
+                user = row.user
+                group = row.group
+
+            size = modified = ''
+            if 'details' in row.namespaces:
+                size = row.size
+                modified = row.modified.timestamp()
+
+            result.append(dict(
+                name=row.name,
+                is_file=row.is_file,
+                is_dir=row.is_dir,
+                size=size,
+                user=user,
+                group=group,
+                modified=modified,
+                view_url = f'{context_url}/view/{subpath}/{row.name}',
+                raw_url = f'{context_url}/raw/{subpath}/{row.name}',
+                highlight_url = f'{context_url}/highlight/{subpath}/{row.name}',
+            ))
+
+        self.request.response.setHeader('content-type', 'application/json')
+        print(result)
+        return json.dumps(result)
 
     def __call__(self, *args, **kw):
         return self.template()
