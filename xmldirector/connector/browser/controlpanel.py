@@ -22,15 +22,15 @@ from plone.registry.interfaces import IRegistry
 from plone.app.registry.browser import controlpanel
 from Products.Five.browser import BrowserView
 
-from xmldirector.plonecore.i18n import MessageFactory as _
-from xmldirector.plonecore.interfaces import IConnectorSettings
-from xmldirector.plonecore.interfaces import IConnectorHandle
+from xmldirector.connector.i18n import MessageFactory as _
+from xmldirector.connector.interfaces import IConnectorSettings
+from xmldirector.connector.interfaces import IConnectorHandle
 
 
 class DBSettingsEditForm(controlpanel.RegistryEditForm):
 
     schema = IConnectorSettings
-    label = _(u'XML Director core settings')
+    label = _(u'XML Director Connector settings')
     description = _(u'')
 
     def updateFields(self):
@@ -57,115 +57,3 @@ class DBSettingsControlPanel(controlpanel.ControlPanelFormWrapper):
         """ Returns setting as JSON """
         return json.dumps(self.settings)
 
-    def connection_test(self):
-
-        service = getUtility(IConnectorHandle)
-        errors = []
-
-        try:
-            service.get_handle()
-        except fs.errors.PermissionDeniedError as e:
-            errors.append(
-                u'Permission denied error - improper credentials? ({})'.format(e))
-            return errors
-        except fs.errors.ResourceNotFoundError as e:
-            errors.append(
-                u'Resource not found - local webdav path correct? ({})'.format(e))
-            return errors
-        except fs.errors.RemoteConnectionError as e:
-            errors.append(u'WebDAV URL incorrect! ({})'.format(str(e)))
-            return errors
-
-        return errors
-
-
-class ValidatorRegistry(BrowserView):
-
-    @property
-    def registry(self):
-        from xmldirector.plonecore.interfaces import IValidatorRegistry
-        return getUtility(IValidatorRegistry)
-
-    def get_entries(self):
-        return self.registry.entries()
-
-    def validator_content(self):
-        """ Return the schema content of the given schema """
-
-        family = self.request['family']
-        name = self.request['name']
-        key = '{}::{}'.format(family, name)
-        d = self.registry.registry.get(key)
-        with fs.opener.opener.open(d['path'], 'rb') as fp:
-            return dict(text=fp.read(), ace_type='xml')
-
-    def human_readable_datetime(self, dt):
-        """ Convert with `dt` datetime string into a human readable
-            representation using humanize module.
-        """
-        diff = datetime.datetime.utcnow() - dt
-        return humanize.naturaltime(diff)
-
-    def human_readable_filesize(self, num_bytes):
-        """ Return num_bytes as human readable representation """
-        return hurry.filesize.size(num_bytes, hurry.filesize.alternative)
-
-
-class TransformerRegistry(BrowserView):
-
-    @property
-    def registry(self):
-        from xmldirector.plonecore.interfaces import ITransformerRegistry
-        return getUtility(ITransformerRegistry)
-
-    def transformer_content(self):
-        """ Return the transformer content of the given transformer"""
-
-        family = self.request['family']
-        name = self.request['name']
-        key = '{}::{}'.format(family, name)
-        d = self.registry.registry.get(key)
-
-        if d['type'] in ('XSLT1', 'XSLT2', 'XSLT3'):
-            with fs.opener.opener.open(d['path'], 'rb') as fp:
-                return dict(text=fp.read(), ace_type='xml', transformer_type=d['type'])
-        elif d['type'] == 'python':
-            return dict(text=inspect.getsource(d['transform']), ace_type='python', transformer_type=d['type'])
-        else:
-            raise ValueError(
-                'Unsupported transformer type "{}"'.format(d['type']))
-
-    def get_entries(self):
-        return self.registry.entries()
-
-    def human_readable_datetime(self, dt):
-        """ Convert with `dt` datetime string into a human readable
-            representation using humanize module.
-        """
-        diff = datetime.datetime.utcnow() - dt
-        return humanize.naturaltime(diff)
-
-    def human_readable_filesize(self, num_bytes):
-        """ Return num_bytes as human readable representation """
-        return hurry.filesize.size(num_bytes, hurry.filesize.alternative)
-
-
-class Installer(BrowserView):
-
-    def install_scripts(self):
-
-        service = getUtility(IConnectorHandle)
-        handle = service.get_handle()
-
-        for exist_name, local_name in [('scripts/all-locks.xql', 'scripts/existdb/all-locks.xql')]:
-            src = pkg_resources.resource_string(
-                'xmldirector.plonecore', local_name)
-            dirname = os.path.dirname(exist_name)
-            if not handle.exists(dirname):
-                handle.makedir(dirname, True, True)
-            with handle.open(exist_name, 'wb') as fp:
-                fp.write(src)
-        msg = u'Exist-DB specific scripts installed'
-        self.context.plone_utils.addPortalMessage(msg)
-        self.request.response.redirect(plone.api.portal.get(
-        ).absolute_url() + '/@@xmldirector-core-settings')
