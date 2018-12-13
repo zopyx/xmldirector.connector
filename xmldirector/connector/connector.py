@@ -73,9 +73,34 @@ class IConnector(model.Schema):
 class Connector(Item):
 
     def get_handle(self):
-        f = furl.furl(self.connector_url)
-        if self.connector_username:
-            f.username = self.connector_username
-        if self.connector_password:
-            f.password = self.connector_password
+
+        url = ''
+        username = ''
+        password = ''
+
+        # check local connector URL first
+        if self.connector_url:
+            url = self.connector_url
+            username = self.connector_username
+            password = self.connector_password
+        else:
+            # global URL settings
+            registry = getUtility(IRegistry)
+            settings = registry.forInterface(IConnectorSettings)
+            url = settings.connector_url
+            username = settings.connector_username
+            password = settings.connector_password
+
+        username = username or ''
+        password = password or ''
+        if not url:
+            raise ValueError('No connector URL configured (neither local nor global)')
+
+        f = furl.furl(url)
+        if username:
+            f.username = username
+        if password:
+            f.password = password
+        if self.connector_subpath:
+            f.path.add(self.connector_subpath)
         return fs.open_fs(f.tostr())
