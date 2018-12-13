@@ -9,6 +9,24 @@
 
   <metal:main fill-slot="main" tal:define="subpath view/subpath; entries view/get_entries">
 
+    <script>
+        window.__define = window.define;
+        window.__require = window.require;
+        window.define = undefined;
+        window.require = undefined;
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/clipboard.min.js"></script>
+    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/moment-with-locales.js"></script>
+    <script>
+        window.define = window.__define;
+        window.require = window.__require;
+        window.__define = undefined;
+        window.__require = undefined;
+    </script>
+
     <table>
         <caption>
             <span i18n:translate="">Path:</span>
@@ -21,6 +39,8 @@
         <thead>
             <tr>
                 <th i18n:translate="">Name</th>
+                <th i18n:translate="">Type</th>
+                <th i18n:translate="">Owner</th>
                 <th i18n:translate="">Modified</th>
                 <th i18n:translate="">Size</th>
                 <th i18n:translate="">Action</th>
@@ -43,11 +63,18 @@
                     </a>
                 </td>
                 <td>
-                    <span tal:content="python: entry.modified.isoformat()"/>
+                    <span tal:condition="entry/raw/basic/is_dir" i18n:translate="">DIR</span>
+                    <span tal:condition="not: entry/raw/basic/is_dir" i18n:translate="">FILE</span>
+                </td>
+                <td>
+                    <span tal:content="entry/user"/>.<span tal:content="entry/group"/>
+                </td>
+                <td>
+                    <span class="modified" tal:attributes="data-modified entry/modified" tal:content="python: entry.modified.isoformat()"/>
                 </td>
                 <td>
                     <tal:if condition="not: entry/raw/basic/is_dir">
-                        <span tal:content="python: entry.size"/>
+                        <span class="size" tal:attributes="data-size python: entry.size" tal:content="python: entry.size"/>
                     </tal:if>
                 </td>
                 <td>
@@ -60,11 +87,85 @@
                            tal:attributes="href string:${context/absolute_url}/raw/${subpath}/${entry/name}">
                            <span i18n:translate="">Download</span>
                         </a>
-                    </tal:if>
+
+                       <input tal:attributes="id string:cb-${repeat/entry/index}; value string:${context/absolute_url}/view/${subpath}/${entry/name}" hidden/>
+                       <button class="clipboard" tal:attributes="data-clipboard-target string:#cb-${repeat/entry/index}" i18n:translate="">Clipboard</button>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <div id="jsGrid"></div>
+
+    <script type="text/javascript" tal:content="string: var URL = '${context/absolute_url}'"></script>
+    <script type="text/javascript" tal:content="string: var SUBPATH = '${view/subpath}'"></script>
+
+    <script type="text/javascript">
+
+        function bytesToSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes == 0) return '0 Byte';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        };
+
+        $(document).ready(function() {
+
+            new Clipboard('.clipboard');
+
+            $('.modified').each(function(index, item) {
+                var modified = $(item).data('modified');
+                var modified_str = moment(modified).fromNow();
+                $(item).html(modified_str);
+            });
+
+            $('.size').each(function(index, item) {
+                var size= $(item).data('size');
+                $(item).html(bytesToSize(size));
+            });
+        });
+
+
+    var clients = [
+        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+        { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+        { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+        { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+        { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false }
+    ];
+
+    var countries = [
+        { Name: "", Id: 0 },
+        { Name: "United States", Id: 1 },
+        { Name: "Canada", Id: 2 },
+        { Name: "United Kingdom", Id: 3 }
+    ];
+
+    $("#jsGrid").jsGrid({
+        width: "100%",
+        height: "400px",
+
+        inserting: true,
+        editing: true,
+        sorting: true,
+        paging: true,
+
+        data: clients,
+
+        fields: [
+            { name: "Name", type: "text", width: 150, validate: "required" },
+            { name: "Age", type: "number", width: 50 },
+            { name: "Address", type: "text", width: 200 },
+            { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
+            { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
+            { type: "control" }
+        ]
+    });
+
+
+
+    </script>
+
   </metal:main>
 
 </body>
