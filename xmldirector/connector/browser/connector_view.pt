@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/tabulator.min.css">
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/dropzone.css">
+    <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/styles.css">
 
     <script>
         window.__define = window.define;
@@ -46,9 +47,9 @@
     <div id="files-table"></div>
 
 
-    <div id="zip-form" tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
+    <div id="upload-form" tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
 
-      <fieldset id="zip-upload" style="width: 49%; float:left; ">
+      <fieldset id="zip-upload">
           <legend i18n:translate="">ZIP import</legend>
           <div class="help" i18n:translate="">
               Use this form for uploading a ZIP file. The ZIP file will be
@@ -68,8 +69,7 @@
           </form>
       </fieldset>
 
-      <!-- uploadify -->    
-      <fieldset id="uploadify" style="width: 49%; float: left">
+      <fieldset id="uploadify">
           <legend i18n:translate="">Multi/single file upload</legend>
           <div class="help" i18n:translate="">
               Use this form for uploading a single or multiple files.
@@ -86,7 +86,7 @@
       </fieldset>
     </div>
 
-    <div style="clear: both"></div>
+    <div class="clear"></div>
 
   </metal:main>
 

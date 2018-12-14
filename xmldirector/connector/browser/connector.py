@@ -132,6 +132,7 @@ class Connector(RawConnector):
         for row in sorted(entries, key=operator.attrgetter('name')):
 
             mimetype, _ = mimetypes.guess_type(row.name)
+            basename, ext = os.path.splitext(row.name)
 
             user = group = ''
             if 'access' in row.namespaces:
@@ -149,6 +150,7 @@ class Connector(RawConnector):
                 is_dir=row.is_dir,
                 size=size,
                 mimetype=mimetype,
+                ext=ext,
                 user=user,
                 group=group,
                 modified=modified,
