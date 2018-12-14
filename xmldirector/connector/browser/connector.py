@@ -53,6 +53,10 @@ class RawConnector(BrowserView):
         self._subpath.append(name)
         return self
 
+    @property
+    def can_edit(self):
+        return plone.api.user.has_permission(permissions.ModifyPortalContent, obj=self.context)
+
 
     @property
     def messages(self):
@@ -110,10 +114,6 @@ class Connector(RawConnector):
 
     def __call__(self, *args, **kw):
         return self.template()
-
-    @property
-    def can_edit(self):
-        return plone.api.content.has_permission(permission.ModifyPortalContent, obj=self.context)
 
     def _is_text(self, mimetype):
         """ check if particular mimetype is text-ish """

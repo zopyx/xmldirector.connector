@@ -46,8 +46,29 @@
 
     <div id="files-table"></div>
 
+    <div id="actions">
+        <a id="action-new-folder" i18n:translate="">New folder</a>
+        <a id="action-zip-import" i18n:translate="">ZIP import</a>
+        <a id="action-upload" i18n:translate="">Upload</a>
+    </div>
 
-    <div id="upload-form" tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
+
+    <div id="action-forms" 
+        tal:condition="view/can_edit"
+        tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
+
+      <fieldset id="new-folder">
+          <legend i18n:translate="">New folder</legend>
+          <form method="POST" tal:attributes="action string:${context/absolute_url}/connector-new-folder">
+              <div>
+                  <input type="name" name="name" size="60" id="name" />
+                  <input type="hidden" name="subpath" tal:attributes="value view/subpath | nothing" placeholder="Folder name" i18n:attributes="placeholder"/>
+              </div>
+              <div style="margin-top: 1em;margin-bottom: 2em">
+                  <input type="submit" class="context" i18n:attributes="value" value="New folder" />
+              </div>
+          </form>
+      </fieldset>
 
       <fieldset id="zip-upload">
           <legend i18n:translate="">ZIP import</legend>
