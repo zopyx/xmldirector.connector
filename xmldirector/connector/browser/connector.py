@@ -34,6 +34,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from xmldirector.connector.i18n import MessageFactory as _
 
+TEXT_MIMETYPES = set([
+    'application/json',
+    'application/javascript'
+])
+
 
 LOG = logging.getLogger('xmldirector.connector')
 
@@ -104,6 +109,16 @@ class Connector(RawConnector):
     def __call__(self, *args, **kw):
         return self.template()
 
+    def _is_text(self, mimetype):
+        """ check if particular mimetype is text-ish """
+        if not mimetype:
+            return False
+        if mimetype.startswith('text/'):
+            return True
+        if mimetype in TEXT_MIMETYPES:
+            return True
+        return False
+
     def breadcrumbs(self):
         """ Breadcrumbs """
 
@@ -144,6 +159,8 @@ class Connector(RawConnector):
                 size = row.size
                 modified = row.modified.timestamp()
 
+            is_text = self._is_text(mimetype)
+
             result.append(dict(
                 name=row.name,
                 is_file=row.is_file,
@@ -156,7 +173,7 @@ class Connector(RawConnector):
                 modified=modified,
                 view_url = f'{context_url}/view/{subpath}/{row.name}',
                 raw_url = f'{context_url}/raw/{subpath}/{row.name}',
-                highlight_url = f'{context_url}/highlight/{subpath}/{row.name}',
+                highlight_url = f'{context_url}/highlight/{subpath}/{row.name}' if is_text else None,
             ))
 
         self.request.response.setHeader('content-type', 'application/json')

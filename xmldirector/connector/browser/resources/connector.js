@@ -46,8 +46,9 @@ function actions_renderer(cell, formatterParams, onRendered) {
     var s = '';
     if (data.is_file) {
         s += `<a class="download-link" href="${data.raw_url}">[Download]</a>`; 
-        s += ' ';
-        s += `<a class="raw-link" href="${data.highlight_url}">[View]</a>`;
+        if (data.highlight_url) {
+            s += ` <a class="raw-link" href="${data.highlight_url}">[View]</a>`;
+        }
     }
     return s;
 }
@@ -72,6 +73,7 @@ function build_table() {
         method: 'GET',
         success: function(result) {
 
+        console.log(result);
         var table = new Tabulator("#files-table", {
             height:450,
             data:result, //assign data to table
