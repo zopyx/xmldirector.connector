@@ -10,6 +10,7 @@
   <metal:main fill-slot="main" tal:define="subpath view/subpath; entries view/get_entries">
 
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/tabulator.min.css">
+    <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/dropzone.css">
 
     <script>
         window.__define = window.define;
