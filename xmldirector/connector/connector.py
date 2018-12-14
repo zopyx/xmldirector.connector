@@ -72,7 +72,7 @@ class IConnector(model.Schema):
 @implementer(IConnector)
 class Connector(Item):
 
-    def get_handle(self):
+    def get_handle(self, subpath=None):
 
         url = ''
         username = ''
@@ -103,4 +103,6 @@ class Connector(Item):
             f.password = password
         if self.connector_subpath:
             f.path.add(self.connector_subpath)
+        if subpath:
+            f.path.add(subpath)
         return fs.open_fs(f.tostr())

@@ -5,22 +5,20 @@
 # (C) 2016,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
+import io
 import os
 import fs
-import stat
+import fs.zipfs
+import six
 import json
 import datetime
-import fs.errors
-import itertools
-import fs.path
-import humanize
-import operator
-import hurry.filesize
 import tempfile
+import fs.errors
+import fs.path
+import operator
 import mimetypes
 import unicodedata
 import logging
-import pkg_resources
 
 import zExceptions
 from zope.interface import implementer
@@ -35,8 +33,6 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from xmldirector.connector.i18n import MessageFactory as _
-
-import io
 
 
 LOG = logging.getLogger('xmldirector.connector')
@@ -105,6 +101,9 @@ class Connector(RawConnector):
 
     template = ViewPageTemplateFile('connector_view.pt')
 
+    def __call__(self, *args, **kw):
+        return self.template()
+
     def breadcrumbs(self):
         """ Breadcrumbs """
 
@@ -132,6 +131,8 @@ class Connector(RawConnector):
         context_url = self.context.absolute_url()
         for row in sorted(entries, key=operator.attrgetter('name')):
 
+            mimetype, _ = mimetypes.guess_type(row.name)
+
             user = group = ''
             if 'access' in row.namespaces:
                 user = row.user
@@ -147,6 +148,7 @@ class Connector(RawConnector):
                 is_file=row.is_file,
                 is_dir=row.is_dir,
                 size=size,
+                mimetype=mimetype,
                 user=user,
                 group=group,
                 modified=modified,
@@ -156,8 +158,94 @@ class Connector(RawConnector):
             ))
 
         self.request.response.setHeader('content-type', 'application/json')
-        print(result)
         return json.dumps(result)
 
-    def __call__(self, *args, **kw):
-        return self.template()
+    def upload_file(self):
+        """ AJAX callback for Uploadify """
+
+        get_handle = self.context.get_handle()
+        filename = os.path.basename(self.request.file.filename)
+        basename, ext = os.path.splitext(filename)
+
+        with get_handle.open(fs.path.join(self.subpath, filename), 'wb') as fp:
+            self.request.file.seek(0)
+            data = self.request.file.read()
+            fp.write(data)
+
+        self.request.response.setStatus(200)
+
+    def zip_import_ui(self, zip_file=None, subpath=None, clean_directories=None):
+        """ Import WebDAV subfolder from an uploaded ZIP file """
+
+        try:
+            imported_files = self.zip_import(
+                zip_file, subpath, clean_directories)
+        except Exception as e:
+            msg = u'ZIP import failed'
+            LOG.error(msg, exc_info=True)
+            return self.redirect(msg, 'error')
+
+        self.logger.log(
+            'ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)), details=imported_files)
+        return self.redirect(_(u'Uploaded ZIP archive imported'), subpath=subpath)
+
+    def zip_import(self, zip_file=None):
+        """ Import subfolder from an uploaded ZIP file """
+
+        subpath = self.request.get('subpath') or self.subpath
+        handle = self.context.get_handle(subpath)
+
+        if not zip_file:
+            zip_filename = self.request.zipfile.filename
+            temp_fn = tempfile.mktemp(suffix='.zip')
+            with open(temp_fn, 'wb') as fp:
+                self.request.zipfile.seek(0)
+                fp.write(self.request.zipfile.read())
+            zip_file = temp_fn
+        else:
+            zip_filename = zip_file
+
+        if not zip_filename:
+            raise ValueError(
+                u'No filename detected. Did you really upload a ZIP file?')
+        if not zip_filename.endswith('.zip'):
+            raise ValueError(
+                u'Upload file did not end with .zip. Did you really upload a ZIP file?')
+
+        try:
+            with fs.zipfs.ZipFS(zip_file, encoding='utf-8') as zip_handle:
+
+                # import all files from ZIP into WebDAV
+                count = 0
+                dirs_created = set()
+                for i, name in enumerate(zip_handle.walk.files()):
+
+                    target_filename = unicodedata.normalize(
+                        'NFC', name).lstrip('/')
+                    if self.subpath:
+                        target_filename = u'{}/{}'.format(
+                            self.subpath, target_filename)
+
+                    target_dirname = '/'.join(target_filename.split('/')[:-1])
+                    if target_dirname not in dirs_created:
+                        try:
+                            handle.makedir(
+                                target_dirname, recreate=True)
+                            dirs_created.add(target_dirname)
+                        except Exception as e:
+                            LOG.error(
+                                'Failed creating {} failed ({})'.format(target_dirname, e))
+
+                    LOG.info(u'ZIP filename({})'.format(name))
+
+                    out_fp = handle.open(target_filename, 'wb')
+                    zip_fp = zip_handle.open(name, 'rb')
+                    out_fp.write(zip_fp.read())
+                    out_fp.close()
+                    count += 1
+
+        except Exception as e:
+            msg = 'Error opening ZIP file: {}'.format(e)
+            raise
+
+        self.request.response.redirect(self.context.absolute_url() + '/' + self.subpath)

@@ -86,12 +86,20 @@ function build_table() {
 }
 
 
+Dropzone.autoDiscover = false;
 
 $(document).ready(function() {
 
     build_table();
 
     new Clipboard('.clipboard');
+
+    $("#dropzone").dropzone({ 
+        url: UPLOAD_URL,
+        maxFilesize: 50,
+        addRemoveLinks: false,
+        parallelUploads: 1
+    });
 
     $('.modified').each(function(index, item) {
         var modified = $(item).data('modified');

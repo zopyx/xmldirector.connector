@@ -40,6 +40,24 @@
     />
 
     <browser:page
+        name="connector-upload"
+        for="xmldirector.connector.connector.IConnector"
+        class=".connector.Connector"
+        attribute="upload_file"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="connector-zip-upload"
+        class=".connector.Connector"
+        attribute="zip_import"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
         name="xmldirector-connector-settings"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         class=".controlpanel.DBSettingsControlPanel"

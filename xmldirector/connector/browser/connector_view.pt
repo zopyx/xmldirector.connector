@@ -20,6 +20,11 @@
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/clipboard.min.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/moment-with-locales.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/tabulator.min.js"></script>
+    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/dropzone.js"></script>
+    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/connector.js"> </script>
+    <script type="text/javascript" tal:content="string: var URL = '${context/absolute_url}'"></script>
+    <script type="text/javascript" tal:content="string: var UPLOAD_URL = '${context/absolute_url}/@@connector-upload'"></script>
+    <script type="text/javascript" tal:content="string: var SUBPATH = '${view/subpath}'"></script>
     <script>
         window.define = window.__define;
         window.require = window.__require;
@@ -39,9 +44,48 @@
 
     <div id="files-table"></div>
 
-    <script type="text/javascript" tal:content="string: var URL = '${context/absolute_url}'"></script>
-    <script type="text/javascript" tal:content="string: var SUBPATH = '${view/subpath}'"></script>
-    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/connector.js"> </script>
+
+    <div id="zip-form" tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
+
+      <fieldset id="zip-upload" style="width: 49%; float:left; ">
+          <legend i18n:translate="">ZIP import</legend>
+          <div class="help" i18n:translate="">
+              Use this form for uploading a ZIP file. The ZIP file will be
+              unzipped. 
+              <br/>
+              The ZIP file may contain nested directories.
+          </div>
+          <form method="POST" tal:attributes="action string:${context/absolute_url}/connector-zip-upload" enctype="multipart/form-data">
+              <div>
+                  <label for="zip-file" i18n:translate="">ZIP file</label>
+                  <input type="file" name="zipfile" size="60" id="zipfile" />
+                  <input type="hidden" name="subpath" tal:attributes="value view/subpath | nothing" />
+              </div>
+              <div style="margin-top: 1em;margin-bottom: 2em">
+                  <input class="zip-upload" type="submit" class="context" i18n:attributes="value" value="UPLOAD" />
+              </div>
+          </form>
+      </fieldset>
+
+      <!-- uploadify -->    
+      <fieldset id="uploadify" style="width: 49%; float: left">
+          <legend i18n:translate="">Multi/single file upload</legend>
+          <div class="help" i18n:translate="">
+              Use this form for uploading a single or multiple files.
+          </div>
+
+          <form tal:attributes="action UPLOAD_URL" class="dropzone" id="dropzone" init="foo">
+            <div class="dz-message" i18n:translate="">Drop file here or click to upload</div>
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+            </div>
+            <input type="hidden" name="subpath" tal:attributes="value request/subpath | nothing" />
+          </form>
+          <div id="upload-message"></div>
+      </fieldset>
+    </div>
+
+    <div style="clear: both"></div>
 
   </metal:main>
 
