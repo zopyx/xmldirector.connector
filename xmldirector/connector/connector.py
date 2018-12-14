@@ -5,7 +5,6 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-
 import fs
 import fs.errors
 import furl
@@ -24,16 +23,18 @@ from xmldirector.connector.interfaces import IConnectorSettings
 from xmldirector.connector.interfaces import IConnectorHandle
 from xmldirector.connector.logger import LOG
 
-
 # determine all entry points
+
 
 def supported_protocols():
 
     protocols = []
     for d in pkg_resources.working_set:
-        for protocol in pkg_resources.get_entry_map(d.project_name, 'fs.opener'):
+        for protocol in pkg_resources.get_entry_map(d.project_name,
+                                                    'fs.opener'):
             protocols.append(protocol)
     return protocols
+
 
 SUPPORTED_FS_PROTOCOLS = supported_protocols()
 print('supported fs protocols:', SUPPORTED_FS_PROTOCOLS)
@@ -43,35 +44,30 @@ class IConnector(model.Schema):
 
     connector_url = schema.TextLine(
         title=_(u'(optional) connection URL of storage'),
-        description=_(u'WebDAV: http://host:port/path/to/webdav, '
-                      'Local filesystem: file://path/to/directory, '
-                      'AWS S3: s3://bucketname, ',
-                      'SFTP sftp://host/path, '
-                      'FTP: ftp://host/path'),
-        required=False
-    )
+        description=_(
+            u'WebDAV: http://host:port/path/to/webdav, '
+            'Local filesystem: file://path/to/directory, '
+            'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path, '
+            'FTP: ftp://host/path'),
+        required=False)
 
     connector_username = schema.TextLine(
         title=_(u'(optional) username overriding the system settings'),
-        required=False
-    )
+        required=False)
 
     connector_password = schema.Password(
         title=_(u'(optional) password overriding the system settings'),
-        required=False
-    )
+        required=False)
 
     connector_subpath = schema.TextLine(
         title=_(u'Subdirectory relative to the global connection URL'),
         description=_(
             u'Use this value for configuring a more specific subpath'),
-        required=False
-    )
+        required=False)
 
 
 @implementer(IConnector)
 class Connector(Item):
-
     def get_connector_url(self, subpath=None):
 
         url = ''
@@ -94,7 +90,8 @@ class Connector(Item):
         username = username or ''
         password = password or ''
         if not url:
-            raise ValueError('No connector URL configured (neither local nor global)')
+            raise ValueError(
+                'No connector URL configured (neither local nor global)')
 
         f = furl.furl(url)
         if username:

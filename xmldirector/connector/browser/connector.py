@@ -33,11 +33,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from xmldirector.connector.i18n import MessageFactory as _
 
-TEXT_MIMETYPES = set([
-    'application/json',
-    'application/javascript'
-])
-
+TEXT_MIMETYPES = set(['application/json', 'application/javascript'])
 
 LOG = logging.getLogger('xmldirector.connector')
 
@@ -48,9 +44,41 @@ def safe_unicode(s):
     return s
 
 
+from ZPublisher.Iterators import IStreamIterator
+from ZPublisher.Iterators import IUnboundStreamIterator
+
+
+#@implementer(IStreamIterator)
+@implementer(IUnboundStreamIterator)
+class connector_iterator():
+    """ Iterator for pyfilesystem content """
+
+    def __init__(self, handle, filename, mode='rb', streamsize=1 << 24):
+        self.handle = handle
+        self.fp = handle.open(filename, mode)
+        self.filename = filename
+        self.streamsize = streamsize
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        data = self.fp.read(self.streamsize)
+        if not data:
+            raise StopIteration
+        return data
+
+    next = __next__
+
+    def seek(self, *args):
+        pass
+
+    def __len__(self):
+        return self.handle.getsize(self.filename)
+
+
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
-
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
@@ -63,7 +91,8 @@ class RawConnector(BrowserView):
 
     @property
     def can_edit(self):
-        return plone.api.user.has_permission(permissions.ModifyPortalContent, obj=self.context)
+        return plone.api.user.has_permission(
+            permissions.ModifyPortalContent, obj=self.context)
 
     @property
     def messages(self):
@@ -83,14 +112,19 @@ class RawConnector(BrowserView):
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
-        self.request.response.setHeader(
-            'content-length', handle.getsize(filename))
+        #        self.request.response.setHeader(
+        #           'content-length', handle.getsize(filename))
         if 'download' in self.request.form:
             self.request.response.setHeader(
-                'content-disposition', 'attachment; filename={}'.format(os.path.basename(filename)))
+                'content-disposition', 'attachment; filename={}'.format(
+                    os.path.basename(filename)))
         # iterator?
-        with handle.open(filename, 'rb') as fp:
-            self.request.response.write(fp.read())
+
+        return connector_iterator(handle, filename)
+
+
+#        with handle.open(filename, 'rb') as fp:
+#            self.request.response.write(fp.read())
 
 
 @implementer(IPublishTraverse)
@@ -138,7 +172,7 @@ class Connector(RawConnector):
         current_url = self.context.absolute_url()
         result = list()
         for i in range(len(self._subpath)):
-            sp = '/'.join(self._subpath[:i+1])
+            sp = '/'.join(self._subpath[:i + 1])
             href = '{}/view/{}'.format(current_url, sp)
             result.append(dict(href=href, title=self._subpath[i]))
 
@@ -161,7 +195,7 @@ class Connector(RawConnector):
 
         if f.scheme in ['dlna']:
 
-            # work in progress for "poor" drivers that implement only a subset of the 
+            # work in progress for "poor" drivers that implement only a subset of the
             # full pyfilesystem driver API
 
             handle = self.context.get_handle(subpath)
@@ -177,25 +211,31 @@ class Connector(RawConnector):
                 size = modified = ''
                 is_text = self._is_text(mimetype)
 
-                result.append(dict(
-                    name=name,
-                    is_file=True,
-                    is_dir=False,
-                    size=size,
-                    mimetype=mimetype,
-                    ext=ext,
-                    user=user,
-                    group=group,
-                    modified=modified,
-                    view_url = '{}/view/{}/{}'.format(context_url, subpath, name),
-                    raw_url = '{}/raw/{}/{}'.format(context_url, subpath, name),
-                    highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, name) if is_text else None,
-                ))
+                result.append(
+                    dict(
+                        name=name,
+                        is_file=True,
+                        is_dir=False,
+                        size=size,
+                        mimetype=mimetype,
+                        ext=ext,
+                        user=user,
+                        group=group,
+                        modified=modified,
+                        view_url='{}/view/{}/{}'.format(
+                            context_url, subpath, name),
+                        raw_url='{}/raw/{}/{}'.format(context_url, subpath,
+                                                      name),
+                        highlight_url='{}/highlight/{}/{}'.format(
+                            context_url, subpath, name) if is_text else None,
+                    ))
 
         else:
 
             handle = self.context.get_handle(subpath)
-            entries = list(handle.filterdir('.', namespaces=['basic', 'access', 'details']))
+            entries = list(
+                handle.filterdir(
+                    '.', namespaces=['basic', 'access', 'details']))
             result = []
             for row in sorted(entries, key=sort_key):
 
@@ -223,20 +263,25 @@ class Connector(RawConnector):
 
                 is_text = self._is_text(mimetype)
 
-                result.append(dict(
-                    name=row.name,
-                    is_file=row.is_file,
-                    is_dir=row.is_dir,
-                    size=size,
-                    mimetype=mimetype,
-                    ext=ext,
-                    user=user,
-                    group=group,
-                    modified=modified,
-                    view_url = '{}/view/{}/{}'.format(context_url, subpath, row.name),
-                    raw_url = '{}/raw/{}/{}'.format(context_url, subpath, row.name),
-                    highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, row.name) if is_text else None,
-                ))
+                result.append(
+                    dict(
+                        name=row.name,
+                        is_file=row.is_file,
+                        is_dir=row.is_dir,
+                        size=size,
+                        mimetype=mimetype,
+                        ext=ext,
+                        user=user,
+                        group=group,
+                        modified=modified,
+                        view_url='{}/view/{}/{}'.format(
+                            context_url, subpath, row.name),
+                        raw_url='{}/raw/{}/{}'.format(context_url, subpath,
+                                                      row.name),
+                        highlight_url='{}/highlight/{}/{}'.format(
+                            context_url, subpath, row.name)
+                        if is_text else None,
+                    ))
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(result)
@@ -267,33 +312,43 @@ class Connector(RawConnector):
         if handle.exists(name):
             msg = _('{}/{} already exists found').format(subpath, name)
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
+            return self.request.response.redirect(self.context.absolute_url() +
+                                                  '/view/' + subpath)
 
         try:
             handle.makedir(name)
         except Exception as e:
-            msg = _('{}/{} could not be created ({})').format(subpath, name, str(e))
+            msg = _('{}/{} could not be created ({})').format(
+                subpath, name, str(e))
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() + '/' + subpath)
+            return self.request.response.redirect(self.context.absolute_url() +
+                                                  '/' + subpath)
 
         msg = _('Created {}/{}').format(subpath, name)
         self.messages.add(msg, 'info')
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath + '/' + name)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' +
+                                       subpath + '/' + name)
 
-    def zip_import_ui(self, zip_file=None, subpath=None, clean_directories=None):
+    def zip_import_ui(self,
+                      zip_file=None,
+                      subpath=None,
+                      clean_directories=None):
         """ Import WebDAV subfolder from an uploaded ZIP file """
 
         try:
-            imported_files = self.zip_import(
-                zip_file, subpath, clean_directories)
+            imported_files = self.zip_import(zip_file, subpath,
+                                             clean_directories)
         except Exception as e:
             msg = u'ZIP import failed'
             LOG.error(msg, exc_info=True)
             return self.redirect(msg, 'error')
 
         self.logger.log(
-            'ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)), details=imported_files)
-        return self.redirect(_(u'Uploaded ZIP archive imported'), subpath=subpath)
+            'ZIP file imported ({}, {} files)'.format(zip_file,
+                                                      len(imported_files)),
+            details=imported_files)
+        return self.redirect(
+            _(u'Uploaded ZIP archive imported'), subpath=subpath)
 
     def zip_import(self, zip_file=None):
         """ Import subfolder from an uploaded ZIP file """
@@ -316,7 +371,8 @@ class Connector(RawConnector):
                 u'No filename detected. Did you really upload a ZIP file?')
         if not zip_filename.endswith('.zip'):
             raise ValueError(
-                u'Uploaded file did not end with .zip. Did you really upload a ZIP file?')
+                u'Uploaded file did not end with .zip. Did you really upload a ZIP file?'
+            )
 
         try:
             with fs.zipfs.ZipFS(zip_file, encoding='utf-8') as zip_handle:
@@ -326,8 +382,8 @@ class Connector(RawConnector):
                 dirs_created = set()
                 for i, name in enumerate(zip_handle.walk.files()):
 
-                    target_filename = unicodedata.normalize(
-                        'NFC', name).lstrip('/')
+                    target_filename = unicodedata.normalize('NFC',
+                                                            name).lstrip('/')
                     if self.subpath:
                         target_filename = u'{}/{}'.format(
                             self.subpath, target_filename)
@@ -335,12 +391,11 @@ class Connector(RawConnector):
                     target_dirname = '/'.join(target_filename.split('/')[:-1])
                     if target_dirname not in dirs_created:
                         try:
-                            handle.makedir(
-                                target_dirname, recreate=True)
+                            handle.makedir(target_dirname, recreate=True)
                             dirs_created.add(target_dirname)
                         except Exception as e:
-                            LOG.error(
-                                'Failed creating {} failed ({})'.format(target_dirname, e))
+                            LOG.error('Failed creating {} failed ({})'.format(
+                                target_dirname, e))
 
                     LOG.info(u'ZIP filename({})'.format(name))
 
@@ -354,4 +409,5 @@ class Connector(RawConnector):
             msg = 'Error opening ZIP file: {}'.format(e)
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + self.subpath)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' +
+                                       self.subpath)

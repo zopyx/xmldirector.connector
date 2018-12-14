@@ -5,7 +5,6 @@
 # (C) 2016,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-
 import os
 import json
 import inspect
@@ -52,4 +51,3 @@ class DBSettingsControlPanel(controlpanel.ControlPanelFormWrapper):
     def settings_json(self):
         """ Returns setting as JSON """
         return json.dumps(self.settings)
-

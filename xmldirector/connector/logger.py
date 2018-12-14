@@ -7,5 +7,4 @@
 
 import logging
 
-
 LOG = logging.getLogger('xmldirector.connector')
