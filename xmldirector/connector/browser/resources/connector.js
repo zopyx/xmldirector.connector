@@ -56,7 +56,7 @@ function actions_renderer(cell, formatterParams, onRendered) {
 
 function build_table() {        
     var columns = [ 
-        {title:"Name", field:"name", width:150, formatter: name_renderer, headerFilter: true},
+        {title:"Name", field:"name", width:350, formatter: name_renderer, headerFilter: true},
         {title:"Type", field:"is_dir", align:"left", formatter: type_renderer, headerFilter: true},
         {title:"User", field:"user", formatter: user_renderer, headerFilter: true},
         {title:"Modified", field:"modified", formatter: modified_renderer},
@@ -89,12 +89,31 @@ function build_table() {
 
 
 Dropzone.autoDiscover = false;
+speed = 500;
 
 $(document).ready(function() {
 
     build_table();
 
     new Clipboard('.clipboard');
+
+    $('#action-upload').on('click', function() {
+        $('#zip-upload').hide(0); 
+        $('#uploadify').toggle(speed); 
+    });
+
+    $('#action-new-folder').on('click', function() {
+        $('#uploadify').hide(0); 
+        $('#zip-upload').hide(0); 
+        $('#new-folder').toggle(speed); 
+    });
+
+    $('#action-zip-import').on('click', function() {
+        $('#uploadify').hide(0); 
+        $('#new-folder').hide(0); 
+        $('#zip-upload').toggle(speed); 
+    });
+
 
     $("#dropzone").dropzone({ 
         url: UPLOAD_URL,
