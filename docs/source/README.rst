@@ -92,6 +92,12 @@ Every `Connector` instance in Plone gives you access to the mounted storage thro
 `handle = connector.get_handle()` call which is instance of `fs.base.FS`. Check
 https://docs.pyfilesystem.org for details.
 
+Available drivers
++++++++++++++++++
+
+Connectivity with other backend is accomplished through dedicated driverse that implementation
+the API layer between PyFilesystem 2 and the related backend. 
+See https://www.pyfilesystem.org/page/index-of-filesystems/ for all available drivers.
 
 License
 -------
