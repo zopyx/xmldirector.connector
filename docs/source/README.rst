@@ -84,6 +84,15 @@ AWS S3
   (You need to install the Python package `fs-s3fs` through buildout).
 
 
+API notes
++++++++++
+
+The implementation of `xmldirector.connector` is heavily backed by the PyFilesystem 2 API.
+Every `Connector` instance in Plone gives you access to the mounted storage through the 
+`handle = connector.get_handle()` call which is instance of `fs.base.FS`. Check
+https://docs.pyfilesystem.org for details.
+
+
 License
 -------
 This package is published under the GNU Public License V2 (GPL 2)
