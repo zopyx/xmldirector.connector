@@ -49,37 +49,37 @@ configure the your service
 ExistDB
 +++++++
   
-- webdav://localhost:6080/existdb/webdav/db
+- `webdav://localhost:6080/existdb/webdav/db`
 - username and password required to access your XML database over WebDAV
 
 BaseX
 +++++
 
-- webdav://localhost:8984/webdav                                     
+- `webdav://localhost:8984/webdav`                                     
 - username and password required to access your XML database over WebDAV
 
 Owncloud
 ++++++++
 
-- webdav://hostname:port/remote.php/webdav
+- `webdav://hostname:port/remote.php/webdav`
 - username and password required to access your Owncloud instance over WebDAV
 
 Alfresco
 ++++++++
 
-- webdav://hostname:port/webdav
+- `webdav://hostname:port/webdav`
 - username and password required to access your Alfresco instance over WebDAV
 
 Local filesystem
 ++++++++++++++++
 
-- file:///path/to/some/directory
+- `file:///path/to/some/directory`
 - no support for credentials, the referenced filesystem must be readable (and writable)
 
 AWS S3
 ++++++
     
-- s3://bucketname
+- `s3://bucketname`
 - enter your AWS access key as username and the AWS secret key as password
   (You need to install the Python package `fs-s3fs` through buildout).
 
