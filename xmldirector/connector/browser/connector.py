@@ -136,20 +136,18 @@ class Connector(RawConnector):
 
         return result
 
-    def get_entries(self):
-        handle = self.context.get_handle()
-        result =  list(handle.filterdir(self.subpath,namespaces=['basic', 'access', 'details']))
-        result = sorted(result, key=operator.attrgetter('name'))
-        return result
-
     def folder_contents(self, subpath='.'):
         """" REST endpoint  """
+
+        def sort_key(item):
+            key = 'A-' if item.is_dir else 'B-'
+            return key + item.name
 
         handle = self.context.get_handle()
         entries = list(handle.filterdir(subpath,namespaces=['basic', 'access', 'details']))
         result = []
         context_url = self.context.absolute_url()
-        for row in sorted(entries, key=operator.attrgetter('name')):
+        for row in sorted(entries, key=sort_key):
 
             mimetype, _ = mimetypes.guess_type(row.name)
             basename, ext = os.path.splitext(row.name)

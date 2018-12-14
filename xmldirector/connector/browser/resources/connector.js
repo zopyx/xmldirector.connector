@@ -50,9 +50,9 @@ function actions_renderer(cell, formatterParams, onRendered) {
     var data = cell.getData();
     var s = '';
     if (data.is_file) {
-        s += `<a class="download-link" href="${data.raw_url}">[Download]</a>`; 
+        s += `<a class="download-link" href="${data.raw_url}" title="Download" alt="Download"><img src="++resource++xmldirector.connector/images/download.png"/></a>`; 
         if (data.highlight_url) {
-            s += ` <a class="raw-link" href="${data.highlight_url}">[View]</a>`;
+            s += ` <a class="raw-link" href="${data.highlight_url}" title="View" alt="View"><img src="++resource++xmldirector.connector/images/eye.png"/></a>`;
         }
     }
     return s;
@@ -61,8 +61,7 @@ function actions_renderer(cell, formatterParams, onRendered) {
 
 function build_table() {        
     var columns = [ 
-        {title:"Name", field:"name", width:350, formatter: name_renderer, headerFilter: true},
-        {title:"Type", field:"is_dir", align:"left", formatter: type_renderer, headerFilter: true},
+        {title:"Name", field:"name", width: 450, formatter: name_renderer, headerFilter: true},
         {title:"User", field:"user", formatter: user_renderer, headerFilter: true},
         {title:"Modified", field:"modified", formatter: modified_renderer},
         {title:"Size", field:"size", formatter: size_renderer},
@@ -84,7 +83,7 @@ function build_table() {
             data:result, //assign data to table
             layout:"fitColumns", //fit columns to width of table (optional)
             pagination:"local",
-            paginationSize:12,
+            paginationSize: PAGE_SIZE,
             movableColumns:true,
             columns: columns,
         });

@@ -17,13 +17,14 @@
     margin-right: 1em;
 }
 
-
-a.download-link {
-    background-image: url(++resource++xmldirector.connector/images/icons8-downloading-updates-50.png) !important;
-    width: 16px;
-    height: 16px;
+.download-link img,
+.raw-link  img {
     display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
 }
+
 
 /* mimetype icons */
 
