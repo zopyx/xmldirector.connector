@@ -10,6 +10,7 @@ import os
 import fs
 import fs.zipfs
 import six
+import time
 import json
 import datetime
 import tempfile
@@ -38,6 +39,12 @@ TEXT_MIMETYPES = set([
 
 
 LOG = logging.getLogger('xmldirector.connector')
+
+
+def safe_unicode(s):
+    if not isinstance(s, six.text_type):
+        return six.text_type(s, 'utf8')
+    return s
 
 
 @implementer(IPublishTraverse)
@@ -70,7 +77,7 @@ class RawConnector(BrowserView):
         handle = self.context.get_handle()
         filename = self.subpath
         if not handle.exists(filename):
-            raise zExceptions.NotFound(f'{filename} does not exist')
+            raise zExceptions.NotFound('{} does not exist'.format(filename))
         basename = os.path.basename(filename)
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
@@ -131,7 +138,7 @@ class Connector(RawConnector):
         result = list()
         for i in range(len(self._subpath)):
             sp = '/'.join(self._subpath[:i+1])
-            href = f'{current_url}/view/{sp}'
+            href = '{}/view/{}'.format(current_url, sp)
             result.append(dict(href=href, title=self._subpath[i]))
 
         return result
@@ -144,6 +151,10 @@ class Connector(RawConnector):
             return key + item.name
 
         handle = self.context.get_handle()
+
+        if six.PY2:
+            subpath = safe_unicode(subpath)
+
         entries = list(handle.filterdir(subpath,namespaces=['basic', 'access', 'details']))
         result = []
         context_url = self.context.absolute_url()
@@ -160,7 +171,10 @@ class Connector(RawConnector):
             size = modified = ''
             if 'details' in row.namespaces:
                 size = row.size
-                modified = row.modified.timestamp()
+                if six.PY2:
+                    modified = time.mktime(row.modified.timetuple())
+                else:
+                    modified = row.modified.timestamp()
 
             is_text = self._is_text(mimetype)
 
@@ -174,9 +188,9 @@ class Connector(RawConnector):
                 user=user,
                 group=group,
                 modified=modified,
-                view_url = f'{context_url}/view/{subpath}/{row.name}',
-                raw_url = f'{context_url}/raw/{subpath}/{row.name}',
-                highlight_url = f'{context_url}/highlight/{subpath}/{row.name}' if is_text else None,
+                view_url = '{}/view/{}/{}'.format(context_url, subpath, row.name),
+                raw_url = '{}/raw/{}/{}'.format(context_url, subpath, row.name),
+                highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, row.name) if is_text else None,
             ))
 
         self.request.response.setHeader('content-type', 'application/json')
@@ -185,11 +199,13 @@ class Connector(RawConnector):
     def upload_file(self):
         """ AJAX callback for Uploadify """
 
-        get_handle = self.context.get_handle()
-        filename = os.path.basename(self.request.file.filename)
+        subpath = safe_unicode(self.request.get('subpath', self.subpath))
+        filename = safe_unicode(os.path.basename(self.request.file.filename))
         basename, ext = os.path.splitext(filename)
 
-        with get_handle.open(fs.path.join(self.subpath, filename), 'wb') as fp:
+        handle = self.context.get_handle(subpath)
+
+        with handle.open(filename, 'wb') as fp:
             self.request.file.seek(0)
             data = self.request.file.read()
             fp.write(data)
@@ -199,7 +215,8 @@ class Connector(RawConnector):
     def new_folder(self, name, subpath=None):
         """ Create a new collection ``name`` inside the folder ``subpath `` """
 
-        subpath = subpath or self.subpath
+        name = safe_unicode(name)
+        subpath = safe_unicode(subpath or self.subpath)
         handle = self.context.get_handle(subpath)
 
         if handle.exists(name):
