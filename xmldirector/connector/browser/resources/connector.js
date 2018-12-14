@@ -9,8 +9,13 @@ function name_renderer(cell, formatterParams, onRendered) {
     var data = cell.getData();
     if (data.is_dir) 
         return `<a class="type-directory" data-ext="${data.ext}" href="${data.view_url}">${data.name}</a>`;
-    else
-        return `<a class="type-file" data-ext="${data.ext}" href="${data.raw_url}">${data.name}</a>`;
+    else {
+        if (data.highlight_url) {
+            return `<a class="type-file" data-ext="${data.ext}" href="${data.highlight_url}">${data.name}</a>`;
+        } else {
+            return `<a class="type-file" data-ext="${data.ext}" href="${data.raw_url}">${data.name}</a>`;
+        }
+    }
 }
 
 function type_renderer(cell, formatterParams, onRendered) {

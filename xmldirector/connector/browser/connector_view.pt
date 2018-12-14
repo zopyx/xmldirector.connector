@@ -46,12 +46,11 @@
 
     <div id="files-table"></div>
 
-    <div id="actions">
+    <div id="actions" tal:condition="view/can_edit">
         <a id="action-new-folder" i18n:translate="">New folder</a>
         <a id="action-zip-import" i18n:translate="">ZIP import</a>
         <a id="action-upload" i18n:translate="">Upload</a>
     </div>
-
 
     <div id="action-forms" 
         tal:condition="view/can_edit"

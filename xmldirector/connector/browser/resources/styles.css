@@ -18,6 +18,12 @@
 }
 
 
+a.download-link {
+    background-image: url(++resource++xmldirector.connector/images/icons8-downloading-updates-50.png) !important;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
 
 /* mimetype icons */
 

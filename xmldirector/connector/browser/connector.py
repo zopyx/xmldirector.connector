@@ -57,7 +57,6 @@ class RawConnector(BrowserView):
     def can_edit(self):
         return plone.api.user.has_permission(permissions.ModifyPortalContent, obj=self.context)
 
-
     @property
     def messages(self):
         return IStatusMessage(self.request)
