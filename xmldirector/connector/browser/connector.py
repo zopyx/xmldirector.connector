@@ -21,13 +21,10 @@ import unicodedata
 import logging
 
 import zExceptions
+import plone.api
 from zope.interface import implementer
-from zope.interface import alsoProvides
 from zope.publisher.interfaces import IPublishTraverse
-from plone.app.layout.globals.interfaces import IViewView
-from plone.protect.interfaces import IDisableCSRFProtection
-from AccessControl.SecurityManagement import getSecurityManager
-from ZPublisher.Iterators import IStreamIterator
+from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFCore import permissions
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -55,6 +52,11 @@ class RawConnector(BrowserView):
             self._subpath = []
         self._subpath.append(name)
         return self
+
+
+    @property
+    def messages(self):
+        return IStatusMessage(self.request)
 
     @property
     def subpath(self):
@@ -108,6 +110,10 @@ class Connector(RawConnector):
 
     def __call__(self, *args, **kw):
         return self.template()
+
+    @property
+    def can_edit(self):
+        return plone.api.content.has_permission(permission.ModifyPortalContent, obj=self.context)
 
     def _is_text(self, mimetype):
         """ check if particular mimetype is text-ish """
@@ -193,6 +199,28 @@ class Connector(RawConnector):
 
         self.request.response.setStatus(200)
 
+    def new_folder(self, name, subpath=None):
+        """ Create a new collection ``name`` inside the folder ``subpath `` """
+
+        subpath = subpath or self.subpath
+        handle = self.context.get_handle(subpath)
+
+        if handle.exists(name):
+            msg = _('{}/{} already exists found').format(subpath, name)
+            self.messages.add(msg, 'error')
+            return self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
+
+        try:
+            handle.makedir(name)
+        except Exception as e:
+            msg = _('{}/{} could not be created ({})').format(subpath, name, str(e))
+            self.messages.add(msg, 'error')
+            return self.request.response.redirect(self.context.absolute_url() + '/' + subpath)
+
+        msg = _('Created {}/{}').format(subpath, name)
+        self.messages.add(msg, 'info')
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath + '/' + name)
+
     def zip_import_ui(self, zip_file=None, subpath=None, clean_directories=None):
         """ Import WebDAV subfolder from an uploaded ZIP file """
 
@@ -229,7 +257,7 @@ class Connector(RawConnector):
                 u'No filename detected. Did you really upload a ZIP file?')
         if not zip_filename.endswith('.zip'):
             raise ValueError(
-                u'Upload file did not end with .zip. Did you really upload a ZIP file?')
+                u'Uploaded file did not end with .zip. Did you really upload a ZIP file?')
 
         try:
             with fs.zipfs.ZipFS(zip_file, encoding='utf-8') as zip_handle:
@@ -267,4 +295,4 @@ class Connector(RawConnector):
             msg = 'Error opening ZIP file: {}'.format(e)
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/' + self.subpath)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + self.subpath)
