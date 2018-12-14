@@ -49,6 +49,16 @@
     />
 
     <browser:page
+        name="connector-new-folder"
+        for="xmldirector.connector.connector.IConnector"
+        class=".connector.Connector"
+        attribute="new_folder"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+
+    <browser:page
         for="xmldirector.connector.connector.IConnector"
         name="connector-zip-upload"
         class=".connector.Connector"
