@@ -34,7 +34,9 @@ function user_renderer(cell, formatterParams, onRendered) {
 
 function modified_renderer(cell, formatterParams, onRendered) {
     var data = cell.getData();
-    return moment(data.modified * 1000).fromNow();
+    if (data.modified)
+        return moment(data.modified * 1000).fromNow();
+    return '';
 }
 
 function size_renderer(cell, formatterParams, onRendered) {

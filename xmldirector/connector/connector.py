@@ -9,6 +9,7 @@
 import fs
 import fs.errors
 import furl
+import pkg_resources
 
 import zExceptions
 from zope import schema
@@ -22,6 +23,20 @@ from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IConnectorSettings
 from xmldirector.connector.interfaces import IConnectorHandle
 from xmldirector.connector.logger import LOG
+
+
+# determine all entry points
+
+def supported_protocols():
+
+    protocols = []
+    for d in pkg_resources.working_set:
+        for protocol in pkg_resources.get_entry_map(d.project_name, 'fs.opener'):
+            protocols.append(protocol)
+    return protocols
+
+SUPPORTED_FS_PROTOCOLS = supported_protocols()
+print('supported fs protocols:', SUPPORTED_FS_PROTOCOLS)
 
 
 class IConnector(model.Schema):
@@ -57,7 +72,7 @@ class IConnector(model.Schema):
 @implementer(IConnector)
 class Connector(Item):
 
-    def get_handle(self, subpath=None):
+    def get_connector_url(self, subpath=None):
 
         url = ''
         username = ''
@@ -90,4 +105,12 @@ class Connector(Item):
             f.path.add(self.connector_subpath)
         if subpath:
             f.path.add(subpath)
-        return fs.open_fs(f.tostr())
+
+        if f.scheme not in SUPPORTED_FS_PROTOCOLS:
+            print('Unsupported scheme: {}'.format(f.scheme))
+        return f.tostr()
+
+    def get_handle(self, subpath=None):
+        url = self.get_connector_url(subpath)
+        print(url)
+        return fs.open_fs(url)

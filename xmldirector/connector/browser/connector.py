@@ -12,6 +12,7 @@ import fs.zipfs
 import six
 import time
 import json
+import furl
 import datetime
 import tempfile
 import fs.errors
@@ -150,48 +151,92 @@ class Connector(RawConnector):
             key = 'A-' if item.is_dir else 'B-'
             return key + item.name
 
-        handle = self.context.get_handle()
-
         if six.PY2:
             subpath = safe_unicode(subpath)
 
-        entries = list(handle.filterdir(subpath,namespaces=['basic', 'access', 'details']))
-        result = []
+        connector_url = self.context.get_connector_url(subpath)
+        f = furl.furl(connector_url)
+
         context_url = self.context.absolute_url()
-        for row in sorted(entries, key=sort_key):
 
-            mimetype, _ = mimetypes.guess_type(row.name)
-            basename, ext = os.path.splitext(row.name)
+        if f.scheme in ['dlna']:
 
-            user = group = ''
-            if 'access' in row.namespaces:
-                user = row.user
-                group = row.group
+            # work in progress for "poor" drivers that implement only a subset of the 
+            # full pyfilesystem driver API
 
-            size = modified = ''
-            if 'details' in row.namespaces:
-                size = row.size
-                if six.PY2:
-                    modified = time.mktime(row.modified.timetuple())
-                else:
-                    modified = row.modified.timestamp()
+            handle = self.context.get_handle(subpath)
+            entries = list(handle.listdir(subpath))
 
-            is_text = self._is_text(mimetype)
+            result = []
+            for name in sorted(entries):
 
-            result.append(dict(
-                name=row.name,
-                is_file=row.is_file,
-                is_dir=row.is_dir,
-                size=size,
-                mimetype=mimetype,
-                ext=ext,
-                user=user,
-                group=group,
-                modified=modified,
-                view_url = '{}/view/{}/{}'.format(context_url, subpath, row.name),
-                raw_url = '{}/raw/{}/{}'.format(context_url, subpath, row.name),
-                highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, row.name) if is_text else None,
-            ))
+                mimetype, _ = mimetypes.guess_type(name)
+                basename, ext = os.path.splitext(name)
+
+                user = group = ''
+                size = modified = ''
+                is_text = self._is_text(mimetype)
+
+                result.append(dict(
+                    name=name,
+                    is_file=True,
+                    is_dir=False,
+                    size=size,
+                    mimetype=mimetype,
+                    ext=ext,
+                    user=user,
+                    group=group,
+                    modified=modified,
+                    view_url = '{}/view/{}/{}'.format(context_url, subpath, name),
+                    raw_url = '{}/raw/{}/{}'.format(context_url, subpath, name),
+                    highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, name) if is_text else None,
+                ))
+
+        else:
+
+            handle = self.context.get_handle(subpath)
+            entries = list(handle.filterdir('.', namespaces=['basic', 'access', 'details']))
+            result = []
+            for row in sorted(entries, key=sort_key):
+
+                mimetype, _ = mimetypes.guess_type(row.name)
+                basename, ext = os.path.splitext(row.name)
+
+                user = group = ''
+                if 'access' in row.namespaces:
+                    user = row.user
+                    group = row.group
+
+                size = modified = ''
+                if 'details' in row.namespaces:
+                    size = row.size
+                    if six.PY2:
+                        try:
+                            modified = time.mktime(row.modified.timetuple())
+                        except AttributeError:
+                            modified = u''
+                    else:
+                        try:
+                            modified = row.modified.timestamp()
+                        except AttributeError:
+                            modified = u''
+
+                is_text = self._is_text(mimetype)
+
+                result.append(dict(
+                    name=row.name,
+                    is_file=row.is_file,
+                    is_dir=row.is_dir,
+                    size=size,
+                    mimetype=mimetype,
+                    ext=ext,
+                    user=user,
+                    group=group,
+                    modified=modified,
+                    view_url = '{}/view/{}/{}'.format(context_url, subpath, row.name),
+                    raw_url = '{}/raw/{}/{}'.format(context_url, subpath, row.name),
+                    highlight_url = '{}/highlight/{}/{}'.format(context_url, subpath, row.name) if is_text else None,
+                ))
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(result)
