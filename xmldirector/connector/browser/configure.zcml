@@ -68,7 +68,7 @@
     />
 
     <browser:page
-        name="xmldirector-connector-settings"
+        name="connector-settings"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         class=".controlpanel.DBSettingsControlPanel"
         permission="cmf.ManagePortal"

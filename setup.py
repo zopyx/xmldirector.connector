@@ -1,11 +1,11 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.1'
+version = '0.1.1'
 
 setup(name='xmldirector.connector',
       version=version,
-      description="XML-Director ",
+      description="xmldirector.connector supports mounting storages like S3, Webdav backend or local filesystem into Plone",
       long_description=open(os.path.join("docs", "source", "README.rst")).read() + "\n" +
       open(os.path.join("docs", "source", "HISTORY.rst")).read(),
       # Get more strings from

@@ -8,12 +8,8 @@
 
 import os
 import json
-import hurry
 import inspect
-import humanize
 import datetime
-import fs.opener
-import fs.errors
 import pkg_resources
 
 import plone.api

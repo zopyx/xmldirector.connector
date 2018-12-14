@@ -101,7 +101,7 @@
             <div class="fallback">
                 <input name="file" type="file" multiple />
             </div>
-            <input type="hidden" name="subpath" tal:attributes="value request/subpath | nothing" />
+            <input type="hidden" name="subpath" tal:attributes="value view/subpath | nothing" />
           </form>
           <div id="upload-message"></div>
       </fieldset>

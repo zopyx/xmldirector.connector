@@ -6,12 +6,12 @@
     purge="False">
 
     <configlet
-        title="XML-Director Settings"
+        title="Connector Settings"
         action_id="xmldirector.connector"
         appId="xmldirector.connector"
         category="Products"
         condition_expr=""
-        url_expr="string:${portal_url}/@@xmldirector-connector-settings"
+        url_expr="string:${portal_url}/@@connector-settings"
         visible="True"
         i18n:attributes="title">
             <permission>Manage portal</permission>
