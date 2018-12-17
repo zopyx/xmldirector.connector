@@ -79,7 +79,6 @@ function build_table() {
         method: 'GET',
         success: function(result) {
 
-        console.log(result);
         var table = new Tabulator("#files-table", {
             height:450,
             data:result, //assign data to table
@@ -95,7 +94,7 @@ function build_table() {
 
 
 Dropzone.autoDiscover = false;
-speed = 500;
+speed = 250;
 
 $(document).ready(function() {
 
@@ -120,6 +119,10 @@ $(document).ready(function() {
         $('#zip-upload').toggle(speed); 
     });
 
+
+    $('.legend-close').on('click', function() {
+        $(this).parents('fieldset').hide();
+    });
 
     $("#dropzone").dropzone({ 
         url: UPLOAD_URL,

@@ -31,6 +31,12 @@
 
 }
 
+.legend-close {
+    float: right;
+    font-size: 0.8em;
+    color: grey;
+}
+
 
 /* mimetype icons */
 

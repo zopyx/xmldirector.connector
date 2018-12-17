@@ -62,7 +62,9 @@
         tal:define="UPLOAD_URL string:${context/absolute_url}/@@connector-upload">
 
       <fieldset id="new-folder">
-          <legend i18n:translate="">New folder</legend>
+          <legend i18n:translate="">New folder
+            <a class="legend-close" title="Close" i18n:attributes="title">[x]</a>
+          </legend>
           <form method="POST" tal:attributes="action string:${context/absolute_url}/connector-new-folder">
               <div>
                   <input type="name" name="name" size="60" id="name" />
@@ -75,7 +77,9 @@
       </fieldset>
 
       <fieldset id="zip-upload">
-          <legend i18n:translate="">ZIP import</legend>
+          <legend i18n:translate="">ZIP import
+            <a class="legend-close" title="Close" i18n:attributes="title">[x]</a>
+          </legend>
           <div class="help" i18n:translate="">
               Use this form for uploading a ZIP file. The ZIP file will be
               unzipped. 
@@ -95,7 +99,9 @@
       </fieldset>
 
       <fieldset id="uploadify">
-          <legend i18n:translate="">Multi/single file upload</legend>
+          <legend i18n:translate="">Multi/single file upload
+            <a class="legend-close" title="Close" i18n:attributes="title">[x]</a>
+          </legend>
           <div class="help" i18n:translate="">
               Use this form for uploading a single or multiple files.
           </div>
