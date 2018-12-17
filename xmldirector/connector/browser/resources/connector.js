@@ -81,15 +81,18 @@ function build_table() {
         method: 'GET',
         success: function(result) {
 
-        table = new Tabulator("#files-table", {
-            height:450,
-            data:result, //assign data to table
-            layout:"fitColumns", //fit columns to width of table (optional)
-            pagination:"local",
-            paginationSize: PAGE_SIZE,
-            movableColumns:true,
-            columns: columns,
-        });
+            table = new Tabulator("#files-table", {
+                height:450,
+                data:result, //assign data to table
+                layout:"fitColumns", //fit columns to width of table (optional)
+                pagination:"local",
+                paginationSize: PAGE_SIZE,
+                movableColumns:true,
+                columns: columns,
+            });
+
+            /* move #pagination into tabulator footer */
+            $('#pagination').prependTo('.tabulator-footer');
         } 
     });
 }

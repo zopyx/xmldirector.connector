@@ -49,7 +49,7 @@
         <span i18n:translate="">Connector is readonly</span>
     </div>
 
-    <div id="pagiation">
+    <div id="pagination">
         <span i18n:translate="">Items per page</span>:
         <select name="page_size" id="page_size">
             <option value="15">15</option>
