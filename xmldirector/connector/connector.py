@@ -36,8 +36,8 @@ def supported_protocols():
     return protocols
 
 
-SUPPORTED_FS_PROTOCOLS = supported_protocols()
-print('supported fs protocols:', SUPPORTED_FS_PROTOCOLS)
+SUPPORTED_FS_SCHEMAS = supported_protocols()
+LOG.warn('Supported fs protocols:', SUPPORTED_FS_SCHEMAS)
 
 
 class IConnector(model.Schema):
@@ -64,6 +64,12 @@ class IConnector(model.Schema):
         description=_(
             u'Use this value for configuring a more specific subpath'),
         required=False)
+
+    connector_readonly = schema.Bool(
+        title=_(u'Readonly access'),
+        default=False,
+        required=False
+    )
 
 
 @implementer(IConnector)
@@ -103,11 +109,10 @@ class Connector(Item):
         if subpath:
             f.path.add(subpath)
 
-        if f.scheme not in SUPPORTED_FS_PROTOCOLS:
-            print('Unsupported scheme: {}'.format(f.scheme))
+        if f.scheme not in SUPPORTED_FS_SCHEMAS:
+            LOG.warn('Unsupported scheme: {}'.format(f.scheme))
         return f.tostr()
 
     def get_handle(self, subpath=None):
         url = self.get_connector_url(subpath)
-        print(url)
         return fs.open_fs(url)

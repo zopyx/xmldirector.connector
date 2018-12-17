@@ -79,6 +79,7 @@ class connector_iterator():
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
+
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
@@ -90,8 +91,12 @@ class RawConnector(BrowserView):
         return self
 
     @property
+    def is_readonly(self):
+        return self.context.connector_readonly
+
+    @property
     def can_edit(self):
-        return plone.api.user.has_permission(
+        return not self.is_readonly and plone.api.user.has_permission(
             permissions.ModifyPortalContent, obj=self.context)
 
     @property
@@ -121,10 +126,6 @@ class RawConnector(BrowserView):
         # iterator?
 
         return connector_iterator(handle, filename)
-
-
-#        with handle.open(filename, 'rb') as fp:
-#            self.request.response.write(fp.read())
 
 
 @implementer(IPublishTraverse)
@@ -289,6 +290,9 @@ class Connector(RawConnector):
     def upload_file(self):
         """ AJAX callback for Uploadify """
 
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
+
         subpath = safe_unicode(self.request.get('subpath', self.subpath))
         filename = safe_unicode(os.path.basename(self.request.file.filename))
         basename, ext = os.path.splitext(filename)
@@ -304,6 +308,9 @@ class Connector(RawConnector):
 
     def new_folder(self, name, subpath=None):
         """ Create a new collection ``name`` inside the folder ``subpath `` """
+
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
 
         name = safe_unicode(name)
         subpath = safe_unicode(subpath or self.subpath)
@@ -335,6 +342,9 @@ class Connector(RawConnector):
                       clean_directories=None):
         """ Import WebDAV subfolder from an uploaded ZIP file """
 
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
+
         try:
             imported_files = self.zip_import(zip_file, subpath,
                                              clean_directories)
@@ -352,6 +362,9 @@ class Connector(RawConnector):
 
     def zip_import(self, zip_file=None):
         """ Import subfolder from an uploaded ZIP file """
+
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
 
         subpath = self.request.get('subpath') or self.subpath
         handle = self.context.get_handle(subpath)

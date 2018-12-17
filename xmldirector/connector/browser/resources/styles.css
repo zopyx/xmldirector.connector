@@ -25,6 +25,12 @@
     margin-right: 8px;
 }
 
+#connector-readonly {
+    font-size:80%;
+    font-style: italic;
+
+}
+
 
 /* mimetype icons */
 

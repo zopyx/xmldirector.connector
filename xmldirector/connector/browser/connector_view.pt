@@ -45,6 +45,10 @@
             </tal:loop>
     </div>
 
+    <div tal:condition="view/is_readonly" id="connector-readonly">
+        <span i18n:translate="">Connector is readonly</span>
+    </div>
+
     <div id="files-table"></div>
 
     <div id="actions" tal:condition="view/can_edit">
