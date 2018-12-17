@@ -78,7 +78,7 @@ function build_table() {
         {title:"Actions", field:"actions", formatter: actions_renderer},
     ];
 
-    var url = URL + '/@@connector-folder-contents?subpath=' + SUBPATH;
+    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
 
     $.ajax({
         url: url,
@@ -151,15 +151,13 @@ $(document).ready(function() {
         event.preventDefault()
 
         var name = $(this).data('name');        
-
         var new_name = prompt("Enter new name", name);
         if (new_name == null || new_name =="") {
             return false
         }
-        new_name = escape(new_name);
 
-        var resource_name = escape(`${SUBPATH}/${name}`);
-        url = `${URL}/@@connector-rename?resource_name=${resource_name}&new_name=${new_name}`; 
+        var resource_name = `${SUBPATH}/${name}`;
+        url = `${URL}/@@connector-rename?resource_name:unicode=${resource_name}&new_name:unicode=${new_name}`; 
 
         $.ajax({
             url: url,
@@ -197,7 +195,7 @@ $(document).ready(function() {
         var name = $(this).data('name');        
         var resource_name = escape(`${SUBPATH}/${name}`);
 
-        url = `${URL}/@@connector-remove?resource_name=${resource_name}`; 
+        url = `${URL}/@@connector-remove?resource_name:unicode=${resource_name}`; 
 
         $.ajax({
             url: url,
