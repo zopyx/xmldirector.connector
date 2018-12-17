@@ -151,14 +151,14 @@ $(document).ready(function() {
         event.preventDefault()
 
         var name = $(this).data('name');        
-        var resource_name = escape(`${SUBPATH}/${name}`);
 
         var new_name = prompt("Enter new name", name);
         if (new_name == null || new_name =="") {
             return false
         }
+        new_name = escape(new_name);
 
-
+        var resource_name = escape(`${SUBPATH}/${name}`);
         url = `${URL}/@@connector-rename?resource_name=${resource_name}&new_name=${new_name}`; 
 
         $.ajax({
