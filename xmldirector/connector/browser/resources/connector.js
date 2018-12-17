@@ -61,6 +61,8 @@ function actions_renderer(cell, formatterParams, onRendered) {
 }
 
 
+table = null;
+
 function build_table() {        
     var columns = [ 
         {title:"Name", field:"name", width: 450, formatter: name_renderer, headerFilter: true},
@@ -79,7 +81,7 @@ function build_table() {
         method: 'GET',
         success: function(result) {
 
-        var table = new Tabulator("#files-table", {
+        table = new Tabulator("#files-table", {
             height:450,
             data:result, //assign data to table
             layout:"fitColumns", //fit columns to width of table (optional)
@@ -119,6 +121,10 @@ $(document).ready(function() {
         $('#zip-upload').toggle(speed); 
     });
 
+    $('#page_size').on('change', function() {
+        var page_size = $(this).val();
+        table.setPageSize(page_size);
+    });
 
     $('.legend-close').on('click', function() {
         $(this).parents('fieldset').hide();

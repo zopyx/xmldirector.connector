@@ -49,6 +49,18 @@
         <span i18n:translate="">Connector is readonly</span>
     </div>
 
+    <div id="pagiation">
+        <span i18n:translate="">Items per page</span>:
+        <select name="page_size" id="page_size">
+            <option value="15">15</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+            <option value="99999999">unlimited</option>
+        </select>
+    </div>
+
     <div id="files-table"></div>
 
     <div id="actions" tal:condition="view/can_edit">
