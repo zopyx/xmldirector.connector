@@ -57,6 +57,12 @@ function actions_renderer(cell, formatterParams, onRendered) {
             s += ` <a class="raw-link" href="${data.highlight_url}" title="View" alt="View"><img src="++resource++xmldirector.connector/images/eye.png"/></a>`;
         }
     }
+    if (data.can_remove) {
+            s += ` <a class="remove-link" data-name="${data.name}" href="${data.highlight_url}" title="Remove" alt="Remove"><img src="++resource++xmldirector.connector/images/remove.png"/></a>`;
+
+            s += ` <a class="rename-link" data-name="${data.name}" href="${data.highlight_url}" title="Rename" alt="Rename"><img src="++resource++xmldirector.connector/images/rename.png"/></a>`;
+
+    }
     return s;
 }
 
@@ -138,6 +144,88 @@ $(document).ready(function() {
         maxFilesize: 50,
         addRemoveLinks: false,
         parallelUploads: 1
+    });
+
+    $('.rename-link').on('click', function(event) {
+
+        event.preventDefault()
+
+        var name = $(this).data('name');        
+        var resource_name = escape(`${SUBPATH}/${name}`);
+
+        var new_name = prompt("Enter new name", name);
+        if (new_name == null || new_name =="") {
+            return false
+        }
+
+
+        url = `${URL}/@@connector-rename?resource_name=${resource_name}&new_name=${new_name}`; 
+
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            async: false,
+            method: 'POST',
+            success: function(result) {
+
+                /* remove entry from table */
+                var rows = table.getRows();
+                for (i=0; i<rows.length; i++) {
+                    var row = rows[i];
+                    var data = row.getData();
+                    console.log(data);
+                    if (data.name == name) {
+/*                        table.updateData({id: i, name: "oo"});
+                        alert(`Renamed ${resource_name} to ${new_name}`); 
+                        */
+                        break;
+                    }
+                }
+            } ,
+            error: function(result) {
+                alert(`Error renaming ${resource_name}`);
+            }
+        });
+
+        return false;
+    });
+
+    $('.remove-link').on('click', function(event) {
+
+        event.preventDefault()
+
+        var name = $(this).data('name');        
+        var resource_name = escape(`${SUBPATH}/${name}`);
+
+        url = `${URL}/@@connector-remove?resource_name=${resource_name}`; 
+
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            async: false,
+            method: 'POST',
+            success: function(result) {
+
+                alert(`Deleted sucessfully: ${resource_name}`); 
+
+                /* remove entry from table */
+                var rows = table.getRows();
+                for (i=0; i<rows.length; i++) {
+                    var row = rows[i];
+                    var data = row.getData();
+                    if (data.name == name) {
+                        row.delete();
+                        break;
+                    }
+                }
+            } ,
+            error: function(result) {
+                alert(`Error deleting ${resource_name}`);
+            }
+        });
+
+
+        return false;
     });
 
     $('.modified').each(function(index, item) {

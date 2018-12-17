@@ -40,6 +40,24 @@
     />
 
     <browser:page
+        name="connector-remove"
+        for="xmldirector.connector.connector.IConnector"
+        class=".connector.Connector"
+        attribute="remove"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        name="connector-rename"
+        for="xmldirector.connector.connector.IConnector"
+        class=".connector.Connector"
+        attribute="rename"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
         name="connector-upload"
         for="xmldirector.connector.connector.IConnector"
         class=".connector.Connector"

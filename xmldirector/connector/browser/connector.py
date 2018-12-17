@@ -193,6 +193,7 @@ class Connector(RawConnector):
         f = furl.furl(connector_url)
 
         context_url = self.context.absolute_url()
+        is_readonly = self.is_readonly
 
         if f.scheme in ['dlna']:
 
@@ -223,6 +224,7 @@ class Connector(RawConnector):
                         user=user,
                         group=group,
                         modified=modified,
+                        can_remove=not is_readonly,
                         view_url='{}/view/{}/{}'.format(
                             context_url, subpath, name),
                         raw_url='{}/raw/{}/{}'.format(context_url, subpath,
@@ -275,6 +277,7 @@ class Connector(RawConnector):
                         user=user,
                         group=group,
                         modified=modified,
+                        can_remove=not is_readonly,
                         view_url='{}/view/{}/{}'.format(
                             context_url, subpath, row.name),
                         raw_url='{}/raw/{}/{}'.format(context_url, subpath,
@@ -305,6 +308,65 @@ class Connector(RawConnector):
             fp.write(data)
 
         self.request.response.setStatus(200)
+
+    def rename(self, resource_name, new_name):
+        """ Rename a resource """
+
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
+
+        resource_name = safe_unicode(resource_name)
+        new_name = safe_unicode(new_name)
+
+        dirname = fs.path.dirname(resource_name)
+        new_resource_name = fs.path.join(dirname, new_name)
+        handle = self.context.get_handle()
+
+        if handle.isfile(resource_name):
+            handle.move(resource_name, new_resource_name)
+        else:
+            handle.movedir(resource_name, new_resource_name)
+
+        msg = _('Renamed {} to {}').format(resource_name, new_name)
+        self.request.response.setStatus(200)
+
+    def remove(self, resource_name):
+        """ Remove a resource by path/name """
+
+        if self.is_readonly:
+            raise zExceptions.Forbidden(_('Connector is readonly'))
+
+        subpath = safe_unicode(self.request.get('subpath', self.subpath))
+
+        handle = self.context.get_handle()
+        if not handle.exists(resource_name):
+            msg = 'Not found {}'.format(resource_name)
+            raise zExceptions.NotFound(msg)
+
+        if handle.isdir(resource_name):
+            try:
+                handle.removedir(resource_name, recursive=True, force=True)
+            except Exception as e:
+                msg = _('{} could not be deleted ({})').format(resource_name)
+                self.request.response.setStatus(500)
+                return msg
+
+        elif handle.isfile(resource_name):
+
+            try:
+                handle.remove(resource_name)
+            except Exception as e:
+                msg = _('{} could not be deleted ({})').format(resource_name)
+                self.request.response.setStatus(500)
+                return msg
+
+        else:
+            msg = _('Unhandled file type for {}').format(resource_name)
+            raise RuntimeError(msg)
+
+        msg = _('Deleted {}').format(resource_name)
+        self.request.response.setStatus(200)
+
 
     def new_folder(self, name, subpath=None):
         """ Create a new collection ``name`` inside the folder ``subpath `` """
