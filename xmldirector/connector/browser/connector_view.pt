@@ -12,7 +12,6 @@
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/tabulator.min.css">
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/dropzone.css">
     <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/styles.css">
-    <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/jquery.spin.css">
 
     <script>
         window.__define = window.define;
@@ -25,7 +24,6 @@
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/tabulator.min.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/dropzone.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/connector.js"> </script>
-    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/jquery.spin.js"> </script>
     <script type="text/javascript" tal:content="string: var PAGE_SIZE = '${page_size}'"></script>
     <script type="text/javascript" tal:content="string: var URL = '${context/absolute_url}'"></script>
     <script type="text/javascript" tal:content="string: var UPLOAD_URL = '${context/absolute_url}/@@connector-upload'"></script>
@@ -68,9 +66,6 @@
         <span i18n:translate="">Connector is readonly</span>
     </div>
 
-
-
-    <div class="spinner" data-spin />
     <div id="files-table"></div>
 
     <div id="actions" tal:condition="view/can_edit">
