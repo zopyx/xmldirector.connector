@@ -91,6 +91,10 @@ class RawConnector(BrowserView):
         return self
 
     @property
+    def connector_url(self):
+        return self.context.get_connector_url(self.subpath, hide_password=True)
+
+    @property
     def is_readonly(self):
         return self.context.connector_readonly
 
@@ -105,6 +109,7 @@ class RawConnector(BrowserView):
 
     @property
     def subpath(self):
+        return '/'.join(self._subpath)
         return '/'.join(self._subpath) or '.'
 
     def __call__(self):
@@ -348,7 +353,7 @@ class Connector(RawConnector):
 
         if handle.isdir(resource_name):
             try:
-                handle.removedir(resource_name, recursive=True, force=True)
+                handle.removetree(resource_name)
             except Exception as e:
                 msg = _('{} could not be deleted ({})').format(resource_name)
                 self.request.response.setStatus(500)
