@@ -322,10 +322,13 @@ class Connector(RawConnector):
         new_resource_name = fs.path.join(dirname, new_name)
         handle = self.context.get_handle()
 
+        if handle.exists(new_resource_name):
+            raise ValueError(_('Target {} exists').format(resource_name))
+
         if handle.isfile(resource_name):
             handle.move(resource_name, new_resource_name)
         else:
-            handle.movedir(resource_name, new_resource_name)
+            fs.move.move_dir(handle, resource_name, handle, new_resource_name)
 
         msg = _('Renamed {} to {}').format(resource_name, new_name)
         self.request.response.setStatus(200)

@@ -79,7 +79,7 @@
           </legend>
           <form method="POST" tal:attributes="action string:${context/absolute_url}/connector-new-folder">
               <div>
-                  <input type="name" name="name" size="60" id="name" />
+                  <input type="name" name="name:unicode" size="60" id="name" />
                   <input type="hidden" name="subpath" tal:attributes="value view/subpath | nothing" placeholder="Folder name" i18n:attributes="placeholder"/>
               </div>
               <div style="margin-top: 1em;margin-bottom: 2em">

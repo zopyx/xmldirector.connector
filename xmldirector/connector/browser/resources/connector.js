@@ -72,10 +72,10 @@ table = null;
 function build_table() {        
     var columns = [ 
         {title:"Name", field:"name", width: 450, formatter: name_renderer, headerFilter: true},
-        {title:"User", field:"user", formatter: user_renderer, headerFilter: true},
-        {title:"Modified", field:"modified", formatter: modified_renderer},
-        {title:"Size", field:"size", formatter: size_renderer},
-        {title:"Actions", field:"actions", formatter: actions_renderer},
+        {title:"User", field:"user", formatter: user_renderer, headerFilter: true, align: "center"},
+        {title:"Modified", field:"modified", formatter: modified_renderer, align: "center"},
+        {title:"Size", field:"size", formatter: size_renderer, align: "center"},
+        {title:"Actions", field:"actions", formatter: actions_renderer, align: "right"},
     ];
 
     var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
@@ -166,16 +166,12 @@ $(document).ready(function() {
             method: 'POST',
             success: function(result) {
 
-                /* remove entry from table */
                 var rows = table.getRows();
                 for (i=0; i<rows.length; i++) {
                     var row = rows[i];
                     var data = row.getData();
-                    console.log(data);
                     if (data.name == name) {
-/*                        table.updateData({id: i, name: "oo"});
-                        alert(`Renamed ${resource_name} to ${new_name}`); 
-                        */
+                        table.updateRow(row, {name: new_name});
                         break;
                     }
                 }
@@ -193,7 +189,7 @@ $(document).ready(function() {
         event.preventDefault()
 
         var name = $(this).data('name');        
-        var resource_name = escape(`${SUBPATH}/${name}`);
+        var resource_name = `${SUBPATH}/${name}`;
 
         url = `${URL}/@@connector-remove?resource_name:unicode=${resource_name}`; 
 
