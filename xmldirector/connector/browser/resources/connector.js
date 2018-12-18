@@ -157,8 +157,6 @@ function build_table() {
         {title:"Actions", field:"actions", formatter: actions_renderer, align: "right"},
     ];
 
-    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
-
     table = new Tabulator("#files-table", {
         height:450,
         layout:"fitColumns", //fit columns to width of table (optional)
@@ -168,11 +166,19 @@ function build_table() {
         columns: columns,
     });
 
+    load_data_into_table();
+}
+
+
+function load_data_into_table()  {
+
+    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
+
     table.setData(url).
         then(function() {
             $('#pagination').show()
             setup_click_handlers();
-        })
+        });
 }
 
 
@@ -216,9 +222,14 @@ $(document).ready(function() {
         url: UPLOAD_URL,
         maxFilesize: 50,
         addRemoveLinks: false,
-        parallelUploads: 1
+        parallelUploads: 3,
+        queuecomplete()  {
+            load_data_into_table();
+        },
+        complete(file) {
+            this.removeFile(file);
+        }
     });
-
 
     $('.modified').each(function(index, item) {
         var modified = $(item).data('modified');
