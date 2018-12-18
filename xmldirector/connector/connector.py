@@ -74,7 +74,8 @@ class IConnector(model.Schema):
 
 @implementer(IConnector)
 class Connector(Item):
-    def get_connector_url(self, subpath=None):
+
+    def get_connector_url(self, subpath=None, hide_password=False):
 
         url = ''
         username = ''
@@ -103,7 +104,7 @@ class Connector(Item):
         if username:
             f.username = username
         if password:
-            f.password = password
+            f.password = 'secret' if hide_password else password
         if self.connector_subpath:
             f.path.add(self.connector_subpath)
         if subpath:

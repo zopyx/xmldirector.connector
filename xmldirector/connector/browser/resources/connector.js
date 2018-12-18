@@ -29,7 +29,8 @@ function type_renderer(cell, formatterParams, onRendered) {
 
 function user_renderer(cell, formatterParams, onRendered) {
     var data = cell.getData();
-    return data.user + "." + data.group;
+    if (data.user != '' && data.group != '')
+        return data.user + "." + data.group;
 }
 
 function modified_renderer(cell, formatterParams, onRendered) {
@@ -66,86 +67,7 @@ function actions_renderer(cell, formatterParams, onRendered) {
     return s;
 }
 
-
-table = null;
-
-function build_table() {        
-    var columns = [ 
-        {title:"Name", field:"name", width: 450, formatter: name_renderer, headerFilter: true},
-        {title:"User", field:"user", formatter: user_renderer, headerFilter: true, align: "center"},
-        {title:"Modified", field:"modified", formatter: modified_renderer, align: "center"},
-        {title:"Size", field:"size", formatter: size_renderer, align: "center"},
-        {title:"Actions", field:"actions", formatter: actions_renderer, align: "right"},
-    ];
-
-    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
-
-    $.ajax({
-        url: url,
-        dataType: 'json',
-        async: false,
-        method: 'GET',
-        success: function(result) {
-
-            table = new Tabulator("#files-table", {
-                height:450,
-                data:result, //assign data to table
-                layout:"fitColumns", //fit columns to width of table (optional)
-                pagination:"local",
-                paginationSize: PAGE_SIZE,
-                movableColumns:true,
-                columns: columns,
-            });
-
-            /* move #pagination into tabulator footer */
-            $('#pagination').prependTo('.tabulator-footer');
-        } 
-    });
-}
-
-
-Dropzone.autoDiscover = false;
-speed = 250;
-
-$(document).ready(function() {
-
-    build_table();
-
-    new Clipboard('.clipboard');
-
-    $('#action-upload').on('click', function() {
-        $('#zip-upload').hide(0); 
-        $('#uploadify').toggle(speed); 
-    });
-
-    $('#action-new-folder').on('click', function() {
-        $('#uploadify').hide(0); 
-        $('#zip-upload').hide(0); 
-        $('#new-folder').toggle(speed); 
-    });
-
-    $('#action-zip-import').on('click', function() {
-        $('#uploadify').hide(0); 
-        $('#new-folder').hide(0); 
-        $('#zip-upload').toggle(speed); 
-    });
-
-    $('#page_size').on('change', function() {
-        var page_size = $(this).val();
-        table.setPageSize(page_size);
-    });
-
-    $('.legend-close').on('click', function() {
-        $(this).parents('fieldset').hide();
-    });
-
-    $("#dropzone").dropzone({ 
-        url: UPLOAD_URL,
-        maxFilesize: 50,
-        addRemoveLinks: false,
-        parallelUploads: 1
-    });
-
+function setup_click_handlers() {
     $('.rename-link').on('click', function(event) {
 
         event.preventDefault()
@@ -185,7 +107,6 @@ $(document).ready(function() {
     });
 
     $('.remove-link').on('click', function(event) {
-
         event.preventDefault()
 
         var name = $(this).data('name');        
@@ -221,6 +142,83 @@ $(document).ready(function() {
 
         return false;
     });
+}
+
+
+table = null;
+
+function build_table() {        
+
+    var columns = [ 
+        {title:"Name", field:"name", width: 450, formatter: name_renderer, headerFilter: true},
+        {title:"User", field:"user", formatter: user_renderer, headerFilter: true, align: "center"},
+        {title:"Modified", field:"modified", formatter: modified_renderer, align: "center"},
+        {title:"Size", field:"size", formatter: size_renderer, align: "center"},
+        {title:"Actions", field:"actions", formatter: actions_renderer, align: "right"},
+    ];
+
+    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
+
+    table = new Tabulator("#files-table", {
+        height:450,
+        layout:"fitColumns", //fit columns to width of table (optional)
+        pagination:"local",
+        paginationSize: PAGE_SIZE,
+        movableColumns:true,
+        columns: columns,
+    });
+
+    table.setData(url).
+        then(function() {
+            $('#pagination').show()
+            setup_click_handlers();
+        })
+}
+
+
+Dropzone.autoDiscover = false;
+speed = 250;
+
+$(document).ready(function() {
+
+    build_table();
+
+    new Clipboard('.clipboard');
+
+    $('#action-upload').on('click', function() {
+        $('#new-folder').hide(0); 
+        $('#zip-upload').hide(0); 
+        $('#uploadify').toggle(speed); 
+    });
+
+    $('#action-new-folder').on('click', function() {
+        $('#uploadify').hide(0); 
+        $('#zip-upload').hide(0); 
+        $('#new-folder').toggle(speed); 
+    });
+
+    $('#action-zip-import').on('click', function() {
+        $('#uploadify').hide(0); 
+        $('#new-folder').hide(0); 
+        $('#zip-upload').toggle(speed); 
+    });
+
+    $('#page_size').on('change', function() {
+        var page_size = $(this).val();
+        table.setPageSize(page_size);
+    });
+
+    $('.legend-close').on('click', function() {
+        $(this).parents('fieldset').hide();
+    });
+
+    $("#dropzone").dropzone({ 
+        url: UPLOAD_URL,
+        maxFilesize: 50,
+        addRemoveLinks: false,
+        parallelUploads: 1
+    });
+
 
     $('.modified').each(function(index, item) {
         var modified = $(item).data('modified');
