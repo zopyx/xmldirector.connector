@@ -7,6 +7,7 @@ xmldirector.connector
 - local filesystem
 - WebDAV-backed backend
 - AWS S3
+- remote servers over SFTP/SSH
 
 ``xmldirector.plonecore`` provides a ``Connector`` content-type that
 mounts a particular storage into Plone. 
@@ -82,6 +83,13 @@ AWS S3
 - `s3://bucketname`
 - enter your AWS access key as username and the AWS secret key as password
   (You need to install the Python package `fs-s3fs` through buildout).
+
+SSH/SFTP
+++++++++
+
+- `ssh://hostname.com` or `sftp://hostname.com`
+  (You need to install the Python package `fs.sshfs` through buildout).
+
 
 
 API notes
