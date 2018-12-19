@@ -68,6 +68,11 @@ function actions_renderer(cell, formatterParams, onRendered) {
 }
 
 function setup_click_handlers() {
+
+    $('#table-refresh').on('click', function(event) {
+        load_data_into_table();
+    });
+
     $('.rename-link').on('click', function(event) {
 
         event.preventDefault()

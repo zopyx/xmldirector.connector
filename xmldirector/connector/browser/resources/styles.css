@@ -34,6 +34,13 @@
     margin-right: 8px;
 }
 
+#table-refresh {
+    background-image: url(++resource++xmldirector.connector/images/reload.svg);
+    margin: 0 auto;
+    width: 20px;
+    display: inline-block;
+}
+
 #connector-readonly {
     font-size:80%;
     font-style: italic;

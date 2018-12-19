@@ -55,6 +55,7 @@
                 <option value="500">500</option>
                 <option value="99999999">unlimited</option>
             </select>
+            <a id="table-refresh" i18n:translate="" title="Refresh" alt="Refresh">&nbsp;</a>
             <div id="connector-url" tal:condition="view/can_edit" style="display: none">
                 <span tal:content="view/connector_url"/>
             </div>

@@ -37,7 +37,7 @@ def supported_protocols():
 
 
 SUPPORTED_FS_SCHEMAS = supported_protocols()
-LOG.warn('Supported fs protocols:', SUPPORTED_FS_SCHEMAS)
+LOG.warn('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
 
 
 class IConnector(model.Schema):
