@@ -142,7 +142,6 @@ function setup_click_handlers() {
             method: 'POST',
             success: function(result) {
 
-
                 /* remove entry from table */
                 var rows = table.getRows();
                 for (i=0; i<rows.length; i++) {
