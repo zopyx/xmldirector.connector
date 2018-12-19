@@ -49,12 +49,12 @@
         <div id="pagination" style="display: none">
             <span i18n:translate="">Items per page</span>:
             <select name="page_size" id="page_size">
-                <option value="15">15</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="250">250</option>
-                <option value="500">500</option>
-                <option value="99999999">unlimited</option>
+                <option value="15" i18n:translate="">15</option>
+                <option value="50" i18n:translate="">50</option>
+                <option value="100" i18n:translate="">100</option>
+                <option value="250" i18n:translate="">250</option>
+                <option value="500" i18n:translate="">500</option>
+                <option value="99999999" i18n:translate="">unlimited</option>
             </select>
             <a id="table-refresh" i18n:translate="" title="Refresh" alt="Refresh">&nbsp;</a>
             <div id="connector-url" tal:condition="view/can_edit" style="display: none">
