@@ -34,190 +34,190 @@ msgstr ""
 #: xmldirector.connector:/browser/connector.py:436
 #: xmldirector.connector:/browser/connector_view.pt:69
 msgid "Connector is readonly"
-msgstr ""
+msgstr "Connector ist nicht beschreibbar"
 
 #: xmldirector.connector:/browser/connector.py:330
-    msgid "Target {} exists"
-    msgstr ""
+msgid "Target {} exists"
+msgstr "Ziel {} existiert"
 
 #: xmldirector.connector:/browser/connector.py:337
-    msgid "Renamed {} to {}"
-    msgstr ""
+msgid "Renamed {} to {}"
+msgstr "{} in {} umbenannt"
 
 #: xmldirector.connector:/browser/connector.py:357
 #: xmldirector.connector:/browser/connector.py:366
-    msgid "{} could not be deleted ({})"
-    msgstr ""
+msgid "{} could not be deleted ({})"
+msgstr "{} konnte nicht gelöscht werden ({})"
 
 #: xmldirector.connector:/browser/connector.py:371
-    msgid "Unhandled file type for {}"
-    msgstr ""
+msgid "Unhandled file type for {}"
+msgstr "Unbekannter Dateitype für {}"
 
 #: xmldirector.connector:/browser/connector.py:374
-    msgid "Deleted {}"
-    msgstr ""
+msgid "Deleted {}"
+msgstr "Gelöscht {}"
 
 #: xmldirector.connector:/browser/connector.py:389
-    msgid "{}/{} already exists found"
-    msgstr ""
+msgid "{}/{} already exists found"
+msgstr "{}/{} existiert bereits"
 
 #: xmldirector.connector:/browser/connector.py:397
-    msgid "{}/{} could not be created ({})"
-    msgstr ""
+msgid "{}/{} could not be created ({})"
+msgstr "{}/{} konnte nicht angelegt werden ({})"
 
 #: xmldirector.connector:/browser/connector.py:403
-    msgid "Created {}/{}"
-    msgstr ""
+msgid "Created {}/{}"
+msgstr "Angelegt {}/{}"
 
 #: xmldirector.connector:/browser/connector.py:430
-    msgid "Uploaded ZIP archive imported"
-    msgstr ""
+msgid "Uploaded ZIP archive imported"
+msgstr "ZIP Archiv wurde importiert"
 
 #: xmldirector.connector:/browser/connector_view.pt:42
-    msgid "Path:"
-    msgstr "Pfad:"
+msgid "Path:"
+msgstr "Pfad:"
 
 #: xmldirector.connector:/browser/connector_view.pt:50
-    msgid "Items per page"
-    msgstr ""
+msgid "Items per page"
+msgstr "Einträge je Seite"
 
 #: xmldirector.connector:/browser/connector_view.pt:52
-    msgid "15"
-    msgstr ""
+msgid "15"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:53
-    msgid "50"
-    msgstr ""
+msgid "50"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:54
-    msgid "100"
-    msgstr ""
+msgid "100"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:55
-    msgid "250"
-    msgstr ""
+msgid "250"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:56
-    msgid "500"
-    msgstr ""
+msgid "500"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:57
-    msgid "unlimited"
-    msgstr ""
+msgid "unlimited"
+msgstr "unbegrenzt"
 
 #: xmldirector.connector:/browser/connector_view.pt:59
-    msgid "&nbsp;"
-    msgstr ""
+msgid "&nbsp;"
+msgstr "&nbsp;"
 
 #: xmldirector.connector:/browser/connector_view.pt:75
 #: xmldirector.connector:/browser/connector_view.pt:94
-    msgid "New folder"
-    msgstr "Neuer Ordner"
+msgid "New folder"
+msgstr "Neuer Ordner"
 
 #: xmldirector.connector:/browser/connector_view.pt:76
-    msgid "ZIP import"
-    msgstr "ZIP Import"
+msgid "ZIP import"
+msgstr "ZIP Import"
 
 #: xmldirector.connector:/browser/connector_view.pt:77
-    msgid "Upload"
-    msgstr "Dateien Upload"
+msgid "Upload"
+msgstr "Dateien Upload"
 
 #: xmldirector.connector:/browser/connector_view.pt:86
-    msgid "New folder <a class=\"legend-close\" title=\"x\"></a>"
-    msgstr ""
+msgid "New folder <a class=\"legend-close\" title=\"x\"></a>"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:86
 #: xmldirector.connector:/browser/connector_view.pt:101
 #: xmldirector.connector:/browser/connector_view.pt:123
-    msgid "Close"
-    msgstr "Schliessen"
+msgid "Close"
+msgstr "Schliessen"
 
 #: xmldirector.connector:/browser/connector_view.pt:91
-    msgid "Folder name"
-    msgstr "Name des Ordners"
+msgid "Folder name"
+msgstr "Name des Ordners"
 
 #: xmldirector.connector:/browser/connector_view.pt:101
-    msgid "ZIP import <a class=\"legend-close\" title=\"x\"></a>"
-    msgstr ""
+msgid "ZIP import <a class=\"legend-close\" title=\"x\"></a>"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:103
-    msgid "Use this form for uploading a ZIP file. The ZIP file will be unzipped. <br /> The ZIP file may contain nested directories."
-    msgstr ""
+msgid "Use this form for uploading a ZIP file. The ZIP file will be unzipped. <br /> The ZIP file may contain nested directories."
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:111
-    msgid "ZIP file"
-    msgstr ""
+msgid "ZIP file"
+msgstr "ZIP Datei"
 
 #: xmldirector.connector:/browser/connector_view.pt:116
-    msgid "UPLOAD"
-    msgstr ""
+msgid "UPLOAD"
+msgstr "Hochladen"
 
 #: xmldirector.connector:/browser/connector_view.pt:123
-    msgid "Multi/single file upload <a class=\"legend-close\" title=\"x\"></a>"
-    msgstr ""
+msgid "Multi/single file upload <a class=\"legend-close\" title=\"x\"></a>"
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:125
-    msgid "Use this form for uploading a single or multiple files."
-    msgstr ""
+msgid "Use this form for uploading a single or multiple files."
+msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:130
-    msgid "Drop file here or click to upload"
-    msgstr ""
+msgid "Drop file here or click to upload"
+msgstr ""
 
 #: xmldirector.connector:/browser/controlpanel.py:29
-    msgid "XML Director Connector settings"
-    msgstr ""
+msgid "XML Director Connector settings"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:46
-    msgid "(optional) connection URL of storage"
-    msgstr ""
+msgid "(optional) connection URL of storage"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:47
 #. Default: "SFTP sftp://host/path, FTP: ftp://host/path"
-    msgid "WebDAV: http://host:port/path/to/webdav, Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, "
-    msgstr ""
+msgid "WebDAV: http://host:port/path/to/webdav, Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, "
+msgstr ""
 
 #: xmldirector.connector:/connector.py:55
-    msgid "(optional) username overriding the system settings"
-    msgstr ""
+msgid "(optional) username overriding the system settings"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:59
-    msgid "(optional) password overriding the system settings"
-    msgstr ""
+msgid "(optional) password overriding the system settings"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:63
-    msgid "Subdirectory relative to the global connection URL"
-    msgstr ""
+msgid "Subdirectory relative to the global connection URL"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:64
-    msgid "Use this value for configuring a more specific subpath"
-    msgstr ""
+msgid "Use this value for configuring a more specific subpath"
+msgstr ""
 
 #: xmldirector.connector:/connector.py:69
-    msgid "Readonly access"
-    msgstr ""
+msgid "Readonly access"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:27
-    msgid "Connection URL of storage"
-    msgstr ""
+msgid "Connection URL of storage"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:28
-    msgid "WebDAV: http://host:port/path/to/webdav,Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path, FTP: ftp://host/path"
-    msgstr ""
+msgid "WebDAV: http://host:port/path/to/webdav,Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path, FTP: ftp://host/path"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:36
-    msgid "Username for external storage"
-    msgstr ""
+msgid "Username for external storage"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:37
-    msgid "Username"
-    msgstr ""
+msgid "Username"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:42
-    msgid "Password external storage"
-    msgstr ""
+msgid "Password external storage"
+msgstr ""
 
 #: xmldirector.connector:/interfaces.py:43
-    msgid "Password"
-    msgstr ""
+msgid "Password"
+msgstr ""
 
