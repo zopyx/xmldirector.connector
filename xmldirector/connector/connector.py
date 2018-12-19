@@ -35,7 +35,7 @@ def supported_protocols():
 
 
 SUPPORTED_FS_SCHEMAS = supported_protocols()
-LOG.warn('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
+LOG.info('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
 
 
 class IConnector(model.Schema):
@@ -43,10 +43,9 @@ class IConnector(model.Schema):
     connector_url = schema.TextLine(
         title=_(u'(optional) connection URL of storage'),
         description=_(
-            u'WebDAV: http://host:port/path/to/webdav, '
-            'Local filesystem: file://path/to/directory, '
-            'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path, '
-            'FTP: ftp://host/path'),
+            u'WebDAV: webdav://host:port/path/to/webdav, '
+            'local filesystem: file://path/to/directory, '
+            'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path'),
         required=False)
 
     connector_username = schema.TextLine(
@@ -105,7 +104,7 @@ class Connector(Item):
             f.path.add(subpath)
 
         if f.scheme not in SUPPORTED_FS_SCHEMAS:
-            LOG.warn('Unsupported scheme: {}'.format(f.scheme))
+            LOG.warning('Unsupported scheme: {}'.format(f.scheme))
         return f.tostr()
 
     def get_handle(self, subpath=None):

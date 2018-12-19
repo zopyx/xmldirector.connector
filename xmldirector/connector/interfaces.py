@@ -23,10 +23,9 @@ class IConnectorSettings(Interface):
 
     connector_url = schema.TextLine(
         title=_(u'Connection URL of storage'),
-        description=_(u'WebDAV: http://host:port/path/to/webdav,'
-                      'Local filesystem: file://path/to/directory, '
-                      'AWS S3: s3://bucketname, SFTP sftp://host/path, '
-                      'FTP: ftp://host/path'),
+        description=_(u'WebDAV: webdav://host:port/path/to/webdav, '
+                      'local filesystem: file://path/to/directory, '
+                      'AWS S3: s3://bucketname, SFTP sftp://host/path'),
         default=u'',
         required=True)
 

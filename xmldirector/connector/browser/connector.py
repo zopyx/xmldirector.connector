@@ -42,8 +42,6 @@ def safe_unicode(s):
     return s
 
 
-
-
 @implementer(IStreamIterator)
 class connector_iterator():
     """ Iterator for pyfilesystem content """
@@ -219,6 +217,7 @@ class Connector(RawConnector):
                         is_dir=False,
                         size=size,
                         mimetype=mimetype,
+                        full_path = fs.path.join(subpath, row.name),
                         ext=ext,
                         user=user,
                         group=group,
@@ -272,6 +271,7 @@ class Connector(RawConnector):
                         is_dir=row.is_dir,
                         size=size,
                         mimetype=mimetype,
+                        full_path = fs.path.join(subpath, row.name),
                         ext=ext,
                         user=user,
                         group=group,
@@ -285,6 +285,21 @@ class Connector(RawConnector):
                             context_url, subpath, row.name)
                         if is_text else None,
                     ))
+
+        # directory up entry
+        if subpath:
+            full_path = fs.path.join(*fs.path.parts(subpath)[:-1])
+            result.insert(0, dict(
+                full_path=full_path,
+                name='..',
+                is_file=False,
+                is_dir=True,
+                size=0,
+                mimetype=None,
+                user=None,
+                group=None,
+                can_remove=False
+            ))
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(result)

@@ -83,23 +83,23 @@ msgstr "Einträge je Seite"
 
 #: xmldirector.connector:/browser/connector_view.pt:52
 msgid "15"
-msgstr ""
+msgstr "15"
 
 #: xmldirector.connector:/browser/connector_view.pt:53
 msgid "50"
-msgstr ""
+msgstr "50"
 
 #: xmldirector.connector:/browser/connector_view.pt:54
 msgid "100"
-msgstr ""
+msgstr "100"
 
 #: xmldirector.connector:/browser/connector_view.pt:55
 msgid "250"
-msgstr ""
+msgstr "250"
 
 #: xmldirector.connector:/browser/connector_view.pt:56
 msgid "500"
-msgstr ""
+msgstr "500"
 
 #: xmldirector.connector:/browser/connector_view.pt:57
 msgid "unlimited"
@@ -124,7 +124,7 @@ msgstr "Dateien Upload"
 
 #: xmldirector.connector:/browser/connector_view.pt:86
 msgid "New folder <a class=\"legend-close\" title=\"x\"></a>"
-msgstr ""
+msgstr "Neuer Ordner <a class=\"legend-close\" title=\"x\"></a>"
 
 #: xmldirector.connector:/browser/connector_view.pt:86
 #: xmldirector.connector:/browser/connector_view.pt:101
@@ -142,7 +142,7 @@ msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:103
 msgid "Use this form for uploading a ZIP file. The ZIP file will be unzipped. <br /> The ZIP file may contain nested directories."
-msgstr ""
+msgstr "Mit diesem Formular können Sie eine ZIP Datei hochlanden, die auf dem Server automatisch entpackt wird."
 
 #: xmldirector.connector:/browser/connector_view.pt:111
 msgid "ZIP file"
@@ -154,7 +154,7 @@ msgstr "Hochladen"
 
 #: xmldirector.connector:/browser/connector_view.pt:123
 msgid "Multi/single file upload <a class=\"legend-close\" title=\"x\"></a>"
-msgstr ""
+msgstr "Upload/Mehrfach-Upload<a class=\"legend-close\" title=\"x\"></a>"
 
 #: xmldirector.connector:/browser/connector_view.pt:125
 msgid "Use this form for uploading a single or multiple files."
@@ -162,7 +162,7 @@ msgstr "Mit diesem Formular können Sie eine oder mehrere Dateien hochladen"
 
 #: xmldirector.connector:/browser/connector_view.pt:130
 msgid "Drop file here or click to upload"
-msgstr "Ziehen Sie eine Datein in den Bereich oder klicken für Upload"
+msgstr "Ziehen Sie eine Dateien in den Bereich oder klicken für Upload"
 
 #: xmldirector.connector:/browser/controlpanel.py:29
 msgid "XML Director Connector settings"
@@ -191,7 +191,7 @@ msgstr "Unterverzeichnis relative zur globablen URL des externen Speicherdienste
 
 #: xmldirector.connector:/connector.py:64
 msgid "Use this value for configuring a more specific subpath"
-msgstr ""
+msgstr "optionaler Unterpfad relativ zur URL des Mountpoints"
 
 #: xmldirector.connector:/connector.py:69
 msgid "Readonly access"
@@ -202,8 +202,8 @@ msgid "Connection URL of storage"
 msgstr "URL des externen Dienstes"
 
 #: xmldirector.connector:/interfaces.py:28
-msgid "WebDAV: http://host:port/path/to/webdav,Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path, FTP: ftp://host/path"
-msgstr ""
+msgid "WebDAV: webdav://host:port/path/to/webdav, local filesystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path"
+msgstr "WebDAV: webdav://host:port/path/to/webdav, lokales Dateisystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path"
 
 #: xmldirector.connector:/interfaces.py:36
 msgid "Username for external storage"

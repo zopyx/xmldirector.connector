@@ -7,8 +7,10 @@ function bytesToSize(bytes) {
 
 function name_renderer(cell, formatterParams, onRendered) {
     var data = cell.getData();
-    if (data.is_dir) 
+    if (data.is_dir)  {
+        return `<a class="type-directory" data-subpath="${data.full_path}">${data.name}</a>`;
         return `<a class="type-directory" data-ext="${data.ext}" href="${data.view_url}">${data.name}</a>`;
+    }
     else {
         if (data.highlight_url) {
             return `<a class="type-file" data-ext="${data.ext}" href="${data.highlight_url}">${data.name}</a>`;
@@ -81,6 +83,15 @@ function setup_click_handlers() {
     $('#table-refresh').on('click', function(event) {
         load_data_into_table();
     });
+
+
+    /* Click on directory link -> in-place reload */
+    $('.type-directory').on('click', function(event) {
+        event.preventDefault();
+        var subpath = $(this).data('subpath');
+        window.history.pushState(subpath, subpath, `${URL}/view/${subpath}`);
+        load_data_into_table(subpath);
+    })
 
     $('.rename-link').on('click', function(event) {
 
@@ -192,9 +203,13 @@ function build_table() {
 }
 
 
-function load_data_into_table()  {
+function load_data_into_table(subpath=null)  {
 
-    var url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
+    var url = '';
+    if (subpath != null) 
+        url = URL + '/@@connector-folder-contents?subpath:unicode=' + subpath;
+    else
+        url = URL + '/@@connector-folder-contents?subpath:unicode=' + SUBPATH;
 
     table.setData(url).
         then(function() {
