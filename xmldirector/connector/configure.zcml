@@ -7,7 +7,7 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:pp="http://namespaces.zopyx.com/pp"
     xmlns:plone="http://namespaces.plone.org/plone"
-    i18n_domain="xmldirector.plonecore"
+    i18n_domain="xmldirector.connector"
     >
 
     <include package="plone.browserlayer" />
