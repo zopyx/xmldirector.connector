@@ -100,6 +100,14 @@ Every `Connector` instance in Plone gives you access to the mounted storage thro
 `handle = connector.get_handle()` call which is instance of `fs.base.FS`. Check
 https://docs.pyfilesystem.org for details.
 
+Security
+++++++++
+
+The mounted storage gives you access to all contents inside the mounted
+subtree.  The mount is sandboxes
+(https://docs.pyfilesystem.org/en/latest/concepts.html#sandboxing). So you can
+not escape and access content outside the mounted storage.
+
 Available drivers
 +++++++++++++++++
 
