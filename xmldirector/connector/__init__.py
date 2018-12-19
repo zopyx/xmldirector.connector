@@ -5,7 +5,6 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-import os
 import sys
 
 from xmldirector.connector.logger import LOG

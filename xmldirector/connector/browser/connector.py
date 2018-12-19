@@ -5,8 +5,6 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-
-import io
 import os
 import fs
 import fs.zipfs
@@ -14,11 +12,9 @@ import six
 import time
 import json
 import furl
-import datetime
 import tempfile
 import fs.errors
 import fs.path
-import operator
 import mimetypes
 import unicodedata
 import logging
@@ -27,6 +23,7 @@ import zExceptions
 import plone.api
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
+from ZPublisher.Iterators import IStreamIterator
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFCore import permissions
 from Products.Five.browser import BrowserView
@@ -45,7 +42,6 @@ def safe_unicode(s):
     return s
 
 
-from ZPublisher.Iterators import IStreamIterator
 
 
 @implementer(IStreamIterator)
@@ -78,7 +74,6 @@ class connector_iterator():
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
-
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
@@ -373,7 +368,6 @@ class Connector(RawConnector):
 
         msg = _('Deleted {}').format(resource_name)
         self.request.response.setStatus(200)
-
 
     def new_folder(self, name, subpath=None):
         """ Create a new collection ``name`` inside the folder ``subpath `` """

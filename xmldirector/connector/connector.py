@@ -10,7 +10,6 @@ import fs.errors
 import furl
 import pkg_resources
 
-import zExceptions
 from zope import schema
 from zope.interface import implementer
 from zope.component import getUtility
@@ -20,7 +19,6 @@ from plone.registry.interfaces import IRegistry
 
 from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IConnectorSettings
-from xmldirector.connector.interfaces import IConnectorHandle
 from xmldirector.connector.logger import LOG
 
 # determine all entry points
@@ -66,15 +64,11 @@ class IConnector(model.Schema):
         required=False)
 
     connector_readonly = schema.Bool(
-        title=_(u'Readonly access'),
-        default=False,
-        required=False
-    )
+        title=_(u'Readonly access'), default=False, required=False)
 
 
 @implementer(IConnector)
 class Connector(Item):
-
     def get_connector_url(self, subpath=None, hide_password=False):
 
         url = ''
