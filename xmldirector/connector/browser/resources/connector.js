@@ -84,6 +84,7 @@ function setup_click_handlers() {
 
     $('.rename-link').on('click', function(event) {
 
+        $('#files-table').block();
         event.preventDefault()
 
         var name = $(this).data('name');        
@@ -95,10 +96,11 @@ function setup_click_handlers() {
         var resource_name = `${SUBPATH}/${name}`;
         url = `${URL}/@@connector-rename?resource_name:unicode=${resource_name}&new_name:unicode=${new_name}`; 
 
+
         $.ajax({
             url: url,
             dataType: 'json',
-            async: false,
+            async: true,
             method: 'POST',
             success: function(result) {
 
@@ -109,12 +111,14 @@ function setup_click_handlers() {
                     if (data.name == name) {
                         table.updateRow(row, {name: new_name});
                         notify(`Renamed ${resource_name} to ${new_name}`);
+                        $('#files-table').unblock();
                         break;
                     }
                 }
             } ,
             error: function(result) {
                 notify(`Error renaming ${resource_name}`);
+                $('#files-table').unblock();
             }
         });
 
@@ -122,8 +126,10 @@ function setup_click_handlers() {
     });
 
     $('.remove-link').on('click', function(event) {
-        event.preventDefault()
 
+        $('#files-table').block();
+        event.preventDefault()
+        
         var name = $(this).data('name');        
         var resource_name = `${SUBPATH}/${name}`;
 
@@ -132,11 +138,10 @@ function setup_click_handlers() {
         $.ajax({
             url: url,
             dataType: 'json',
-            async: false,
+            async: true,
             method: 'POST',
             success: function(result) {
 
-                notify(`Deleted sucessfully: ${resource_name}`); 
 
                 /* remove entry from table */
                 var rows = table.getRows();
@@ -145,15 +150,17 @@ function setup_click_handlers() {
                     var data = row.getData();
                     if (data.name == name) {
                         row.delete();
+                        $('#files-table').unblock();
+                        notify(`Deleted sucessfully: ${resource_name}`); 
                         break;
                     }
                 }
             } ,
             error: function(result) {
                 notify(`Error deleting ${resource_name}`);
+                $('#files-table').unblock();
             }
         });
-
 
         return false;
     });

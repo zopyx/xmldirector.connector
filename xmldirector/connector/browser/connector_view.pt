@@ -24,6 +24,7 @@
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/tabulator.min.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/dropzone.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/connector.js"> </script>
+    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/jquery.blockUI.js"> </script>
     <script type="text/javascript" tal:content="string: var PAGE_SIZE = '${page_size}'"></script>
     <script type="text/javascript" tal:content="string: var URL = '${context/absolute_url}'"></script>
     <script type="text/javascript" tal:content="string: var UPLOAD_URL = '${context/absolute_url}/@@connector-upload'"></script>
