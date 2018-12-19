@@ -158,19 +158,19 @@ msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:125
 msgid "Use this form for uploading a single or multiple files."
-msgstr ""
+msgstr "Mit diesem Formular können Sie eine oder mehrere Dateien hochladen"
 
 #: xmldirector.connector:/browser/connector_view.pt:130
 msgid "Drop file here or click to upload"
-msgstr ""
+msgstr "Ziehen Sie eine Datein in den Bereich oder klicken für Upload"
 
 #: xmldirector.connector:/browser/controlpanel.py:29
 msgid "XML Director Connector settings"
-msgstr ""
+msgstr "XML Director Connector Voreinstellungen"
 
 #: xmldirector.connector:/connector.py:46
 msgid "(optional) connection URL of storage"
-msgstr ""
+msgstr "optionale URL des Speicherdienstes"
 
 #: xmldirector.connector:/connector.py:47
 #. Default: "SFTP sftp://host/path, FTP: ftp://host/path"
@@ -179,15 +179,15 @@ msgstr ""
 
 #: xmldirector.connector:/connector.py:55
 msgid "(optional) username overriding the system settings"
-msgstr ""
+msgstr "optionaler Benutzername"
 
 #: xmldirector.connector:/connector.py:59
 msgid "(optional) password overriding the system settings"
-msgstr ""
+msgstr "optionales Passwort"
 
 #: xmldirector.connector:/connector.py:63
 msgid "Subdirectory relative to the global connection URL"
-msgstr ""
+msgstr "Unterverzeichnis relative zur globablen URL des externen Speicherdienstes"
 
 #: xmldirector.connector:/connector.py:64
 msgid "Use this value for configuring a more specific subpath"
@@ -195,11 +195,11 @@ msgstr ""
 
 #: xmldirector.connector:/connector.py:69
 msgid "Readonly access"
-msgstr ""
+msgstr "Lesezugriff (kein Schreibzugriff)"
 
 #: xmldirector.connector:/interfaces.py:27
 msgid "Connection URL of storage"
-msgstr ""
+msgstr "URL des externen Dienstes"
 
 #: xmldirector.connector:/interfaces.py:28
 msgid "WebDAV: http://host:port/path/to/webdav,Local filesystem: file://path/to/directory, AWS S3: s3://bucketname, SFTP sftp://host/path, FTP: ftp://host/path"
@@ -207,17 +207,17 @@ msgstr ""
 
 #: xmldirector.connector:/interfaces.py:36
 msgid "Username for external storage"
-msgstr ""
+msgstr "Benutzername des externen Dienstes"
 
 #: xmldirector.connector:/interfaces.py:37
 msgid "Username"
-msgstr ""
+msgstr "Benutzername"
 
 #: xmldirector.connector:/interfaces.py:42
 msgid "Password external storage"
-msgstr ""
+msgstr "Passwort des externen Dienstes"
 
 #: xmldirector.connector:/interfaces.py:43
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
