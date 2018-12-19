@@ -41,6 +41,14 @@
     display: inline-block;
 }
 
+.legend-close {
+    background-image: url(++resource++xmldirector.connector/images/cancel.svg);
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
 #connector-readonly {
     font-size:80%;
     font-style: italic;

@@ -45,11 +45,9 @@ def safe_unicode(s):
 
 
 from ZPublisher.Iterators import IStreamIterator
-from ZPublisher.Iterators import IUnboundStreamIterator
 
 
-#@implementer(IStreamIterator)
-@implementer(IUnboundStreamIterator)
+@implementer(IStreamIterator)
 class connector_iterator():
     """ Iterator for pyfilesystem content """
 
