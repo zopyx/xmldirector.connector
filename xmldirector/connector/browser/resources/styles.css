@@ -34,6 +34,11 @@
     margin-right: 8px;
 }
 
+#table-message {
+    float: left;
+    max-width: 50%;
+}
+
 #table-refresh {
     background-image: url(++resource++xmldirector.connector/images/reload.svg);
     margin: 0 auto;

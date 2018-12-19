@@ -67,6 +67,15 @@ function actions_renderer(cell, formatterParams, onRendered) {
     return s;
 }
 
+
+function notify(s) {
+    $('#table-message').fadeOut(0, 0, function () {
+        $(this).html(s);
+        $(this).show();
+        $(this).fadeOut(2500);
+    });
+}
+
 function setup_click_handlers() {
 
     $('#table-refresh').on('click', function(event) {
@@ -99,12 +108,13 @@ function setup_click_handlers() {
                     var data = row.getData();
                     if (data.name == name) {
                         table.updateRow(row, {name: new_name});
+                        notify(`Renamed ${resource_name} to ${new_name}`);
                         break;
                     }
                 }
             } ,
             error: function(result) {
-                alert(`Error renaming ${resource_name}`);
+                notify(`Error renaming ${resource_name}`);
             }
         });
 
@@ -126,7 +136,7 @@ function setup_click_handlers() {
             method: 'POST',
             success: function(result) {
 
-                alert(`Deleted sucessfully: ${resource_name}`); 
+                notify(`Deleted sucessfully: ${resource_name}`); 
 
                 /* remove entry from table */
                 var rows = table.getRows();
@@ -140,7 +150,7 @@ function setup_click_handlers() {
                 }
             } ,
             error: function(result) {
-                alert(`Error deleting ${resource_name}`);
+                notify(`Error deleting ${resource_name}`);
             }
         });
 
@@ -168,9 +178,10 @@ function build_table() {
         pagination:"local",
         paginationSize: PAGE_SIZE,
         movableColumns:true,
-        columns: columns,
+        columns: columns
     });
 
+    $('#table-message').prependTo('.tabulator-footer')
     load_data_into_table();
 }
 

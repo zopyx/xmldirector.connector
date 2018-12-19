@@ -60,6 +60,7 @@
                 <span tal:content="view/connector_url"/>
             </div>
         </div>
+        <div id="table-message"></div>
     </div>
     <div class="clear"></div>
 
