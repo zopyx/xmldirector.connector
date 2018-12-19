@@ -91,12 +91,12 @@ a.type-file:before {
     vertical-align: middle;
 }
 
+
 a.type-directory:before {
     background-image: url(++resource++xmldirector.connector/images/directory.svg) !important;
     width: 18px;
     height: 18px;
 }
-
 
 
 a.type-file:before {

@@ -296,8 +296,8 @@ class Connector(RawConnector):
                 is_dir=True,
                 size=0,
                 mimetype=None,
-                user=None,
-                group=None,
+                user='',
+                group='',
                 can_remove=False
             ))
 

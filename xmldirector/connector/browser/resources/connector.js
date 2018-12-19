@@ -84,9 +84,7 @@ function setup_click_handlers() {
         load_data_into_table();
     });
 
-
-    /* Click on directory link -> in-place reload */
-    $('.type-directory').on('click', function(event) {
+    $('.type-directory,.type-directory-bc').on('click', function(event) {
         event.preventDefault();
         var subpath = $(this).data('subpath');
         window.history.pushState(subpath, subpath, `${URL}/view/${subpath}`);
@@ -215,7 +213,23 @@ function load_data_into_table(subpath=null)  {
         then(function() {
             $('#pagination').show()
             setup_click_handlers();
+            update_breadcrumbs(subpath);
         });
+}
+
+
+function update_breadcrumbs(subpath) {
+
+    var parts = subpath.split('/');
+    var s = '<a class="type-directory-bc root" data-subpath="/">root<a>';
+    for (i=0; i<parts.length; i++) {
+        console.log(parts[i]);
+        var this_subpath = parts.slice(0, i+1).join('/');
+        s += '/';
+        s += `<a class="type-directory-bc" data-subpath="${this_subpath}">${parts[i]}</a>`;
+    }
+    $('#breadcrumbs-generated').html(s);
+    setup_click_handlers();
 }
 
 

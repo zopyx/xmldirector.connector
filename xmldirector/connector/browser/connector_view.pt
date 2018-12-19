@@ -40,11 +40,7 @@
     <div>
         <div id="breadcrumbs">
             <span i18n:translate="">Path:</span>
-            <a tal:attributes="href string:${context/absolute_url}/view/">/</a>
-            <tal:loop repeat="bc view/breadcrumbs">
-                <a tal:attributes="href bc/href" tal:content="bc/title"/>
-                <a tal:condition="not: repeat/bc/end">/</a>
-            </tal:loop>
+            <span id="breadcrumbs-generated">XXX</span>
         </div>
         <div id="pagination" style="display: none">
             <span i18n:translate="">Items per page</span>:
