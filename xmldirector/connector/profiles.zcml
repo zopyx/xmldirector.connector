@@ -4,9 +4,9 @@
 
     <genericsetup:registerProfile
         name="default"
-        title="Mounts storages over WebDAV, S3, SSH/SFTP oder local filesystem into Plone"
+        title="XML-Director Connector"
+        description="Mounts storages over WebDAV, S3, SSH/SFTP oder local filesystem into Plone"
         directory="profiles/default"
-        description="XML-Director Connector"
         provides="Products.GenericSetup.interfaces.EXTENSION"
     />
 
