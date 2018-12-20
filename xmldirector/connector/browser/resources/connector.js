@@ -1,3 +1,5 @@
+"use strict";
+
 function bytesToSize(bytes) {
     var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes == 0) return '0 Byte';
@@ -103,7 +105,7 @@ function setup_click_handlers() {
         }
 
         var resource_name = `${SUBPATH}/${name}`;
-        url = `${URL}/@@connector-rename?resource_name:unicode=${resource_name}&new_name:unicode=${new_name}`; 
+        var url = `${URL}/@@connector-rename?resource_name:unicode=${resource_name}&new_name:unicode=${new_name}`; 
 
 
         $.ajax({
@@ -114,7 +116,7 @@ function setup_click_handlers() {
             success: function(result) {
 
                 var rows = table.getRows();
-                for (i=0; i<rows.length; i++) {
+                for (var i=0; i<rows.length; i++) {
                     var row = rows[i];
                     var data = row.getData();
                     if (data.name == name) {
@@ -142,7 +144,7 @@ function setup_click_handlers() {
         var name = $(this).data('name');        
         var resource_name = `${SUBPATH}/${name}`;
 
-        url = `${URL}/@@connector-remove?resource_name:unicode=${resource_name}`; 
+        var url = `${URL}/@@connector-remove?resource_name:unicode=${resource_name}`; 
 
         $.ajax({
             url: url,
@@ -153,7 +155,7 @@ function setup_click_handlers() {
 
                 /* remove entry from table */
                 var rows = table.getRows();
-                for (i=0; i<rows.length; i++) {
+                for (var i=0; i<rows.length; i++) {
                     var row = rows[i];
                     var data = row.getData();
                     if (data.name == name) {
@@ -175,7 +177,7 @@ function setup_click_handlers() {
 }
 
 
-table = null;
+var table = null;
 
 function build_table() {        
 
@@ -213,17 +215,17 @@ function load_data_into_table(subpath=null)  {
         then(function() {
             $('#pagination').show()
             setup_click_handlers();
-            update_breadcrumbs(subpath);
+            update_breadcrumbs(subpath == null ? SUBPATH : subpath);
         });
 }
 
 
 function update_breadcrumbs(subpath) {
-
     var parts = subpath.split('/');
-    var s = '<a class="type-directory-bc root" data-subpath="/">root<a>';
-    for (i=0; i<parts.length; i++) {
-        console.log(parts[i]);
+//    parts = parts.filter(function(el) {return el.length >0});
+    parts  = parts.filter(el => el.length > 0);
+    var s = '<a class="type-directory-bc root" data-subpath="">root<a>';
+    for (var i=0; i<parts.length; i++) {
         var this_subpath = parts.slice(0, i+1).join('/');
         s += '/';
         s += `<a class="type-directory-bc" data-subpath="${this_subpath}">${parts[i]}</a>`;
@@ -234,7 +236,7 @@ function update_breadcrumbs(subpath) {
 
 
 Dropzone.autoDiscover = false;
-speed = 250;
+var speed = 250;
 
 $(document).ready(function() {
 

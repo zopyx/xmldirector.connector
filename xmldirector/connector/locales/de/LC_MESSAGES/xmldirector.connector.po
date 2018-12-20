@@ -153,8 +153,8 @@ msgid "UPLOAD"
 msgstr "Hochladen"
 
 #: xmldirector.connector:/browser/connector_view.pt:123
-msgid "Multi/single file upload <a class=\"legend-close\" title=\"x\"></a>"
-msgstr "Upload/Mehrfach-Upload<a class=\"legend-close\" title=\"x\"></a>"
+msgid "Multi/single file upload"
+msgstr "Upload/Mehrfach-Upload"
 
 #: xmldirector.connector:/browser/connector_view.pt:125
 msgid "Use this form for uploading a single or multiple files."

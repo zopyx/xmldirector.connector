@@ -40,7 +40,7 @@
     <div>
         <div id="breadcrumbs">
             <span i18n:translate="">Path:</span>
-            <span id="breadcrumbs-generated">XXX</span>
+            <span id="breadcrumbs-generated"></span>
         </div>
         <div id="pagination" style="display: none">
             <span i18n:translate="">Items per page</span>:

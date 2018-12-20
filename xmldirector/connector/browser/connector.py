@@ -390,6 +390,9 @@ class Connector(RawConnector):
         if self.is_readonly:
             raise zExceptions.Forbidden(_('Connector is readonly'))
 
+        if not name:
+            raise ValueError(_('No name given'))
+
         name = safe_unicode(name)
         subpath = safe_unicode(subpath or self.subpath)
         handle = self.context.get_handle(subpath)
