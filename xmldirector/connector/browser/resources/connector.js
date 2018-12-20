@@ -222,7 +222,6 @@ function load_data_into_table(subpath=null)  {
 
 function update_breadcrumbs(subpath) {
     var parts = subpath.split('/');
-//    parts = parts.filter(function(el) {return el.length >0});
     parts  = parts.filter(el => el.length > 0);
     var s = '<a class="type-directory-bc root" data-subpath="">root<a>';
     for (var i=0; i<parts.length; i++) {

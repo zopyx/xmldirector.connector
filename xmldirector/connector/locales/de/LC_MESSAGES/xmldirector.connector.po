@@ -141,7 +141,7 @@ msgid "ZIP import <a class=\"legend-close\" title=\"x\"></a>"
 msgstr ""
 
 #: xmldirector.connector:/browser/connector_view.pt:103
-msgid "Use this form for uploading a ZIP file. The ZIP file will be unzipped. <br /> The ZIP file may contain nested directories."
+msgid "Use this form for uploading a ZIP file. The ZIP file will be unzipped. The ZIP file may contain nested directories."
 msgstr "Mit diesem Formular können Sie eine ZIP Datei hochlanden, die auf dem Server automatisch entpackt wird."
 
 #: xmldirector.connector:/browser/connector_view.pt:111
