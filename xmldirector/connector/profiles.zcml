@@ -11,6 +11,14 @@
     />
 
     <genericsetup:registerProfile
+        name="uninstall"
+        title="XML-Director Connector (uninstall)"
+        directory="profiles/uninstall"
+        description="XML-Director Connector (uninstall)"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+   
+    <genericsetup:registerProfile
         name="testing"
         title="XML-Director Connector (testing)"
         directory="profiles/testing"
