@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################
-# xmldirector.plonecore
-# (C) 2016,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
+# xmldirector.connector
+# (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
-
 
 import os
 import six
