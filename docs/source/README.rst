@@ -2,14 +2,14 @@ xmldirector.connector
 =====================
 
 
-``xmldirector.plonecore`` integrates  Plone 5 with 
+``xmldirector.connector`` integrates  Plone 5 with 
 
 - local filesystem
 - WebDAV-backed backend
 - AWS S3
 - remote servers over SFTP/SSH
 
-``xmldirector.plonecore`` provides a ``Connector`` content-type that
+``xmldirector.connector`` provides a ``Connector`` content-type that
 mounts a particular storage into Plone. 
 
 No support for indexing and search mounted content.
