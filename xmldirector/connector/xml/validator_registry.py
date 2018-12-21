@@ -6,6 +6,7 @@
 ################################################################
 
 
+import io
 import os
 import time
 import fs.opener
@@ -183,9 +184,15 @@ class Validator(object):
 
     def validate(self, xml):
 
-        if isinstance(xml, basestring):
+        if isinstance(xml, str):
             try:
                 root = defusedxml.lxml.fromstring(xml)
+            except lxml.etree.XMLSyntaxError as e:
+                return ValidationResult([u'Invalid XML ({})'.format(e)])
+
+        elif isinstance(xml, bytes):
+            try:
+                root = defusedxml.lxml.parse(io.BytesIO(xml))
             except lxml.etree.XMLSyntaxError as e:
                 return ValidationResult([u'Invalid XML ({})'.format(e)])
 

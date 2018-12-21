@@ -14,5 +14,3 @@ class ITransformerRegistry(Interface):
 
 class IValidatorRegistry(Interface):
     """ Marker interface for TransformerRegistry """
-
-
