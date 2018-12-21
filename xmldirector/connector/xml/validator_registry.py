@@ -54,11 +54,11 @@ class ValidatorRegistry(object):
             handle = fs.open_fs(directory)
         except Exception as e:
             raise IOError(
-                u'Directory "{}" does not exist ({})'.format(directory, e))
+                'Directory "{}" does not exist ({})'.format(directory, e))
 
         for name in handle.listdir('.'):
             fullname = os.path.join(directory, name)
-            LOG.debug(u'Parsing "{}"'.format(fullname))
+            LOG.debug('Parsing "{}"'.format(fullname))
             base, ext = os.path.splitext(name)
 
             registered_name = name
@@ -79,7 +79,7 @@ class ValidatorRegistry(object):
                         schema_doc = lxml.etree.XML(fp.read())
                         validator = lxml.etree.XMLSchema(schema_doc)
                     except Exception as e:
-                        LOG.error(u'Unable to parse XML Schema ({}, {})'.format(
+                        LOG.error('Unable to parse XML Schema ({}, {})'.format(
                             name, e), exc_info=True)
                         continue
                     validator_type = 'XSD'
@@ -151,7 +151,7 @@ class ValidatorRegistry(object):
 
     def entries(self):
         """ All entries as sorted list """
-        result = self.registry.values()
+        result = list(self.registry.values())
         return sorted(result, key=operator.itemgetter('family', 'name'))
 
 
@@ -166,7 +166,7 @@ class ValidationResult(object):
         self.errors = errors or []
         self.validator = validator
 
-    def __nonzero__(self):
+    def __bool__(self):
         return not self.errors
 
     def __str__(self):
@@ -188,13 +188,13 @@ class Validator(object):
             try:
                 root = defusedxml.lxml.fromstring(xml)
             except lxml.etree.XMLSyntaxError as e:
-                return ValidationResult([u'Invalid XML ({})'.format(e)])
+                return ValidationResult(['Invalid XML ({})'.format(e)])
 
         elif isinstance(xml, bytes):
             try:
                 root = defusedxml.lxml.parse(io.BytesIO(xml))
             except lxml.etree.XMLSyntaxError as e:
-                return ValidationResult([u'Invalid XML ({})'.format(e)])
+                return ValidationResult(['Invalid XML ({})'.format(e)])
 
         elif isinstance(xml, lxml.etree._Element):
             root = xml

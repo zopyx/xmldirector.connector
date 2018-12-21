@@ -36,9 +36,9 @@ class TransformerRegistry(object):
             # ``transformer_path`` is Python function here
             transform = transformer_path
             if six.PY2:
-                method_filename = transform.func_code.co_filename
+                method_filename = transform.__code__.co_filename
                 transformer_path = '{}(), {}'.format(
-                    transformer_path.func_name, transformer_path.func_code.co_filename)
+                    transformer_path.__name__, transformer_path.__code__.co_filename)
             else:
                 method_filename = transform.__code__.co_filename
                 transformer_path = '{}(), {}'.format(
@@ -46,7 +46,7 @@ class TransformerRegistry(object):
 
         else:
             raise ValueError(
-                u'Unsupported transformer type "{}"'.format(transformer_type))
+                'Unsupported transformer type "{}"'.format(transformer_type))
 
         key = '{}::{}'.format(family, transformer_name)
         if key in self.registry:
@@ -66,7 +66,7 @@ class TransformerRegistry(object):
 
     def entries(self):
         """ Return all entries of the registry sorted by family + name """
-        result = self.registry.values()
+        result = list(self.registry.values())
         return sorted(result, key=operator.itemgetter('family', 'name'))
 
     def clear(self):

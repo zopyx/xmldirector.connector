@@ -6,6 +6,7 @@
 ################################################################
 
 import os
+import six
 import time
 import tempfile
 import defusedxml.lxml
@@ -59,7 +60,7 @@ class Transformer(object):
             self,
             xml_or_node,
             input_encoding=None,
-            output_encoding=unicode,
+            output_encoding=six.text_type,
             return_fragment=None,
             pretty_print=False,
             debug=False):
@@ -79,11 +80,11 @@ class Transformer(object):
             LOG.info('Transformation debug directory: {}'.format(debug_dir))
 
         # Convert XML string into a root node
-        if isinstance(xml_or_node, basestring):
-            if not isinstance(xml_or_node, unicode):
+        if isinstance(xml_or_node, str):
+            if not isinstance(xml_or_node, six.text_type):
                 if not input_encoding:
-                    raise TypeError('Input data must be unicode')
-                    xml_or_node = unicode(xml_or_node, input_encoding)
+                    raise TypeError('Input data must be unicode|str')
+                    xml_or_node = six.text_type(xml_or_node, input_encoding)
             root = defusedxml.lxml.fromstring(xml_or_node.strip())
 
         elif isinstance(xml_or_node, lxml.etree._Element):
@@ -91,7 +92,7 @@ class Transformer(object):
 
         else:
             raise TypeError(
-                u'Unsupported type {}'.format(xml_or_node.__class__))
+                'Unsupported type {}'.format(xml_or_node.__class__))
 
         # run the transformation chain
         for step_no, step in enumerate(self.steps):
@@ -136,10 +137,10 @@ class Transformer(object):
                     'No tag <{}> found in transformed document'.format(return_fragment))
             return_node = node
 
-        if output_encoding == unicode:
+        if output_encoding == six.text_type:
             return lxml.etree.tostring(
                 return_node,
-                encoding=unicode,
+                encoding=six.text_type,
                 pretty_print=pretty_print)
         else:
             return lxml.etree.tostring(
