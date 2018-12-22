@@ -21,6 +21,7 @@ import logging
 
 import zExceptions
 import plone.api
+from zope.component import queryUtility
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 from ZPublisher.Iterators import IStreamIterator
@@ -30,6 +31,8 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from xmldirector.connector.i18n import MessageFactory as _
+from xmldirector.connector.interfaces import IViewDispatcher
+
 
 TEXT_MIMETYPES = set(['application/json', 'application/javascript'])
 
@@ -152,6 +155,12 @@ class Connector(RawConnector):
     template = ViewPageTemplateFile('connector_view.pt')
 
     def __call__(self, *args, **kw):
+
+        dispatcher = queryUtility(IViewDispatcher)
+        if dispatcher:
+            url = dispatcher(self.context).get_url()
+            if url:
+                return self.request.response.redirect(url)
         return self.template()
 
     def _is_text(self, mimetype):

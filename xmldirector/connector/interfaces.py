@@ -15,7 +15,14 @@ class IBrowserLayer(Interface):
 
 
 class IConnectorHandle(Interface):
-    """ Return a DAVFS handle for the system-wide configured conector handle """
+    """ Return a handle for the system-wide configured conector handle """
+
+
+class IViewDispatcher(Interface):
+    """ Marker interface for view dispatcher """
+
+    def get_url(context):
+        """ Return a redirection URL """
 
 
 class IConnectorSettings(Interface):
