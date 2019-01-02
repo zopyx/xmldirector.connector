@@ -75,6 +75,7 @@ class connector_iterator():
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
+
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
@@ -117,15 +118,19 @@ class RawConnector(BrowserView):
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
-        #        self.request.response.setHeader(
-        #           'content-length', handle.getsize(filename))
         if 'download' in self.request.form:
             self.request.response.setHeader(
                 'content-disposition', 'attachment; filename={}'.format(
                     os.path.basename(filename)))
-        # iterator?
-
-        return connector_iterator(handle, filename)
+        content_length = handle.getsize(filename)
+        if content_length:
+            self.request.response.setHeader('content-length', str(content_length))
+            return connector_iterator(handle, filename)
+        else:
+            with handle.open(filename, 'rb') as fp:
+                data = fp.read()
+                self.request.response.setHeader('content-length', str(len(data)))
+                return data
 
 
 @implementer(IPublishTraverse)
