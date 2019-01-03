@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="xmldirector.connector">
+<body>
+
+    <metal:main fill-slot="main" tal:define="subpath view/subpath">
+        <link rel="stylesheet" tal:attributes="href string:$portal_url/++resource++xmldirector.connector/styles.css">
+        <h2 tal:content="subpath"/>
+        <div class="inline" tal:content="structure view/content"/>
+
+</metal:main>
+
+</body>
+</html>
+

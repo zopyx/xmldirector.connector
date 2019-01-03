@@ -1,3 +1,7 @@
+div.inline {
+    max-width: 100%;
+}
+
 #breadcrumbs {
     float: left;
 }

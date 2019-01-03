@@ -40,6 +40,15 @@
     />
 
     <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="inline"
+        class=".connector.InlineConnector"
+        template="connector_inline.pt"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
         name="connector-remove"
         for="xmldirector.connector.connector.IConnector"
         class=".connector.Connector"
@@ -74,7 +83,6 @@
         permission="cmf.ModifyPortalContent"
         layer="xmldirector.connector.interfaces.IBrowserLayer"
     />
-
 
     <browser:page
         for="xmldirector.connector.connector.IConnector"

@@ -155,6 +155,12 @@ class HighlightConnector(RawConnector):
 
 
 @implementer(IPublishTraverse)
+class InlineConnector(HighlightConnector):
+
+    template = ViewPageTemplateFile('connector_inline.pt')
+
+
+@implementer(IPublishTraverse)
 class Connector(RawConnector):
 
     template = ViewPageTemplateFile('connector_view.pt')
