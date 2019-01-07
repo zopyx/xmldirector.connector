@@ -7,8 +7,8 @@
 
 import fs
 import fs.errors
+from fs.opener import registry as fs_opener_registry
 import furl
-import pkg_resources
 
 from zope import schema
 from zope.interface import implementer
@@ -22,19 +22,7 @@ from xmldirector.connector.interfaces import IConnectorSettings
 from xmldirector.connector.logger import LOG
 
 # determine all entry points
-
-
-def supported_protocols():
-
-    protocols = []
-    for d in pkg_resources.working_set:
-        for protocol in pkg_resources.get_entry_map(d.project_name,
-                                                    'fs.opener'):
-            protocols.append(protocol)
-    return protocols
-
-
-SUPPORTED_FS_SCHEMAS = supported_protocols()
+SUPPORTED_FS_SCHEMAS = fs_opener_registry.protocols
 LOG.info('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
 
 
