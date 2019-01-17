@@ -169,7 +169,11 @@ class Connector(RawConnector):
 
         dispatcher = queryUtility(IViewDispatcher)
         if dispatcher:
-            url = dispatcher(self.context).get_url()
+            try:
+                url = dispatcher(self.context).get_url()
+            except Exception as e:
+                LOG.warn('Calling view dispatcher failed', exc_info=True)
+                url = None
             if url:
                 return self.request.response.redirect(url)
         return self.template()
