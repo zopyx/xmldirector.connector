@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:pp="http://namespaces.zopyx.com/pp"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="xmldirector.connector"
+    >
+
+    <utility
+        provides="xmldirector.connector.xml.interfaces.ITransformerRegistry"
+        component="xmldirector.connector.xml.transformer_registry.TransformerRegistryUtility"
+    />
+
+    <utility
+        provides="xmldirector.connector.xml.interfaces.IValidatorRegistry"
+        component="xmldirector.connector.xml.validator_registry.ValidatorRegistryUtility"
+    />
+</configure>
