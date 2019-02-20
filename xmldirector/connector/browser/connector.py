@@ -33,7 +33,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IViewDispatcher
 
-
 TEXT_MIMETYPES = set(['application/json', 'application/javascript'])
 
 LOG = logging.getLogger('xmldirector.connector')
@@ -75,7 +74,6 @@ class connector_iterator():
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
-
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
@@ -96,8 +94,7 @@ class RawConnector(BrowserView):
 
     @property
     def can_edit(self):
-        return not self.is_readonly and plone.api.user.has_permission(
-            permissions.ModifyPortalContent, obj=self.context)
+        return not self.is_readonly and plone.api.user.has_permission(permissions.ModifyPortalContent, obj=self.context)
 
     @property
     def messages(self):
@@ -119,9 +116,8 @@ class RawConnector(BrowserView):
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
         if 'download' in self.request.form:
-            self.request.response.setHeader(
-                'content-disposition', 'attachment; filename={}'.format(
-                    os.path.basename(filename)))
+            self.request.response.setHeader('content-disposition', 'attachment; filename={}'.format(
+                os.path.basename(filename)))
         content_length = handle.getsize(filename)
         if content_length:
             self.request.response.setHeader('content-length', str(content_length))
@@ -241,26 +237,21 @@ class Connector(RawConnector):
                         is_dir=False,
                         size=size,
                         mimetype=mimetype,
-                        full_path = fs.path.join(subpath, row.name),
+                        full_path=fs.path.join(subpath, name),
                         ext=ext,
                         user=user,
                         group=group,
                         modified=modified,
                         can_remove=not is_readonly,
-                        view_url='{}/view/{}/{}'.format(
-                            context_url, subpath, name),
-                        raw_url='{}/raw/{}/{}'.format(context_url, subpath,
-                                                      name),
-                        highlight_url='{}/highlight/{}/{}'.format(
-                            context_url, subpath, name) if is_text else None,
+                        view_url='{}/view/{}/{}'.format(context_url, subpath, name),
+                        raw_url='{}/raw/{}/{}'.format(context_url, subpath, name),
+                        highlight_url='{}/highlight/{}/{}'.format(context_url, subpath, name) if is_text else None,
                     ))
 
         else:
 
             handle = self.context.get_handle(subpath)
-            entries = list(
-                handle.filterdir(
-                    '.', namespaces=['basic', 'access', 'details']))
+            entries = list(handle.filterdir('.', namespaces=['basic', 'access', 'details']))
             result = []
             for row in sorted(entries, key=sort_key):
 
@@ -295,35 +286,32 @@ class Connector(RawConnector):
                         is_dir=row.is_dir,
                         size=size,
                         mimetype=mimetype,
-                        full_path = fs.path.join(subpath, row.name),
+                        full_path=fs.path.join(subpath, row.name),
                         ext=ext,
                         user=user,
                         group=group,
                         modified=modified,
                         can_remove=not is_readonly,
-                        view_url='{}/view/{}/{}'.format(
-                            context_url, subpath, row.name),
-                        raw_url='{}/raw/{}/{}'.format(context_url, subpath,
-                                                      row.name),
-                        highlight_url='{}/highlight/{}/{}'.format(
-                            context_url, subpath, row.name)
-                        if is_text else None,
+                        view_url='{}/view/{}/{}'.format(context_url, subpath, row.name),
+                        raw_url='{}/raw/{}/{}'.format(context_url, subpath, row.name),
+                        highlight_url='{}/highlight/{}/{}'.format(context_url, subpath, row.name) if is_text else None,
                     ))
 
         # directory up entry
         if subpath:
             full_path = fs.path.join(*fs.path.parts(subpath)[:-1])
-            result.insert(0, dict(
-                full_path=full_path,
-                name='..',
-                is_file=False,
-                is_dir=True,
-                size=0,
-                mimetype=None,
-                user='',
-                group='',
-                can_remove=False
-            ))
+            result.insert(
+                0,
+                dict(
+                    full_path=full_path,
+                    name='..',
+                    is_file=False,
+                    is_dir=True,
+                    size=0,
+                    mimetype=None,
+                    user='',
+                    group='',
+                    can_remove=False))
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(result)
@@ -424,46 +412,35 @@ class Connector(RawConnector):
         if handle.exists(name):
             msg = _('{}/{} already exists found').format(subpath, name)
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() +
-                                                  '/view/' + subpath)
+            return self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
 
         try:
             handle.makedir(name)
         except Exception as e:
-            msg = _('{}/{} could not be created ({})').format(
-                subpath, name, str(e))
+            msg = _('{}/{} could not be created ({})').format(subpath, name, str(e))
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() +
-                                                  '/' + subpath)
+            return self.request.response.redirect(self.context.absolute_url() + '/' + subpath)
 
         msg = _('Created {}/{}').format(subpath, name)
         self.messages.add(msg, 'info')
-        self.request.response.redirect(self.context.absolute_url() + '/view/' +
-                                       subpath + '/' + name)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath + '/' + name)
 
-    def zip_import_ui(self,
-                      zip_file=None,
-                      subpath=None,
-                      clean_directories=None):
+    def zip_import_ui(self, zip_file=None, subpath=None, clean_directories=None):
         """ Import WebDAV subfolder from an uploaded ZIP file """
 
         if self.is_readonly:
             raise zExceptions.Forbidden(_('Connector is readonly'))
 
         try:
-            imported_files = self.zip_import(zip_file, subpath,
-                                             clean_directories)
+            imported_files = self.zip_import(zip_file, subpath, clean_directories)
         except Exception as e:
             msg = u'ZIP import failed'
             LOG.error(msg, exc_info=True)
             return self.redirect(msg, 'error')
 
         self.logger.log(
-            'ZIP file imported ({}, {} files)'.format(zip_file,
-                                                      len(imported_files)),
-            details=imported_files)
-        return self.redirect(
-            _(u'Uploaded ZIP archive imported'), subpath=subpath)
+            'ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)), details=imported_files)
+        return self.redirect(_(u'Uploaded ZIP archive imported'), subpath=subpath)
 
     def zip_import(self, zip_file=None):
         """ Import subfolder from an uploaded ZIP file """
@@ -485,12 +462,9 @@ class Connector(RawConnector):
             zip_filename = zip_file
 
         if not zip_filename:
-            raise ValueError(
-                u'No filename detected. Did you really upload a ZIP file?')
+            raise ValueError(u'No filename detected. Did you really upload a ZIP file?')
         if not zip_filename.endswith('.zip'):
-            raise ValueError(
-                u'Uploaded file did not end with .zip. Did you really upload a ZIP file?'
-            )
+            raise ValueError(u'Uploaded file did not end with .zip. Did you really upload a ZIP file?')
 
         try:
             with fs.zipfs.ZipFS(zip_file, encoding='utf-8') as zip_handle:
@@ -500,11 +474,9 @@ class Connector(RawConnector):
                 dirs_created = set()
                 for i, name in enumerate(zip_handle.walk.files()):
 
-                    target_filename = unicodedata.normalize('NFC',
-                                                            name).lstrip('/')
+                    target_filename = unicodedata.normalize('NFC', name).lstrip('/')
                     if self.subpath:
-                        target_filename = u'{}/{}'.format(
-                            self.subpath, target_filename)
+                        target_filename = u'{}/{}'.format(self.subpath, target_filename)
 
                     target_dirname = '/'.join(target_filename.split('/')[:-1])
                     if target_dirname not in dirs_created:
@@ -512,8 +484,7 @@ class Connector(RawConnector):
                             handle.makedir(target_dirname, recreate=True)
                             dirs_created.add(target_dirname)
                         except Exception as e:
-                            LOG.error('Failed creating {} failed ({})'.format(
-                                target_dirname, e))
+                            LOG.error('Failed creating {} failed ({})'.format(target_dirname, e))
 
                     LOG.info(u'ZIP filename({})'.format(name))
 
@@ -527,5 +498,4 @@ class Connector(RawConnector):
             msg = 'Error opening ZIP file: {}'.format(e)
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/view/' +
-                                       self.subpath)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + self.subpath)

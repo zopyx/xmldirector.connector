@@ -37,13 +37,7 @@ class IConnectorSettings(Interface):
         required=True)
 
     connector_username = schema.TextLine(
-        title=_(u'Username for external storage'),
-        description=_(u'Username'),
-        default=u'admin',
-        required=False)
+        title=_(u'Username for external storage'), description=_(u'Username'), default=u'admin', required=False)
 
     connector_password = schema.Password(
-        title=_(u'Password external storage'),
-        description=_(u'Password'),
-        default=u'',
-        required=False)
+        title=_(u'Password external storage'), description=_(u'Password'), default=u'', required=False)

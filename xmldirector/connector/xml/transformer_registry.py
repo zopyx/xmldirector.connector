@@ -5,18 +5,14 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-import os
 import six
 import operator
-import lxml.etree
-import fs.opener
 import datetime
 
 from zope.interface import implementer
 
 from .interfaces import ITransformerRegistry
 from ..logger import LOG
-
 
 
 @implementer(ITransformerRegistry)
@@ -36,22 +32,16 @@ class TransformerRegistry(object):
             # ``transformer_path`` is Python function here
             transform = transformer_path
             if six.PY2:
-                method_filename = transform.__code__.co_filename
-                transformer_path = '{}(), {}'.format(
-                    transformer_path.__name__, transformer_path.__code__.co_filename)
+                transformer_path = '{}(), {}'.format(transformer_path.__name__, transformer_path.__code__.co_filename)
             else:
-                method_filename = transform.__code__.co_filename
-                transformer_path = '{}(), {}'.format(
-                    transformer_path.__name__, transformer_path.__code__.co_filename)
+                transformer_path = '{}(), {}'.format(transformer_path.__name__, transformer_path.__code__.co_filename)
 
         else:
-            raise ValueError(
-                'Unsupported transformer type "{}"'.format(transformer_type))
+            raise ValueError('Unsupported transformer type "{}"'.format(transformer_type))
 
         key = '{}::{}'.format(family, transformer_name)
         if key in self.registry:
-            raise ValueError(
-                'Transformation {}/{} already registered'.format(family, transformer_name))
+            raise ValueError('Transformation {}/{} already registered'.format(family, transformer_name))
 
         self.registry[key] = dict(
             transform=transform,
@@ -61,8 +51,7 @@ class TransformerRegistry(object):
             name=transformer_name,
             registered=datetime.datetime.utcnow())
 
-        LOG.debug(
-            'Transformer registered ({}, {})'.format(key, transformer_path))
+        LOG.debug('Transformer registered ({}, {})'.format(key, transformer_path))
 
     def entries(self):
         """ Return all entries of the registry sorted by family + name """
@@ -82,15 +71,17 @@ class TransformerRegistry(object):
 
         key = '{}::{}'.format(family, transformer_name)
         if key not in self.registry:
-            raise ValueError(
-                'Transformation {}/{} not registered'.format(family, transformer_name))
+            raise ValueError('Transformation {}/{} not registered'.format(family, transformer_name))
         d = self.registry[key]
         if d['type'] == 'python':
             return d['transform']
-        elif d['type'] == 'XSLT1':
-            return XSLT1Wrapper(d)
-        elif d['type'] in ('XSLT2', 'XSLT3'):
-            return SaxonWrapper(d)
+        else:
+            raise ValueError('Unsupported transformation type "{}"'.format(d['type']))
 
+
+#        elif d['type'] == 'XSLT1':
+#            return XSLT1Wrapper(d)
+#        elif d['type'] in ('XSLT2', 'XSLT3'):
+#            return SaxonWrapper(d)
 
 TransformerRegistryUtility = TransformerRegistry()

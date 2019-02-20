@@ -36,22 +36,16 @@ class IConnector(model.Schema):
             'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path'),
         required=False)
 
-    connector_username = schema.TextLine(
-        title=_(u'(optional) username overriding the system settings'),
-        required=False)
+    connector_username = schema.TextLine(title=_(u'(optional) username overriding the system settings'), required=False)
 
-    connector_password = schema.Password(
-        title=_(u'(optional) password overriding the system settings'),
-        required=False)
+    connector_password = schema.Password(title=_(u'(optional) password overriding the system settings'), required=False)
 
     connector_subpath = schema.TextLine(
         title=_(u'Subdirectory relative to the global connection URL'),
-        description=_(
-            u'Use this value for configuring a more specific subpath'),
+        description=_(u'Use this value for configuring a more specific subpath'),
         required=False)
 
-    connector_readonly = schema.Bool(
-        title=_(u'Readonly access'), default=False, required=False)
+    connector_readonly = schema.Bool(title=_(u'Readonly access'), default=False, required=False)
 
 
 @implementer(IConnector)
@@ -78,8 +72,7 @@ class Connector(Item):
         username = username or ''
         password = password or ''
         if not url:
-            raise ValueError(
-                'No connector URL configured (neither local nor global)')
+            raise ValueError('No connector URL configured (neither local nor global)')
 
         f = furl.furl(url)
         if username:

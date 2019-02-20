@@ -5,7 +5,6 @@
 # (C) 2016,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-
 import os
 import sys
 import uuid
@@ -22,21 +21,18 @@ is_mac = False
 
 
 class BasicTests(TestBase):
-
     def setUp(self):
         pass
 
     def tearDown(self):
         pass
 
-
     def testCheckPortalType(self):
         assert self.portal.connector.portal_type == 'xmldirector.connector.connector'
 
     def testCheckWebdavHandle(self):
         handle = self.portal.connector.get_handle()
-        self.assertEqual(
-            handle.url, CONNECTOR_URL + '/{}/'.format(PREFIX))
+        self.assertEqual(handle.url, CONNECTOR_URL + '/{}/'.format(PREFIX))
 
     def testFileCheck(self):
         handle = self.portal.connector.get_handle()
@@ -122,8 +118,7 @@ class BasicTests(TestBase):
         for name in handle.listdir():
             handle.removedir(name, False, True)
 
-        fn = os.path.join(os.path.dirname(__file__),
-                          'zip_data', 'created_macosx_finder.zip')
+        fn = os.path.join(os.path.dirname(__file__), 'zip_data', 'created_macosx_finder.zip')
         view = self._get_view()
         view.zip_import(fn)
         names = handle.listdir()
@@ -136,8 +131,7 @@ class BasicTests(TestBase):
         for name in handle.listdir():
             handle.removedir(name, False, True)
 
-        fn = os.path.join(os.path.dirname(__file__),
-                          'zip_data', 'created_macosx_zip.zip')
+        fn = os.path.join(os.path.dirname(__file__), 'zip_data', 'created_macosx_zip.zip')
         view = self._get_view()
         view.zip_import(fn)
         names = handle.listdir()
@@ -162,7 +156,7 @@ class BasicTests(TestBase):
         self.assertEqual('<html/>' in result.wrapped_object, True)
         self.assertEqual('wrapped_meta' in result.__dict__, True)
         info = result.wrapped_info
-#        self.assertEqual('modified_time' in info, True) # not supported in Marc Logic Server
+        #        self.assertEqual('modified_time' in info, True) # not supported in Marc Logic Server
         self.assertEqual('st_mode' in info, True)
 
     def testTraversalNonExistingPath(self):
@@ -172,14 +166,12 @@ class BasicTests(TestBase):
 
     def testRenderControlPanel(self):
         with self.assertRaises(zExceptions.Unauthorized):
-            view = self.portal.restrictedTraverse(
-                '@@xmldirector-core-settings')
+            view = self.portal.restrictedTraverse('@@xmldirector-core-settings')
             view()
 
         self.login('god')
         view = self.portal.restrictedTraverse('@@xmldirector-core-settings')
         view()
-
 
 
 def test_suite():

@@ -5,7 +5,6 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-
 import io
 import os
 import time
@@ -16,7 +15,6 @@ import defusedxml.lxml
 import lxml.etree
 import lxml.isoschematron
 from zope.interface import implementer
-from zope.interface import implements
 from xmldirector.connector.xml.interfaces import IValidatorRegistry
 from xmldirector.connector.logger import LOG
 
@@ -36,9 +34,7 @@ from xmldirector.connector.logger import LOG
 
 @implementer(IValidatorRegistry)
 class ValidatorRegistry(object):
-
     """ A registry for XML schemas and DTDs """
-
 
     registry = {}
 
@@ -53,8 +49,7 @@ class ValidatorRegistry(object):
         try:
             handle = fs.open_fs(directory)
         except Exception as e:
-            raise IOError(
-                'Directory "{}" does not exist ({})'.format(directory, e))
+            raise IOError('Directory "{}" does not exist ({})'.format(directory, e))
 
         for name in handle.listdir('.'):
             fullname = os.path.join(directory, name)
@@ -64,8 +59,7 @@ class ValidatorRegistry(object):
             registered_name = name
             if version_suffix:
                 basename, ext = os.path.splitext(name)
-                registered_name = '{}-{}{}'.format(basename,
-                                                   version_suffix, ext)
+                registered_name = '{}-{}{}'.format(basename, version_suffix, ext)
 
             key = '{}::{}'.format(family, registered_name)
             ts = time.time()
@@ -79,8 +73,7 @@ class ValidatorRegistry(object):
                         schema_doc = lxml.etree.XML(fp.read())
                         validator = lxml.etree.XMLSchema(schema_doc)
                     except Exception as e:
-                        LOG.error('Unable to parse XML Schema ({}, {})'.format(
-                            name, e), exc_info=True)
+                        LOG.error('Unable to parse XML Schema ({}, {})'.format(name, e), exc_info=True)
                         continue
                     validator_type = 'XSD'
             elif ext == '.rng':
@@ -111,18 +104,15 @@ class ValidatorRegistry(object):
                 type=validator_type,
                 registered=datetime.datetime.utcnow())
             if duration > 3:
-                LOG.warn(
-                    'Slow loading/parsing of ({}, {}), duration: {:0.3f} seconds'.format(key, fullname, duration))
-            LOG.debug('Registered ({}, {}), duration: {:0.3f} seconds'.format(
-                key, fullname, duration))
+                LOG.warn('Slow loading/parsing of ({}, {}), duration: {:0.3f} seconds'.format(key, fullname, duration))
+            LOG.debug('Registered ({}, {}), duration: {:0.3f} seconds'.format(key, fullname, duration))
 
     def get_schema(self, family, name):
         """ Return a pre-validator DTD/schema/RelaxNG/Schematron """
 
         key = '{}::{}'.format(family, name)
         if key not in self.registry:
-            raise ValueError(
-                'Schema/DTD {}/{} not registered'.format(family, name))
+            raise ValueError('Schema/DTD {}/{} not registered'.format(family, name))
         return self.registry[key]['validation']
 
     def get_validator(self, family, name):
@@ -159,7 +149,6 @@ ValidatorRegistryUtility = ValidatorRegistry()
 
 
 class ValidationResult(object):
-
     """ Encapsulates DTD/schema validation results """
 
     def __init__(self, errors=None, validator=None):
@@ -174,7 +163,6 @@ class ValidationResult(object):
 
 
 class Validator(object):
-
     """ Encapsulates a schema validator """
 
     def __init__(self, schema, family, name):

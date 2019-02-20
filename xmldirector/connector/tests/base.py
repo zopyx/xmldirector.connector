@@ -28,9 +28,7 @@ from xmldirector.connector.logger import LOG
 import xmldirector.connector
 import plone.app.dexterity
 
-
-CONNECTOR_URL = os.environ.get(
-    'CONNECTOR_URL', 'http://localhost:6080/exist/webdav/db')
+CONNECTOR_URL = os.environ.get('CONNECTOR_URL', 'http://localhost:6080/exist/webdav/db')
 CONNECTOR_USERNAME = os.environ.get('CONNECTOR_USERNAME', 'admin')
 CONNECTOR_PASSWORD = os.environ.get('CONNECTOR_PASSWORD', 'admin')
 
@@ -39,17 +37,20 @@ os.environ['TESTING'] = '1'
 
 class PolicyFixture(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE,)
+    defaultBases = (PLONE_FIXTURE, )
 
     def setUpZope(self, app, configurationContext):
         #        xmlconfig.file('meta.zcml', z3c.jbot, context=configurationContext)
 
-        for mod in [plone.app.dexterity,
-                    xmldirector.connector,
-                    ]:
+        for mod in [
+                plone.app.dexterity,
+                xmldirector.connector,
+        ]:
             xmlconfig.file('configure.zcml', mod, context=configurationContext)
 
         # Install product and call its initialize() function
+
+
 #        z2.installProduct(app, 'eteaching.policy')
 
     def setUpPloneSite(self, portal):
@@ -66,35 +67,29 @@ class PolicyFixture(PloneSandboxLayer):
         settings.connector_username = unicode(CONNECTOR_USERNAME)
         settings.connector_password = unicode(CONNECTOR_PASSWORD)
         settings.connector_url = unicode(CONNECTOR_URL)
-        self.testing_directory = settings.connector_dexterity_subpath = u'testing-dexterity-{}'.format(
-            uuid.uuid4())
+        self.testing_directory = settings.connector_dexterity_subpath = u'testing-dexterity-{}'.format(uuid.uuid4())
 
-        handle = get_fs_wrapper(CONNECTOR_URL, credentials=dict(username=CONNECTOR_USERNAME,
-                                                             password=CONNECTOR_PASSWORD))
+        handle = get_fs_wrapper(
+            CONNECTOR_URL, credentials=dict(username=CONNECTOR_USERNAME, password=CONNECTOR_PASSWORD))
         if not handle.exists(self.testing_directory):
             handle.makedir(self.testing_directory)
 
         self.connector = plone.api.content.create(
-            container=portal,
-            type='xmldirector.plonecore.connector',
-            id='connector')
+            container=portal, type='xmldirector.plonecore.connector', id='connector')
 
     def tearDownZope(self, app):
 
-        handle = get_fs_wrapper(CONNECTOR_URL, credentials=dict(username=CONNECTOR_USERNAME,
-                                                             password=CONNECTOR_PASSWORD))
+        handle = get_fs_wrapper(
+            CONNECTOR_URL, credentials=dict(username=CONNECTOR_USERNAME, password=CONNECTOR_PASSWORD))
         if handle.exists(self.testing_directory):
             try:
-                handle.removedir(
-                    self.testing_directory, recursive=True, force=True)
+                handle.removedir(self.testing_directory, recursive=True, force=True)
             except Exception as e:
                 LOG.error('tearDownZope() failed ({})'.format(e))
         z2.uninstallProduct(app, 'xmldirector.plonecore')
 
-
 POLICY_FIXTURE = PolicyFixture()
-POLICY_INTEGRATION_TESTING = IntegrationTesting(
-    bases=(POLICY_FIXTURE,), name='PolicyFixture:Integration')
+POLICY_INTEGRATION_TESTING = IntegrationTesting(bases=(POLICY_FIXTURE, ), name='PolicyFixture:Integration')
 
 
 class TestBase(unittest.TestCase):
