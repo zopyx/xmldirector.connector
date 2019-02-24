@@ -77,6 +77,7 @@ class RawConnector(BrowserView):
     def __init__(self, context, request):
         super(RawConnector, self).__init__(context, request)
         self._subpath = []
+        self.traversal_subpath = []
 
     def publishTraverse(self, request, name):
         if not hasattr(self, '_subpath'):
@@ -103,7 +104,6 @@ class RawConnector(BrowserView):
     @property
     def subpath(self):
         return '/'.join(self._subpath)
-        return '/'.join(self._subpath) or '.'
 
     def __call__(self):
         """ Download given file """
@@ -127,6 +127,45 @@ class RawConnector(BrowserView):
                 data = fp.read()
                 self.request.response.setHeader('content-length', str(len(data)))
                 return data
+
+    def get_handle(self, subpath=None, root=False):
+        """ Returns a webdav handle for the current subpath """
+
+        if not root:
+            if not subpath:
+                subpath = '/'.join(self.subpath)
+
+        try:
+            return self.context.get_handle(subpath)
+        except fs.errors.ResourceNotFoundError as e:
+            msg = 'eXist-db path {} does not exist'.format(e.url)
+            self.context.plone_utils.addPortalMessage(msg, 'error')
+            LOG.debug(msg)
+            raise zExceptions.NotFound()
+        except fs.errors.PermissionDeniedError as e:
+            msg = 'eXist-db path {} unauthorized access (check credentials)'.format(
+                e.url)
+            self.context.plone_utils.addPortalMessage(msg, 'error')
+            LOG.error(msg)
+            raise zExceptions.Unauthorized()
+    def __bobo_traverse__(self, request, entryname):
+        """ Traversal hook for (un)restrictedTraverse() """
+        self.traversal_subpath.append(entryname)
+        traversal_subpath = '/'.join(self.traversal_subpath)
+        handle = self.get_handle()
+        if handle.exists(traversal_subpath):
+            if handle.isdir(traversal_subpath):
+                return self
+            elif handle.isfile(traversal_subpath):
+                data = handle.open(traversal_subpath, 'rb').read()
+                self.wrapped_object = data
+                self.wrapped_info = handle.getinfo(traversal_subpath, namespaces=['access', 'details'])
+                try:
+                    self.wrapped_meta = handle.getmeta(traversal_subpath)
+                except fs.errors.NoMetaError:
+                    self.wrapped_meta = None
+                return self
+        raise zExceptions.NotFound('not found: {}'.format(entryname))
 
 
 @implementer(IPublishTraverse)

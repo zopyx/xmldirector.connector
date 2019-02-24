@@ -73,6 +73,18 @@ class BasicTests(TestBase):
         with self.assertRaises(zExceptions.NotFound):
             self.portal.restrictedTraverse(path)
 
+        obj = self.portal.restrictedTraverse(path, None)
+        assert obj == None
+
+    def testTraversalExistingPath(self):
+        handle = self.portal.connector.get_handle()
+        handle.makedir('foo')
+        with handle.open('foo/index.html', 'w') as fp:
+            fp.write('<html/>')
+        path = 'connector/@@view/foo/index.html'
+        result = self.portal.restrictedTraverse(path)
+        assert result.wrapped_info.size == 7
+
 class BasicTests2(TestBase):
     def testZipExport(self):
         self.login('god')
@@ -149,19 +161,6 @@ class BasicTests2(TestBase):
         names = handle.listdir()
         if is_mac:
             self.assertEquals(u'üüüü' in names, True, names)
-
-    def testTraversalExistingPath(self):
-        path = 'connector/@@view/foo/index.html'
-        result = self.portal.restrictedTraverse(path)
-        # with XML preamble
-        self.assertEqual('<html/>' in result.wrapped_object, True)
-        self.assertEqual('wrapped_meta' in result.__dict__, True)
-        info = result.wrapped_info
-        #        self.assertEqual('modified_time' in info, True) # not supported in Marc Logic Server
-        self.assertEqual('st_mode' in info, True)
-
-
-
 
 def test_suite():
     from unittest import TestSuite, makeSuite
