@@ -38,7 +38,8 @@ setup(name='xmldirector.connector',
           'fs>=2.1',
           'fs.webdavfs',
           'plone.app.testing',
-          'defusedxml'
+          'defusedxml',
+          'plone.api'
           # -*- Extra requirements: -*-
       ],
       tests_require=['zope.testing'],
