@@ -18,7 +18,6 @@ docker run -d $DOCKER_OPTIONS $DOCKER
 #virtualenv --clear .
 pip install setuptools==36.6.0
 pip install zc.buildout
-ln -sf base.cfg buildout.cfg
 buildout bootstrap
 buildout -c $config
 
