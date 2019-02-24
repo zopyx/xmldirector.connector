@@ -51,14 +51,29 @@ class BasicTests(TestBase):
         handle = self.portal.connector.get_handle()
         self.assertEqual(handle.exists('new'), True)
 
-class BasicTests2(TestBase):
     def testRemoveCollection(self):
         self.login('god')
         view = self._get_view()
-        view.filemanager_delete('', 'foo')
+        view.new_folder('foo')
+        view.remove('foo')
         handle = self.portal.connector.get_handle()
         self.assertEqual(handle.exists('foo'), False)
 
+    def testRenderControlPanel(self):
+        with self.assertRaises(zExceptions.Unauthorized):
+            view = self.portal.restrictedTraverse('@@connector-settings')
+            view()
+
+        self.login('god')
+        view = self.portal.restrictedTraverse('@@connector-settings')
+        view()
+
+    def testTraversalNonExistingPath(self):
+        path = 'connector/@@view/foo/doesnotexist.html'
+        with self.assertRaises(zExceptions.NotFound):
+            self.portal.restrictedTraverse(path)
+
+class BasicTests2(TestBase):
     def testZipExport(self):
         self.login('god')
         view = self._get_view()
@@ -135,17 +150,6 @@ class BasicTests2(TestBase):
         if is_mac:
             self.assertEquals(u'üüüü' in names, True, names)
 
-    def testHumanReadableDatetime(self):
-        view = self._get_view()
-        now = datetime.datetime.utcnow()
-        result = view.human_readable_datetime(now, to_utc=True)
-        self.assertEqual(result, 'now')
-
-    def testHumanReadableFilesize(self):
-        view = self._get_view()
-        result = view.human_readable_filesize(1000000)
-        self.assertEqual(result, '976 KB')
-
     def testTraversalExistingPath(self):
         path = 'connector/@@view/foo/index.html'
         result = self.portal.restrictedTraverse(path)
@@ -156,19 +160,7 @@ class BasicTests2(TestBase):
         #        self.assertEqual('modified_time' in info, True) # not supported in Marc Logic Server
         self.assertEqual('st_mode' in info, True)
 
-    def testTraversalNonExistingPath(self):
-        path = 'connector/@@view/foo/doesnotexist.html'
-        with self.assertRaises(zExceptions.NotFound):
-            self.portal.restrictedTraverse(path)
 
-    def testRenderControlPanel(self):
-        with self.assertRaises(zExceptions.Unauthorized):
-            view = self.portal.restrictedTraverse('@@xmldirector-core-settings')
-            view()
-
-        self.login('god')
-        view = self.portal.restrictedTraverse('@@xmldirector-core-settings')
-        view()
 
 
 def test_suite():
