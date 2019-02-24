@@ -21,40 +21,37 @@ is_mac = False
 
 
 class BasicTests(TestBase):
-    def setUp(self):
-        pass
 
-    def tearDown(self):
-        pass
+    def _get_view(self):
+        from xmldirector.connector.browser.connector import Connector
+        return Connector(self.portal.connector, self.portal.connector.REQUEST)
 
     def testCheckPortalType(self):
-        assert self.portal.connector.portal_type == 'xmldirector.connector.connector'
-
-    def testCheckWebdavHandle(self):
-        handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.url, CONNECTOR_URL + '/{}/'.format(PREFIX))
+        assert self.portal.connector.portal_type == 'xmldirector.connector'
 
     def testFileCheck(self):
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('foo/index.html'), True)
-        self.assertEqual(handle.exists('foo/index.xml'), True)
+        self.assertEqual(handle.exists('foo/index.html'), False)
+        self.assertEqual(handle.exists('foo/index.xml'), False)
         self.assertEqual(handle.exists('foo/xxxx.html'), False)
 
     def testRenameCollection(self):
         self.login('god')
         view = self._get_view()
-        view.filemanager_rename('', 'foo', 'bar')
+        view.new_folder('foo')
+        view.rename('foo', 'bar')
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('bar/index.html'), True)
-        self.assertEqual(handle.exists('bar/index.xml'), True)
+        self.assertEqual(handle.exists('foo'), False)
+        self.assertEqual(handle.exists('bar'), True)
 
     def testCreateCollection(self):
         self.login('god')
         view = self._get_view()
-        view.filemanager_create_collection('', 'new')
+        view.new_folder('new')
         handle = self.portal.connector.get_handle()
         self.assertEqual(handle.exists('new'), True)
 
+class BasicTests2(TestBase):
     def testRemoveCollection(self):
         self.login('god')
         view = self._get_view()
