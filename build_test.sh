@@ -26,5 +26,5 @@ then
     wget http://localhost:8080
 fi
 
-bin/test -s xmldirector.plonecore
+bin/test -s xmldirector.connector
 
