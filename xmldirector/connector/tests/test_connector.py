@@ -79,9 +79,9 @@ class BasicTests(TestBase):
     def testTraversalExistingPath(self):
         handle = self.portal.connector.get_handle()
         handle.makedir('foo')
-        with handle.open('foo/index.html', 'w') as fp:
-            fp.write('<html/>')
-        path = 'connector/@@view/foo/index.html'
+        with handle.open('foo/foo.bar', 'w') as fp:
+            fp.write('1234567')
+        path = 'connector/@@view/foo/foo.bar'
         result = self.portal.restrictedTraverse(path)
         assert result.wrapped_info.size == 7
 
