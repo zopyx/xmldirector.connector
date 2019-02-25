@@ -16,7 +16,6 @@ config=buildout-plone-$PLONE_VERSION.cfg
 docker run -d $DOCKER_OPTIONS $DOCKER
 
 #virtualenv --clear .
-ln -sf base.cfg buildout.cfg
 pip install setuptools==36.6.0
 pip install zc.buildout
 buildout bootstrap
