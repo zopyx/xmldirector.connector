@@ -63,9 +63,9 @@ class PolicyFixture(PloneSandboxLayer):
 
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IConnectorSettings)
-        settings.connector_username = CONNECTOR_USERNAME
-        settings.connector_password = CONNECTOR_PASSWORD
-        settings.connector_url = CONNECTOR_URL 
+        settings.connector_username = six.text_type(CONNECTOR_USERNAME)
+        settings.connector_password = six.text_type(CONNECTOR_PASSWORD)
+        settings.connector_url = six.text_type(CONNECTOR_URL)
 
         handle = self.connector.get_handle()
         handle.makedir(self.testing_directory)
