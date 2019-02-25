@@ -57,7 +57,7 @@ class PolicyFixture(PloneSandboxLayer):
         setRoles(portal, 'god2', ['Manager'])
         login(portal, 'god')
 
-        self.testing_directory = 'testing-{}'.format(uuid.uuid4())
+        self.testing_directory = u'testing-{}'.format(uuid.uuid4())
 
         self.connector = plone.api.content.create(type='xmldirector.connector', container=plone.api.portal.get(), id='connector')
 
@@ -76,10 +76,10 @@ class PolicyFixture(PloneSandboxLayer):
             handle.makedir(self.testing_directory)
 
     def tearDownPloneSite(self, app):
-      
+
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IConnectorSettings)
-        settings.connector_url = CONNECTOR_URL 
+        settings.connector_url = CONNECTOR_URL
 
         handle = self.connector.get_handle()
 

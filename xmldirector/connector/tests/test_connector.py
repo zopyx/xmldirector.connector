@@ -31,33 +31,33 @@ class BasicTests(TestBase):
 
     def testFileCheck(self):
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('foo/index.html'), False)
-        self.assertEqual(handle.exists('foo/index.xml'), False)
-        self.assertEqual(handle.exists('foo/xxxx.html'), False)
+        self.assertEqual(handle.exists(u'foo/index.html'), False)
+        self.assertEqual(handle.exists(u'foo/index.xml'), False)
+        self.assertEqual(handle.exists(u'foo/xxxx.html'), False)
 
     def testRenameCollection(self):
         self.login('god')
         view = self._get_view()
-        view.new_folder('foo')
-        view.rename('foo', 'bar')
+        view.new_folder(u'foo')
+        view.rename(u'foo', u'bar')
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('foo'), False)
-        self.assertEqual(handle.exists('bar'), True)
+        self.assertEqual(handle.exists(u'foo'), False)
+        self.assertEqual(handle.exists(u'bar'), True)
 
     def testCreateCollection(self):
         self.login('god')
         view = self._get_view()
-        view.new_folder('new')
+        view.new_folder(u'new')
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('new'), True)
+        self.assertEqual(handle.exists(u'new'), True)
 
     def testRemoveCollection(self):
         self.login('god')
         view = self._get_view()
-        view.new_folder('foo')
-        view.remove('foo')
+        view.new_folder(u'foo')
+        view.remove(u'foo')
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('foo'), False)
+        self.assertEqual(handle.exists(u'foo'), False)
 
     def testRenderControlPanel(self):
         with self.assertRaises(zExceptions.Unauthorized):
@@ -78,9 +78,9 @@ class BasicTests(TestBase):
 
     def testTraversalExistingPath(self):
         handle = self.portal.connector.get_handle()
-        handle.makedir('foo')
-        with handle.open('foo/foo.bar', 'w') as fp:
-            fp.write('1234567')
+        handle.makedir(u'foo')
+        with handle.open(u'foo/foo.bar', 'w') as fp:
+            fp.write(u'1234567')
         path = 'connector/@@view/foo/foo.bar'
         result = self.portal.restrictedTraverse(path)
         assert result.wrapped_info.size == 7
@@ -91,8 +91,8 @@ class BasicTests(TestBase):
         view = self._get_view()
         view.zip_import(fn)
         handle = self.portal.connector.get_handle()
-        self.assertEqual(handle.exists('import/test.xml'), True)
-        self.assertEqual(handle.exists('import/test.html'), True)
+        self.assertEqual(handle.exists(u'import/test.xml'), True)
+        self.assertEqual(handle.exists(u'import/test.html'), True)
 
     def _testZipImportMacZip(self):
         self.login('god')
