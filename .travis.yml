@@ -16,6 +16,9 @@ matrix:
     env: 
      - TYPE=OWNCLOUD PLONE_VERSION=5.2  DOCKER=pschmitt/owncloud DOCKER_OPTIONS="-p 127.0.0.1:8080:80" CONNECTOR_URL=webdav://localhost:8080/remote.php/webdav CONNECTOR_USERNAME=admin CONNECTOR_PASSWORD=changeme
 
+  - python: "2.7"
+    env: 
+     - TYPE=LOCAL_FS PLONE_VERSION=5.2 CONNECTOR_URL=file:///tmp/testing
 
   - python: "3.6"
     env: 
