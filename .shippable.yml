@@ -54,4 +54,4 @@ script:
 - ls -la
 - mkdir -p /tmp/testing
 - rm -fr /tmp/testing/*
-- bash build_test.sh 
+- bash build_test2.sh 
