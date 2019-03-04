@@ -79,7 +79,7 @@ class PolicyFixture(PloneSandboxLayer):
 
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IConnectorSettings)
-        settings.connector_url = CONNECTOR_URL
+        settings.connector_url = six.text_type(CONNECTOR_URL)
 
         handle = self.connector.get_handle()
 

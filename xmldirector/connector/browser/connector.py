@@ -153,6 +153,8 @@ class RawConnector(BrowserView):
         self.traversal_subpath.append(entryname)
         traversal_subpath = '/'.join(self.traversal_subpath)
         handle = self.get_handle()
+        if six.PY2:
+            traversal_subpath = unicode(traversal_subpath, 'utf8')
         if handle.exists(traversal_subpath):
             if handle.isdir(traversal_subpath):
                 return self
