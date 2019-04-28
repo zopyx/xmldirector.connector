@@ -89,5 +89,18 @@ class Connector(Item):
         return f.tostr()
 
     def get_handle(self, subpath=None):
+
+        def escaped_url(url):
+            """ Remove credentials from url """
+            f = furl.furl(url)
+            f.username = None
+            f.password = None
+            return f.tostr()
+
         url = self.get_connector_url(subpath)
-        return fs.open_fs(url)
+        try:
+            return fs.open_fs(url)
+        except fs.errors.CreateFailed as e:
+            url2 = escaped_url(url)
+            raise IOError('Unable to open fs {0} ({1}'.format(url2, e))
+
