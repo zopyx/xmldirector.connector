@@ -522,7 +522,7 @@ class Connector(RawConnector):
                     target_dirname = '/'.join(target_filename.split('/')[:-1])
                     if target_dirname not in dirs_created:
                         try:
-                            handle.makedir(target_dirname, recreate=True)
+                            handle.makedirs(target_dirname, recreate=True)
                             dirs_created.add(target_dirname)
                         except Exception as e:
                             LOG.error('Failed creating {} failed ({})'.format(target_dirname, e))
