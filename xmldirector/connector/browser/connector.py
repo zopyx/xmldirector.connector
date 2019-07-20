@@ -159,7 +159,8 @@ class RawConnector(BrowserView):
             if handle.isdir(traversal_subpath):
                 return self
             elif handle.isfile(traversal_subpath):
-                data = handle.open(traversal_subpath, 'rb').read()
+                with handle.open(traversal_subpath, 'rb') as fp:
+                    data = fp.read()
                 self.wrapped_object = data
                 self.wrapped_info = handle.getinfo(traversal_subpath, namespaces=['access', 'details'])
                 try:

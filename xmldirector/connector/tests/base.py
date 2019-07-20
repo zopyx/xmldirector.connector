@@ -17,7 +17,7 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import setRoles
 from plone.app.testing import login
-from plone.testing import z2
+from plone.testing import zope
 from plone.registry.interfaces import IRegistry
 
 from zope.component import getUtility
@@ -87,7 +87,7 @@ class PolicyFixture(PloneSandboxLayer):
             handle.removedir(self.testing_directory)
         except Exception as e:
             LOG.error('tearDownZope() failed ({})'.format(e))
-        z2.uninstallProduct(app, 'xmldirector.connector')
+        zope.uninstallProduct(app, 'xmldirector.connector')
 
 POLICY_FIXTURE = PolicyFixture()
 POLICY_INTEGRATION_TESTING = IntegrationTesting(bases=(POLICY_FIXTURE, ), name='PolicyFixture:Integration')
