@@ -2,6 +2,7 @@ build:
 	sh bootstrap-py3.sh
 
 release:
+	bin/pip install twine
 	mkrelease -p -d pypi
 
 docs:
