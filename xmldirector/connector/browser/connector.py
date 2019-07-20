@@ -525,6 +525,7 @@ class Connector(RawConnector):
                             handle.makedirs(target_dirname, recreate=True)
                             dirs_created.add(target_dirname)
                         except Exception as e:
+
                             LOG.error('Failed creating {} failed ({})'.format(target_dirname, e))
 
                     LOG.info(u'ZIP filename({})'.format(name))
@@ -539,4 +540,4 @@ class Connector(RawConnector):
             msg = 'Error opening ZIP file: {}'.format(e)
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + self.subpath)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)

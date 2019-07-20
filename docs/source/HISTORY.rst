@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.3 (2019-07-20)
+------------------
+- fixed redirection upon remove
+
+
 0.2.2 (2019-07-20)
 ------------------
 - import fix for nested zip files 
