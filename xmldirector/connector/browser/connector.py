@@ -394,9 +394,19 @@ class Connector(RawConnector):
             raise ValueError(_('Target {} exists').format(resource_name))
 
         if handle.isfile(resource_name):
-            handle.move(resource_name, new_resource_name)
+            try:
+                handle.move(resource_name, new_resource_name)
+            except Exception as e:
+                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                self.request.response.setStatus(500)
+                return msg
         else:
-            fs.move.move_dir(handle, resource_name, handle, new_resource_name)
+            try:
+                fs.move.move_dir(handle, resource_name, handle, new_resource_name)
+            except Exception as e:
+                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                self.request.response.setStatus(500)
+                return msg
 
         msg = _('Renamed {} to {}').format(resource_name, new_name)
         self.request.response.setStatus(200)
@@ -418,7 +428,7 @@ class Connector(RawConnector):
             try:
                 handle.removetree(resource_name)
             except Exception as e:
-                msg = _('{} could not be deleted ({})').format(resource_name)
+                msg = resource_name + _(' could not be deleted') + ' ({})'.format(e)
                 self.request.response.setStatus(500)
                 return msg
 
