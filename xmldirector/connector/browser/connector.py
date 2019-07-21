@@ -423,11 +423,10 @@ class Connector(RawConnector):
                 return msg
 
         elif handle.isfile(resource_name):
-
             try:
                 handle.remove(resource_name)
             except Exception as e:
-                msg = _('{} could not be deleted ({})').format(resource_name)
+                msg = _('{} could not be deleted ({})').format(resource_name, e)
                 self.request.response.setStatus(500)
                 return msg
 
