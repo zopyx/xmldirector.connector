@@ -5,8 +5,8 @@ for name in os.listdir('.'):
         continue
 
     base, other = name.split('-', 1)
-    print 'a.type-file[href*=".{}"]:before {}'.format(base, '{')
-    print '    background-image: url(++resource++xmldirector.plonecore/images/110941-file-formats-text/svg/{}) !important;'.format(name)
-    print '}'
-    print
+    print('a.type-file[href*=".{}"]:before {}'.format(base, '{'))
+    print('    background-image: url(++resource++xmldirector.plonecore/images/110940-file-formats-text/svg/{}) !important;'.format(name))
+    print('}')
+    print()
 
