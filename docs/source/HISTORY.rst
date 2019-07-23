@@ -1,6 +1,9 @@
 Changelog
 =========
 
+0.2.4 (2019-07-24)
+------------------
+- Python 3 fix
 0.2.3 (2019-07-20)
 ------------------
 - fixed redirection upon remove
