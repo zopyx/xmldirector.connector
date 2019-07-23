@@ -4,10 +4,10 @@ Changelog
 0.2.4 (2019-07-24)
 ------------------
 - Python 3 fix
+
 0.2.3 (2019-07-20)
 ------------------
 - fixed redirection upon remove
-
 
 0.2.2 (2019-07-20)
 ------------------
@@ -23,7 +23,6 @@ Changelog
 ------------------
 - various fixes
 - various XML related backports
-
 
 0.1 (2018-12-14)
 ------------------
