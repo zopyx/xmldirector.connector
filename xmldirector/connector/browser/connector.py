@@ -115,9 +115,9 @@ class RawConnector(BrowserView):
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
-        if 'download' in self.request.form:
-            self.request.response.setHeader('content-disposition', 'attachment; filename={}'.format(
-                os.path.basename(filename)))
+        if 'download' in self.request.form or 'filename' in self.request.form:
+            fn = self.request.get('filename', os.path.basename(filename))
+            self.request.response.setHeader('content-disposition', 'attachment; filename={}'.format(fn))
         content_length = handle.getsize(filename)
         if content_length:
             self.request.response.setHeader('content-length', str(content_length))
