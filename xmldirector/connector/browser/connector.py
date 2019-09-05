@@ -60,6 +60,7 @@ class connector_iterator():
     def __next__(self):
         data = self.fp.read(self.streamsize)
         if not data:
+            self.fp.close()
             raise StopIteration
         return data
 
