@@ -74,9 +74,9 @@ function actions_renderer(cell, formatterParams, onRendered) {
 
 function notify(s) {
     $('#table-message').fadeOut(0, 0, function () {
-        $(this).html(s);
+        $(this).html(s).css("color", "red");
         $(this).show();
-        $(this).fadeOut(2500);
+        $(this).fadeOut(4500);
     });
 }
 
@@ -128,7 +128,7 @@ function setup_click_handlers() {
                 }
             } ,
             error: function(result) {
-                notify(`Error renaming ${resource_name}`);
+                notify(`Error renaming ${resource_name} (${result.responseText})`);
                 $('#files-table').unblock();
             }
         });
@@ -167,7 +167,7 @@ function setup_click_handlers() {
                 }
             } ,
             error: function(result) {
-                notify(`Error deleting ${resource_name}`);
+                notify(`Error deleting ${resource_name} (${result.responseText})`);
                 $('#files-table').unblock();
             }
         });

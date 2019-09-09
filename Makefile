@@ -2,6 +2,7 @@ build:
 	sh bootstrap-py3.sh
 
 release:
+	bin/pip install twine
 	mkrelease -p -d pypi
 
 docs:
@@ -12,7 +13,6 @@ upload-docs:
 
 test:
 	bin/test xmldirector
-	bin/test-crex xmldirector
 
 test-coverage:
 	unbuffer bin/test --coverage=${PWD}/coverage xmldirector | tee coverage.txt

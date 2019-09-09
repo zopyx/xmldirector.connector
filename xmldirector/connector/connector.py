@@ -50,6 +50,7 @@ class IConnector(model.Schema):
 
 @implementer(IConnector)
 class Connector(Item):
+
     def get_connector_url(self, subpath=None, hide_password=False):
 
         url = ''
@@ -57,8 +58,9 @@ class Connector(Item):
         password = ''
 
         # check local connector URL first
-        if self.connector_url:
-            url = self.connector_url
+        connector_url = getattr(self, 'connector_url', None)
+        if connector_url:
+            url = connector_url
             username = self.connector_username
             password = self.connector_password
         else:

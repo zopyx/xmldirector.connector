@@ -104,7 +104,7 @@ Security
 ++++++++
 
 The mounted storage gives you access to all contents inside the mounted
-subtree.  The mount is sandboxes
+subtree.  The mounted filesystem is sandboxed
 (https://docs.pyfilesystem.org/en/latest/concepts.html#sandboxing). So you can
 not escape and access content outside the mounted storage.
 

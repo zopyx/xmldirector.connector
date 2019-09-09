@@ -60,6 +60,7 @@ class connector_iterator():
     def __next__(self):
         data = self.fp.read(self.streamsize)
         if not data:
+            self.fp.close()
             raise StopIteration
         return data
 
@@ -115,9 +116,9 @@ class RawConnector(BrowserView):
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
-        if 'download' in self.request.form:
-            download_filename = self.request.form.get('filename', os.path.basename(filename))
-            self.request.response.setHeader('content-disposition', 'attachment; filename={}'.format(download_filename))
+        if 'download' in self.request.form or 'filename' in self.request.form:
+            fn = self.request.get('filename', os.path.basename(filename))
+            self.request.response.setHeader('content-disposition', 'attachment; filename={}'.format(fn))
         content_length = handle.getsize(filename)
         if content_length:
             self.request.response.setHeader('content-length', str(content_length))
@@ -159,7 +160,8 @@ class RawConnector(BrowserView):
             if handle.isdir(traversal_subpath):
                 return self
             elif handle.isfile(traversal_subpath):
-                data = handle.open(traversal_subpath, 'rb').read()
+                with handle.open(traversal_subpath, 'rb') as fp:
+                    data = fp.read()
                 self.wrapped_object = data
                 self.wrapped_info = handle.getinfo(traversal_subpath, namespaces=['access', 'details'])
                 try:
@@ -393,9 +395,19 @@ class Connector(RawConnector):
             raise ValueError(_('Target {} exists').format(resource_name))
 
         if handle.isfile(resource_name):
-            handle.move(resource_name, new_resource_name)
+            try:
+                handle.move(resource_name, new_resource_name)
+            except Exception as e:
+                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                self.request.response.setStatus(500)
+                return msg
         else:
-            fs.move.move_dir(handle, resource_name, handle, new_resource_name)
+            try:
+                fs.move.move_dir(handle, resource_name, handle, new_resource_name)
+            except Exception as e:
+                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                self.request.response.setStatus(500)
+                return msg
 
         msg = _('Renamed {} to {}').format(resource_name, new_name)
         self.request.response.setStatus(200)
@@ -417,16 +429,15 @@ class Connector(RawConnector):
             try:
                 handle.removetree(resource_name)
             except Exception as e:
-                msg = _('{} could not be deleted ({})').format(resource_name)
+                msg = resource_name + _(' could not be deleted') + ' ({})'.format(e)
                 self.request.response.setStatus(500)
                 return msg
 
         elif handle.isfile(resource_name):
-
             try:
                 handle.remove(resource_name)
             except Exception as e:
-                msg = _('{} could not be deleted ({})').format(resource_name)
+                msg = _('{} could not be deleted ({})').format(resource_name, e)
                 self.request.response.setStatus(500)
                 return msg
 
@@ -522,9 +533,10 @@ class Connector(RawConnector):
                     target_dirname = '/'.join(target_filename.split('/')[:-1])
                     if target_dirname not in dirs_created:
                         try:
-                            handle.makedir(target_dirname, recreate=True)
+                            handle.makedirs(target_dirname, recreate=True)
                             dirs_created.add(target_dirname)
                         except Exception as e:
+
                             LOG.error('Failed creating {} failed ({})'.format(target_dirname, e))
 
                     LOG.info(u'ZIP filename({})'.format(name))
@@ -539,4 +551,4 @@ class Connector(RawConnector):
             msg = 'Error opening ZIP file: {}'.format(e)
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + self.subpath)
+        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)

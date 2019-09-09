@@ -75,7 +75,7 @@ class Transformer(object):
 
         if debug:
             debug_dir = tempfile.mkdtemp(prefix='transformation_debug_')
-            LOG.info('Transformation debug directory: {}'.format(debug_dir))
+            LOG.debug('Transformation debug directory: {}'.format(debug_dir))
 
         # Convert XML string into a root node
         if isinstance(xml_or_node, str):
@@ -122,7 +122,7 @@ class Transformer(object):
                 with open(os.path.join(debug_dir, out_data_fn), 'wb') as fp:
                     fp.write(out_data)
 
-            LOG.info('Transformation %-30s: %3.6f seconds' % (name, time.time() - ts))
+            LOG.debug('Transformation %-30s: %3.6f seconds' % (name, time.time() - ts))
 
         # optional: return a fragment given by the top-level tag name
         return_node = root
