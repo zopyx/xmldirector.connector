@@ -11,7 +11,6 @@ import time
 import fs.opener
 import datetime
 import operator
-import defusedxml.lxml
 import lxml.etree
 import lxml.isoschematron
 from zope.interface import implementer
@@ -174,13 +173,13 @@ class Validator(object):
 
         if isinstance(xml, str):
             try:
-                root = defusedxml.lxml.fromstring(xml)
+                root = defusedxml.etree.fromstring(xml)
             except lxml.etree.XMLSyntaxError as e:
                 return ValidationResult(['Invalid XML ({})'.format(e)])
 
         elif isinstance(xml, bytes):
             try:
-                root = defusedxml.lxml.parse(io.BytesIO(xml))
+                root = defusedxml.etree.parse(io.BytesIO(xml))
             except lxml.etree.XMLSyntaxError as e:
                 return ValidationResult(['Invalid XML ({})'.format(e)])
 
