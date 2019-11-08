@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.2.4.5'
+version = '0.2.4.6'
 
 setup(name='xmldirector.connector',
       version=version,
