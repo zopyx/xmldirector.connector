@@ -72,7 +72,7 @@ class BasicTests(TestBase):
             self.portal.restrictedTraverse(path)
 
         obj = self.portal.restrictedTraverse(path, None)
-        assert obj == None
+        assert obj is None
 
     def testTraversalExistingPath(self):
         handle = self.portal.connector.get_handle()
