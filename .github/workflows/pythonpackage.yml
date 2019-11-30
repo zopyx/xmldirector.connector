@@ -19,7 +19,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        bash bootstrap-py3.sh
+        bash bootstrap-py3.sh buildout-plone-5.2.cfg
     - name: Test with pytest
       run: |
         make test
