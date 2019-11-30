@@ -2,4 +2,4 @@ setuptools==42.0.1
 zc.buildout==2.13.2
 wheel
 persistent==4.5.1
-zope.testrunner
+zope.testrunner==5.1
