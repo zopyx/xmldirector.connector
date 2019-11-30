@@ -19,7 +19,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        bootstrap-py3.sh
+        bash bootstrap-py3.sh
     - name: Test with pytest
       run: |
         make test
