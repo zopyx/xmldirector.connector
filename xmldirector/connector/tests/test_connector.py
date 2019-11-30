@@ -8,10 +8,8 @@
 import os
 import sys
 import uuid
-import datetime
 from zipfile import ZipFile
 from .base import TestBase
-from .base import CONNECTOR_URL
 import zExceptions
 
 PREFIX = 'testing-{}'.format(uuid.uuid4())
