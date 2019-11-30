@@ -92,6 +92,7 @@ class PolicyFixture(PloneSandboxLayer):
             LOG.error('tearDownZope() failed ({})'.format(e))
         zope.uninstallProduct(app, 'xmldirector.connector')
 
+
 POLICY_FIXTURE = PolicyFixture()
 POLICY_INTEGRATION_TESTING = IntegrationTesting(bases=(POLICY_FIXTURE, ), name='PolicyFixture:Integration')
 
