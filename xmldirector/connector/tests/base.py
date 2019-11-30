@@ -60,8 +60,8 @@ class PolicyFixture(PloneSandboxLayer):
         self.testing_directory = u'testing-{}'.format(uuid.uuid4())
 
         self.connector = plone.api.content.create(
-                type='xmldirector.connector', 
-                container=plone.api.portal.get(), 
+                type='xmldirector.connector',
+                container=plone.api.portal.get(),
                 id='connector')
 
         registry = getUtility(IRegistry)
