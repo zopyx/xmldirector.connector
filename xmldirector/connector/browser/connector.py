@@ -149,6 +149,7 @@ class RawConnector(BrowserView):
             self.context.plone_utils.addPortalMessage(msg, 'error')
             LOG.error(msg)
             raise zExceptions.Unauthorized()
+
     def __bobo_traverse__(self, request, entryname):
         """ Traversal hook for (un)restrictedTraverse() """
         self.traversal_subpath.append(entryname)
