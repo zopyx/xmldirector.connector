@@ -148,7 +148,7 @@ class BasicTests2(TestBase):
         if is_mac:
             self.assertEqual(u'üöä' in dirs, True)
 
-    def testZipExport(self):
+    def testZipExport2(self):
         self.login('god')
         view = self._get_view()
         fn = view.filemanager_zip_download(subpath='', download=False)
