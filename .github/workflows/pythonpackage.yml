@@ -27,6 +27,11 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        echo $CONNECTOR_URL
+        echo $PLONE_VERSION
+        echo $DOCKER
+        echo $DOCKER_OPTIONS
+        docker run -d $DOCKER_OPTIONS $DOCKER
         bash bootstrap-py3.sh -c buildout-plone-5.2.cfg
     - name: Test with pytest
       run: |
