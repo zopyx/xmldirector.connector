@@ -16,7 +16,7 @@ jobs:
       max-parallel: 4
       matrix:
        env:
-        - { TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
+        - { DOCKER=williamyeh/dummy, DOCKER_OPTIONS=  ,TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
     env: ${{ matrix.env }}
 
     steps:
