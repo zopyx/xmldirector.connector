@@ -16,6 +16,7 @@ jobs:
       max-parallel: 4
       matrix:
        env:
+           - { TYPE: OWNCLOUD, CONNECTOR_URL: 'webdav://localhost:8080/remote.php/webdav', DOCKER: pschmitt/owncloud, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' }
            - { TYPE: ALFRESCO, CONNECTOR_URL: 'webdav://localhost:8080/alfresco/webdav', DOCKER: gui81/alfresco, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' }
            - { TYPE: BASEX92, CONNECTOR_URL: 'webdav://localhost:8080/webdav', DOCKER: zopyx/basex-92, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' }
            - { DOCKER: williamyeh/dummy, DOCKER_OPTIONS: ''  ,TYPE: LOCAL_FS, CONNECTOR_URL: "file:///tmp/testing" }
