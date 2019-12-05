@@ -16,7 +16,7 @@ jobs:
       max-parallel: 4
       matrix:
        env:
-        - { DOCKER=williamyeh/dummy, DOCKER_OPTIONS=  ,TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
+           - { DOCKER: williamyeh/dummy, DOCKER_OPTIONS: ''  ,TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
     env: ${{ matrix.env }}
 
     steps:
@@ -31,6 +31,7 @@ jobs:
         echo $PLONE_VERSION
         echo $DOCKER
         echo $DOCKER_OPTIONS
+        echo docker run -d $DOCKER_OPTIONS $DOCKER
         docker run -d $DOCKER_OPTIONS $DOCKER
         bash bootstrap-py3.sh -c buildout-plone-5.2.cfg
     - name: Test with pytest
