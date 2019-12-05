@@ -1,6 +1,5 @@
 name: Python package
 
-
 on:
     push:
 
@@ -16,7 +15,9 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7]
+       env:
+        - { TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
+    env: ${{ matrix.env }}
 
     steps:
     - uses: actions/checkout@v1
