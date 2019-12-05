@@ -16,6 +16,7 @@ jobs:
       max-parallel: 4
       matrix:
        env:
+           - { TYPE: BASEX92, CONNECTOR_URL: webdav://localhost:8080/webdav, DOCKER: zopyx/basex-92, DOCKER_OPTIONS: "-p 127.0.0.1:8080:8080" }
            - { DOCKER: williamyeh/dummy, DOCKER_OPTIONS: ''  ,TYPE: LOCAL_FS, PLONE_VERSION: 5.2, CONNECTOR_URL: "file:///tmp/testing" }
     env: ${{ matrix.env }}
 
