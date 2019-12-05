@@ -36,4 +36,5 @@ jobs:
         bash bootstrap-py3.sh -c buildout-plone-5.2.cfg
     - name: Test with pytest
       run: |
+        mkdir /tmp/testing
         make test
