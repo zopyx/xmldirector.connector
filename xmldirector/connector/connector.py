@@ -105,4 +105,3 @@ class Connector(Item):
         except fs.errors.CreateFailed as e:
             url2 = escaped_url(url)
             raise IOError('Unable to open fs {0} ({1}'.format(url2, e))
-

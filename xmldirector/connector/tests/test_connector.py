@@ -8,10 +8,8 @@
 import os
 import sys
 import uuid
-import datetime
 from zipfile import ZipFile
 from .base import TestBase
-from .base import CONNECTOR_URL
 import zExceptions
 
 PREFIX = 'testing-{}'.format(uuid.uuid4())
@@ -74,7 +72,7 @@ class BasicTests(TestBase):
             self.portal.restrictedTraverse(path)
 
         obj = self.portal.restrictedTraverse(path, None)
-        assert obj == None
+        assert obj is None
 
     def testTraversalExistingPath(self):
         handle = self.portal.connector.get_handle()
@@ -150,7 +148,7 @@ class BasicTests2(TestBase):
         if is_mac:
             self.assertEqual(u'üöä' in dirs, True)
 
-    def testZipExport(self):
+    def testZipExport2(self):
         self.login('god')
         view = self._get_view()
         fn = view.filemanager_zip_download(subpath='', download=False)

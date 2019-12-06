@@ -59,7 +59,10 @@ class PolicyFixture(PloneSandboxLayer):
 
         self.testing_directory = u'testing-{}'.format(uuid.uuid4())
 
-        self.connector = plone.api.content.create(type='xmldirector.connector', container=plone.api.portal.get(), id='connector')
+        self.connector = plone.api.content.create(
+            type='xmldirector.connector',
+            container=plone.api.portal.get(),
+            id='connector')
 
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IConnectorSettings)
@@ -88,6 +91,7 @@ class PolicyFixture(PloneSandboxLayer):
         except Exception as e:
             LOG.error('tearDownZope() failed ({})'.format(e))
         zope.uninstallProduct(app, 'xmldirector.connector')
+
 
 POLICY_FIXTURE = PolicyFixture()
 POLICY_INTEGRATION_TESTING = IntegrationTesting(bases=(POLICY_FIXTURE, ), name='PolicyFixture:Integration')

@@ -1,0 +1,44 @@
+name: Python package
+
+on:
+    push:
+
+    schedule:
+        # * is a special character in YAML so you have to quote this string
+        - cron:  '0 12 * * *'
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+       env:
+           - { TYPE: OWNCLOUD, CONNECTOR_URL: 'webdav://localhost:8080/remote.php/webdav', DOCKER: pschmitt/owncloud, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' , CONNECTOR_USERNAME: admin, CONNECTOR_PASSWORD: changeme}
+              
+           - { TYPE: ALFRESCO, CONNECTOR_URL: 'webdav://localhost:8080/alfresco/webdav', DOCKER: gui81/alfresco, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' }
+           - { TYPE: BASEX92, CONNECTOR_URL: 'webdav://localhost:8080/webdav', DOCKER: zopyx/basex-92, DOCKER_OPTIONS: '-p 127.0.0.1:8080:8080' }
+           - { DOCKER: williamyeh/dummy, DOCKER_OPTIONS: ''  ,TYPE: LOCAL_FS, CONNECTOR_URL: "file:///tmp/testing" }
+    env: ${{ matrix.env }}
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        echo $CONNECTOR_URL
+        echo $PLONE_VERSION
+        echo $DOCKER
+        echo $DOCKER_OPTIONS
+        echo docker run -d $DOCKER_OPTIONS $DOCKER
+        docker run -d $DOCKER_OPTIONS $DOCKER
+        bash bootstrap-py3.sh -c buildout-plone-5.2.cfg
+    - name: Test with pytest
+      run: |
+        mkdir /tmp/testing
+        make test
