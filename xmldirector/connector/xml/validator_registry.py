@@ -13,7 +13,7 @@ import datetime
 import operator
 import lxml.etree
 import lxml.isoschematron
-import defusedxml.lxml
+import defusedxml.etree
 from zope.interface import implementer
 from xmldirector.connector.xml.interfaces import IValidatorRegistry
 from xmldirector.connector.logger import LOG
@@ -174,13 +174,13 @@ class Validator(object):
 
         if isinstance(xml, str):
             try:
-                root = defusedxml.lxml.fromstring(xml)
+                root = defusedxml.etree.fromstring(xml)
             except lxml.etree.XMLSyntaxError as e:
                 return ValidationResult(['Invalid XML ({})'.format(e)])
 
         elif isinstance(xml, bytes):
             try:
-                root = defusedxml.lxml.parse(io.BytesIO(xml))
+                root = defusedxml.etree.parse(io.BytesIO(xml))
             except lxml.etree.XMLSyntaxError as e:
                 return ValidationResult(['Invalid XML ({})'.format(e)])
 
