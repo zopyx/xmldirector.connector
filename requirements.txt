@@ -1,4 +1,4 @@
-setuptools==42.0.2
+setuptools==45.0.0
 zc.buildout==2.13.2
 wheel==0.33.6
 persistent==4.5.1
