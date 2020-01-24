@@ -72,6 +72,12 @@ class connector_iterator():
     def __len__(self):
         return self.handle.getsize(self.filename)
 
+    def read(self, size):
+        data = self.fp.read(size)
+        if not data:
+            self.fp.close()
+            raise StopIteration
+        return data
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
