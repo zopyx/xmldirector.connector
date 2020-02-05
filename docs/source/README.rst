@@ -19,7 +19,7 @@ No support for indexing and search mounted content.
 Requirements
 ------------
 
-- Plone 5.2 with Python 2.7 and Python 3.6 (tested)
+- Plone 5.2 with Python 3.6 or higher (tested)
 
 - Supported backends:
 
