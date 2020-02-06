@@ -9,6 +9,9 @@ import sys
 
 from xmldirector.connector.logger import LOG
 
+if sys.version_info.major < 3:
+    raise RuntimeError('xmldirector.connector requires Python 3 or higher. No support for Python 2. Python 2 is dead')
+
 # Check filesystem encoding
 fs_enc = sys.getfilesystemencoding()
 if fs_enc.lower() not in ('utf8', 'utf-8'):
