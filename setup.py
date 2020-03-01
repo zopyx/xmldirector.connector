@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.2.5'
+version = '0.2.8'
 
 setup(name='xmldirector.connector',
       version=version,
@@ -12,11 +12,10 @@ setup(name='xmldirector.connector',
       # http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           "Programming Language :: Python",
-          "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
           "Framework :: Plone",
-          "Framework :: Plone :: 5.1",
           "Framework :: Plone :: 5.2",
           "Framework :: Zope2",
           "Topic :: Software Development :: Libraries :: Python Modules",
