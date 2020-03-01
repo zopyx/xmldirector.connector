@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.5 (2020-03-01)
+------------------
+- fix for content-disposition header 
+
 0.2.4 (2019-07-24)
 ------------------
 - Python 3 fix
