@@ -15,6 +15,8 @@ import furl
 import tempfile
 import fs.errors
 import fs.path
+import fs.copy
+import fs.zipfs
 import mimetypes
 import unicodedata
 import logging
@@ -559,3 +561,19 @@ class Connector(RawConnector):
             raise
 
         self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
+
+    def zip_export(self):
+        """ export as ZIP """
+
+        handle = self.context.get_handle()
+        zip_name = tempfile.mktemp(suffix='.zip')
+        with fs.zipfs.ZipFS(zip_name, write=True) as zip_out:
+            fs.copy.copy_dir(handle, '/', zip_out, '/')
+
+        self.request.response.setHeader('content-type', 'application/zip')
+        self.request.response.setHeader('content-disposition', f'attachment; filename={self.context.getId()}.zip')
+        self.request.response.setHeader('content-length', os.path.getsize(zip_name))
+        with open(zip_name, 'rb') as fp:
+            self.request.response.write(fp.read())
+        os.unlink(zip_name)
+

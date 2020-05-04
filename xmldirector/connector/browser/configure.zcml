@@ -94,6 +94,16 @@
     />
 
     <browser:page
+        for="xmldirector.connector.connector.IConnector"
+        name="connector-zip-export"
+        class=".connector.Connector"
+        attribute="zip_export"
+        permission="cmf.ModifyPortalContent"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+
+    <browser:page
         name="connector-settings"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         class=".controlpanel.DBSettingsControlPanel"
