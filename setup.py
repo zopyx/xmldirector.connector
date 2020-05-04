@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.2.8'
+version = '0.2.9'
 
 setup(name='xmldirector.connector',
       version=version,
@@ -15,6 +15,7 @@ setup(name='xmldirector.connector',
           "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
           "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
           "Framework :: Plone",
           "Framework :: Plone :: 5.2",
           "Framework :: Zope2",

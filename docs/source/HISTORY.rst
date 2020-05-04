@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.9 (2020-05-04)
+------------------
+- added @@connector-zip-export functionality
+
+
 0.2.8 (2020-03-01)
 ------------------
 - fix for content-disposition header 
