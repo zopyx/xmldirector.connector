@@ -24,6 +24,15 @@
 
     <browser:page
         for="xmldirector.connector.connector.IConnector"
+        name="connector-view"
+        class=".connector.Connector"
+        template="connector_view.pt"
+        permission="zope2.View"
+        layer="xmldirector.connector.interfaces.IBrowserLayer"
+    />
+
+    <browser:page
+        for="xmldirector.connector.connector.IConnector"
         name="raw"
         class=".connector.RawConnector"
         permission="zope2.View"

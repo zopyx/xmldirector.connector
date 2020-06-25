@@ -215,6 +215,9 @@ class Connector(RawConnector):
 
     def __call__(self, *args, **kw):
 
+        if '@@connector-view' in self.request.URL:
+            return self.template()
+
         dispatcher = queryUtility(IViewDispatcher)
         if dispatcher:
             try:
