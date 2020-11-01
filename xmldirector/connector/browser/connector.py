@@ -49,7 +49,6 @@ def safe_unicode(s):
 @implementer(IStreamIterator)
 class connector_iterator():
     """ Iterator for pyfilesystem content """
-
     def __init__(self, handle, filename, mode='rb', streamsize=1 << 24):
         self.handle = handle
         self.fp = handle.open(filename, mode)
@@ -80,6 +79,7 @@ class connector_iterator():
             self.fp.close()
             raise StopIteration
         return data
+
 
 @implementer(IPublishTraverse)
 class RawConnector(BrowserView):
@@ -152,8 +152,7 @@ class RawConnector(BrowserView):
             LOG.debug(msg)
             raise zExceptions.NotFound()
         except fs.errors.PermissionDeniedError as e:
-            msg = 'eXist-db path {} unauthorized access (check credentials)'.format(
-                e.url)
+            msg = 'eXist-db path {} unauthorized access (check credentials)'.format(e.url)
             self.context.plone_utils.addPortalMessage(msg, 'error')
             LOG.error(msg)
             raise zExceptions.Unauthorized()
@@ -253,7 +252,6 @@ class Connector(RawConnector):
 
     def folder_contents(self, subpath='.'):
         """" REST endpoint  """
-
         def sort_key(item):
             key = 'A-' if item.is_dir else 'B-'
             return key + item.name
@@ -357,16 +355,15 @@ class Connector(RawConnector):
             full_path = fs.path.join(*fs.path.parts(subpath)[:-1])
             result.insert(
                 0,
-                dict(
-                    full_path=full_path,
-                    name='..',
-                    is_file=False,
-                    is_dir=True,
-                    size=0,
-                    mimetype=None,
-                    user='',
-                    group='',
-                    can_remove=False))
+                dict(full_path=full_path,
+                     name='..',
+                     is_file=False,
+                     is_dir=True,
+                     size=0,
+                     mimetype=None,
+                     user='',
+                     group='',
+                     can_remove=False))
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(result)
@@ -502,8 +499,8 @@ class Connector(RawConnector):
             LOG.error(msg, exc_info=True)
             return self.redirect(msg, 'error')
 
-        self.logger.log(
-            'ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)), details=imported_files)
+        self.logger.log('ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)),
+                        details=imported_files)
         return self.redirect(_(u'Uploaded ZIP archive imported'), subpath=subpath)
 
     def zip_import(self, zip_file=None):
@@ -579,4 +576,3 @@ class Connector(RawConnector):
         with open(zip_name, 'rb') as fp:
             self.request.response.write(fp.read())
         os.unlink(zip_name)
-

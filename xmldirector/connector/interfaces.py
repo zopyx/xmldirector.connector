@@ -20,7 +20,6 @@ class IConnectorHandle(Interface):
 
 class IViewDispatcher(Interface):
     """ Marker interface for view dispatcher """
-
     def get_url(context):
         """ Return a redirection URL """
 
@@ -28,16 +27,19 @@ class IViewDispatcher(Interface):
 class IConnectorSettings(Interface):
     """ Connector settings """
 
-    connector_url = schema.TextLine(
-        title=_(u'Connection URL of storage'),
-        description=_(u'WebDAV: webdav://host:port/path/to/webdav, '
-                      'local filesystem: file://path/to/directory, '
-                      'AWS S3: s3://bucketname, SFTP sftp://host/path'),
-        default=u'',
-        required=True)
+    connector_url = schema.TextLine(title=_(u'Connection URL of storage'),
+                                    description=_(u'WebDAV: webdav://host:port/path/to/webdav, '
+                                                  'local filesystem: file://path/to/directory, '
+                                                  'AWS S3: s3://bucketname, SFTP sftp://host/path'),
+                                    default=u'',
+                                    required=True)
 
-    connector_username = schema.TextLine(
-        title=_(u'Username for external storage'), description=_(u'Username'), default=u'admin', required=False)
+    connector_username = schema.TextLine(title=_(u'Username for external storage'),
+                                         description=_(u'Username'),
+                                         default=u'admin',
+                                         required=False)
 
-    connector_password = schema.Password(
-        title=_(u'Password external storage'), description=_(u'Password'), default=u'', required=False)
+    connector_password = schema.Password(title=_(u'Password external storage'),
+                                         description=_(u'Password'),
+                                         default=u'',
+                                         required=False)

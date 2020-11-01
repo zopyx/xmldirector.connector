@@ -28,29 +28,26 @@ LOG.info('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
 
 class IConnector(model.Schema):
 
-    connector_url = schema.TextLine(
-        title=_(u'(optional) connection URL of storage'),
-        description=_(
-            u'WebDAV: webdav://host:port/path/to/webdav, '
-            'local filesystem: file://path/to/directory, '
-            'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path'),
-        required=False)
+    connector_url = schema.TextLine(title=_(u'(optional) connection URL of storage'),
+                                    description=_(
+                                        u'WebDAV: webdav://host:port/path/to/webdav, '
+                                        'local filesystem: file://path/to/directory, '
+                                        'AWS S3: s3://bucketname, ', 'SFTP sftp://host/path'),
+                                    required=False)
 
     connector_username = schema.TextLine(title=_(u'(optional) username overriding the system settings'), required=False)
 
     connector_password = schema.Password(title=_(u'(optional) password overriding the system settings'), required=False)
 
-    connector_subpath = schema.TextLine(
-        title=_(u'Subdirectory relative to the global connection URL'),
-        description=_(u'Use this value for configuring a more specific subpath'),
-        required=False)
+    connector_subpath = schema.TextLine(title=_(u'Subdirectory relative to the global connection URL'),
+                                        description=_(u'Use this value for configuring a more specific subpath'),
+                                        required=False)
 
     connector_readonly = schema.Bool(title=_(u'Readonly access'), default=False, required=False)
 
 
 @implementer(IConnector)
 class Connector(Item):
-
     def get_connector_url(self, subpath=None, hide_password=False):
 
         url = ''
@@ -91,7 +88,6 @@ class Connector(Item):
         return f.tostr()
 
     def get_handle(self, subpath=None):
-
         def escaped_url(url):
             """ Remove credentials from url """
             f = furl.furl(url)
