@@ -8,7 +8,6 @@
 import os
 import fs
 import fs.zipfs
-import time
 import json
 import furl
 import tempfile
