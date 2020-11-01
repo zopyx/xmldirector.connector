@@ -9,7 +9,6 @@ import os
 import six
 import time
 import tempfile
-import defusedxml.lxml
 import lxml.etree
 
 from zope.component import getUtility
@@ -83,7 +82,7 @@ class Transformer(object):
                 if not input_encoding:
                     raise TypeError('Input data must be unicode|str')
                     xml_or_node = six.text_type(xml_or_node, input_encoding)
-            root = defusedxml.lxml.fromstring(xml_or_node.strip())
+            root = lxml.etree.fromstring(xml_or_node.strip())
 
         elif isinstance(xml_or_node, lxml.etree._Element):
             root = xml_or_node
