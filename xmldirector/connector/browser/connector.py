@@ -8,7 +8,6 @@
 import os
 import fs
 import fs.zipfs
-import six
 import time
 import json
 import furl
@@ -41,8 +40,8 @@ LOG = logging.getLogger('xmldirector.connector')
 
 
 def safe_unicode(s):
-    if not isinstance(s, six.text_type):
-        return six.text_type(s, 'utf8')
+    if not isinstance(s, str):
+        return s.decode("utf8")
     return s
 
 
@@ -162,8 +161,6 @@ class RawConnector(BrowserView):
         self.traversal_subpath.append(entryname)
         traversal_subpath = '/'.join(self.traversal_subpath)
         handle = self.get_handle()
-        if six.PY2:
-            traversal_subpath = unicode(traversal_subpath, 'utf8')
         if handle.exists(traversal_subpath):
             if handle.isdir(traversal_subpath):
                 return self
@@ -256,9 +253,6 @@ class Connector(RawConnector):
             key = 'A-' if item.is_dir else 'B-'
             return key + item.name
 
-        if six.PY2:
-            subpath = safe_unicode(subpath)
-
         connector_url = self.context.get_connector_url(subpath)
         f = furl.furl(connector_url)
 
@@ -319,16 +313,10 @@ class Connector(RawConnector):
                 size = modified = ''
                 if 'details' in row.namespaces:
                     size = row.size
-                    if six.PY2:
-                        try:
-                            modified = time.mktime(row.modified.timetuple())
-                        except AttributeError:
-                            modified = u''
-                    else:
-                        try:
-                            modified = row.modified.timestamp()
-                        except AttributeError:
-                            modified = u''
+                    try:
+                        modified = row.modified.timestamp()
+                    except AttributeError:
+                        modified = u''
 
                 is_text = self._is_text(mimetype)
 
