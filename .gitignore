@@ -2,3 +2,12 @@ __pycache__
 *.pyc
 *.pyo
 *.egg-info
+.*project
+/.installed.cfg
+/.mr.developer.cfg
+/pyvenv.cfg
+/bin/
+/dist/
+/lib/
+/parts/
+develop-eggs/
