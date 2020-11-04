@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.1 (unreleased)
+------------------
+- Nothing changed yet.
+
+
 0.3.0 (2020-11-04)
 ------------------
 - minor cleanup
