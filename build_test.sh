@@ -15,12 +15,9 @@ config=buildout-plone-$PLONE_VERSION.cfg
 
 docker run -d $DOCKER_OPTIONS $DOCKER
 
-#virtualenv --clear .
-#python3 -m venv .
-pip install setuptools==36.6.0
-pip install zc.buildout
-buildout bootstrap
-buildout -c $config
+virtualenv -p `which python` .
+bin/pip install -r requirements.txt
+bin/buildout -c $config
 
 if [[ $TYPE  == 'OWNCLOUD' ]]
 then
