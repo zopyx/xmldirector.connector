@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.0 (2020-11-04)
+------------------
+- minor cleanup
+- removed Python 2 support
+- removed defusedxml dependency
+
 0.2.9 (2020-05-04)
 ------------------
 - added @@connector-zip-export functionality
