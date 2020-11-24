@@ -1,1 +1,4 @@
-include docs/source/*
+graft xmldirector
+graft docs
+include *.rst
+global-exclude *.pyc
