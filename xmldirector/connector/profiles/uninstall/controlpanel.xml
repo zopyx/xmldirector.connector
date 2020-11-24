@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel">
+ <configlet title="Connector Settings" action_id="xmldirector.connector" appId="xmldirector.connector"
+    category="Products" condition_expr="" remove="True">
+ </configlet>
+</object>
+
