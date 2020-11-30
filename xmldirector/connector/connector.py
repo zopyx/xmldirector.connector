@@ -50,10 +50,6 @@ class IConnector(model.Schema):
 class Connector(Item):
     def get_connector_url(self, subpath=None, hide_password=False):
 
-        url = ''
-        username = ''
-        password = ''
-
         # check local connector URL first
         connector_url = getattr(self, 'connector_url', None)
         if connector_url:
@@ -70,6 +66,7 @@ class Connector(Item):
 
         username = username or ''
         password = password or ''
+
         if not url:
             raise ValueError('No connector URL configured (neither local nor global)')
 
@@ -88,6 +85,7 @@ class Connector(Item):
         return f.tostr()
 
     def get_handle(self, subpath=None):
+
         def escaped_url(url):
             """ Remove credentials from url """
             f = furl.furl(url)
