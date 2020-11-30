@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.1 (2020-11-24)
+------------------
+- uninstall profile added
+- fix for mod_dav issue when sorting entries (issue #64)
+
 0.3.0 (2020-11-04)
 ------------------
 - minor cleanup

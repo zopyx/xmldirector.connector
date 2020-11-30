@@ -215,11 +215,11 @@ class Connector(RawConnector):
 
         dispatcher = queryUtility(IViewDispatcher)
         if dispatcher:
+            url = None
             try:
                 url = dispatcher(self.context).get_url()
             except Exception as e:
                 LOG.warn('Calling view dispatcher failed', exc_info=True)
-                url = None
             if url:
                 return self.request.response.redirect(url)
         return self.template()
@@ -299,8 +299,16 @@ class Connector(RawConnector):
             handle = self.context.get_handle(subpath)
             entries = list(handle.filterdir('.', namespaces=['basic', 'access', 'details']))
             result = []
-            for row in sorted(entries, key=sort_key):
 
+            try:
+                sorted_entries = sorted(entries, key=sort_key)
+            except TypeError:
+                LOG.error('Unable to sort entries', exc_info=True)
+                # Workaround for mod_dav
+                # https://github.com/zopyx/xmldirector.connector/issues/64
+                sorted_entries = entries
+
+            for row in sorted_entries:
                 mimetype, _ = mimetypes.guess_type(row.name)
                 basename, ext = os.path.splitext(row.name)
 

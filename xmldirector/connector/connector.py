@@ -80,8 +80,8 @@ class Connector(Item):
         if subpath:
             f.path.add(subpath)
 
-        if f.scheme not in SUPPORTED_FS_SCHEMAS:
-            LOG.warning('Unsupported scheme: {}'.format(f.scheme))
+        if f.scheme and f.scheme not in SUPPORTED_FS_SCHEMAS:
+            LOG.warning('Unsupported scheme: {} in {}'.format(f.scheme, f.tostr()))
         return f.tostr()
 
     def get_handle(self, subpath=None):
