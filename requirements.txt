@@ -1,3 +1,3 @@
-setuptools==42.0.2
+setuptools==51.1.0.post20201221
 zc.buildout==2.13.3
 wheel
