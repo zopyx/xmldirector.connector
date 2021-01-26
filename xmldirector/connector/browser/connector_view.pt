@@ -19,7 +19,6 @@
         window.define = undefined;
         window.require = undefined;
     </script>
-    <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/clipboard.min.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/moment-with-locales.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/tabulator.min.js"></script>
     <script type="text/javascript" tal:attributes="src string:$portal_url/++resource++xmldirector.connector/dropzone.js"></script>

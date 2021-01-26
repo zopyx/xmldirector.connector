@@ -241,8 +241,6 @@ $(document).ready(function() {
 
     build_table();
 
-    new Clipboard('.clipboard');
-
     $('#action-upload').on('click', function() {
         $('#new-folder').hide(0); 
         $('#zip-upload').hide(0); 
