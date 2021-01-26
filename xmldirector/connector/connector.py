@@ -85,7 +85,6 @@ class Connector(Item):
         return f.tostr()
 
     def get_handle(self, subpath=None):
-
         def escaped_url(url):
             """ Remove credentials from url """
             f = furl.furl(url)

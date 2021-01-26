@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.4.0 (2021-01-26)
+------------------
+- updates JS resources
+- minor tweaks
+
 0.3.1 (2020-11-24)
 ------------------
 - uninstall profile added
