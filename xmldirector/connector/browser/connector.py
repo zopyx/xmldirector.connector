@@ -5,33 +5,31 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
-import os
-import fs
-import fs.zipfs
 import json
-import furl
+import logging
+import mimetypes
+import os
 import tempfile
+import unicodedata
+
+import fs
+import fs.copy
 import fs.errors
 import fs.path
-import fs.copy
 import fs.zipfs
-import mimetypes
-import unicodedata
-import logging
-
-import zExceptions
+import furl
 import plone.api
+import zExceptions
+from Products.CMFCore import permissions
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
+from xmldirector.connector.i18n import MessageFactory as _
+from xmldirector.connector.interfaces import IViewDispatcher
 from zope.component import queryUtility
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 from ZPublisher.Iterators import IStreamIterator
-from Products.statusmessages.interfaces import IStatusMessage
-from Products.CMFCore import permissions
-from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
-from xmldirector.connector.i18n import MessageFactory as _
-from xmldirector.connector.interfaces import IViewDispatcher
 
 TEXT_MIMETYPES = set(['application/json', 'application/javascript'])
 

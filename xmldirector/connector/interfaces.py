@@ -5,9 +5,9 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
+from xmldirector.connector.i18n import MessageFactory as _
 from zope import schema
 from zope.interface import Interface
-from xmldirector.connector.i18n import MessageFactory as _
 
 
 class IBrowserLayer(Interface):

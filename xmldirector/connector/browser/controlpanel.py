@@ -7,12 +7,11 @@
 
 import json
 
-from zope.component import getUtility
-from plone.registry.interfaces import IRegistry
 from plone.app.registry.browser import controlpanel
-
+from plone.registry.interfaces import IRegistry
 from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IConnectorSettings
+from zope.component import getUtility
 
 
 class DBSettingsEditForm(controlpanel.RegistryEditForm):

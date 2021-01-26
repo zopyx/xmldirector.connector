@@ -7,19 +7,17 @@
 
 import fs
 import fs.errors
-from fs.opener import registry as fs_opener_registry
 import furl
-
-from zope import schema
-from zope.interface import implementer
-from zope.component import getUtility
+from fs.opener import registry as fs_opener_registry
 from plone.dexterity.content import Item
-from plone.supermodel import model
 from plone.registry.interfaces import IRegistry
-
+from plone.supermodel import model
 from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IConnectorSettings
 from xmldirector.connector.logger import LOG
+from zope import schema
+from zope.component import getUtility
+from zope.interface import implementer
 
 # determine all entry points
 SUPPORTED_FS_SCHEMAS = fs_opener_registry.protocols
