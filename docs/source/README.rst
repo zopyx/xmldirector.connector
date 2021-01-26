@@ -100,6 +100,21 @@ Every `Connector` instance in Plone gives you access to the mounted storage thro
 `handle = connector.get_handle()` call which is instance of `fs.base.FS`. Check
 https://docs.pyfilesystem.org for details.
 
+Compatiblity with rclone
+------------------------
+
+An alternative to using native drivers under the hood, using `rclone`
+(https://rclone.org/) is meanwhile perhaps the better solution. `rclone` is an
+application (a commandline utility) to interact with up to 40 different storage
+systems out of the box. `rclone` also allows you to mount different storages
+directly into your filesystem (tested on Linux but supposed to work on Mac and
+Windows too).  So for example, you can mount your Dropbox and Google Drive
+storages into your local filesystem under `/mnt/dropbox` and `/mnt/drive` and
+point your connector instances to `file:///mnt/dropbox` and
+`file:///mnt/drive`.  So any interaction would happen through the filesystem
+driver of Pyfilesystem. The underlying communication with the Dropbox or Google
+Drive API would be handled by `rclone` under the hood.
+
 Security
 ++++++++
 
