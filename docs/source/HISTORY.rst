@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.5.0 (2021-02-09)
+------------------
+- added support for referencing another connector instance for using 
+  their connector configuration  
+
 0.4.0 (2021-01-26)
 ------------------
 - updates JS resources
