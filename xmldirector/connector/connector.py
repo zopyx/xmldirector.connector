@@ -5,12 +5,19 @@
 # (C) 2019,  Andreas Jung, www.zopyx.com, Tuebingen, Germany
 ################################################################
 
+import operator
 import fs
 import fs.errors
 import furl
 from fs.opener import registry as fs_opener_registry
+import plone.api
 from plone.dexterity.content import Item
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from plone.registry.interfaces import IRegistry
+from plone.autoform import directives as form
+from zope.schema.interfaces import IContextSourceBinder
+import zope.interface
+from z3c.form.browser.select import SelectWidget
 from plone.supermodel import model
 from xmldirector.connector.i18n import MessageFactory as _
 from xmldirector.connector.interfaces import IConnectorSettings
@@ -22,6 +29,21 @@ from zope.interface import implementer
 # determine all entry points
 SUPPORTED_FS_SCHEMAS = fs_opener_registry.protocols
 LOG.info('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
+
+
+def get_connector_references(context):
+    """ Read guideline topics from portal annotation """
+
+    catalog = plone.api.portal.get_tool('portal_catalog')
+    query = dict(portal_type='xmldirector.connector')
+    items = list()
+    for brain in catalog(**query):
+        items.append(SimpleTerm(brain.UID, brain.UID, brain.Title))
+    items.sort(key=operator.attrgetter("title"))
+    return SimpleVocabulary(items)
+
+
+zope.interface.directlyProvides(get_connector_references, IContextSourceBinder)
 
 
 class IConnector(model.Schema):
@@ -42,6 +64,14 @@ class IConnector(model.Schema):
                                         required=False)
 
     connector_readonly = schema.Bool(title=_(u'Readonly access'), default=False, required=False)
+
+    form.widget("connector_reference", SelectWidget)
+    connector_reference = schema.Choice(
+        title=_("Reference to other connector "),
+        required=False,
+        source=get_connector_references,
+        default=None,
+    )
 
 
 @implementer(IConnector)
@@ -90,7 +120,22 @@ class Connector(Item):
             f.password = None
             return f.tostr()
 
-        url = self.get_connector_url(subpath)
+        # a connector may reference another connector as "parent"
+        if self.connector_reference:
+            uid = self.connector_reference
+            catalog = plone.api.portal.get_tool("portal_catalog")
+            brains = catalog(UID=uid)
+            if brains:
+                connector_reference = brains[0].getObject()
+                url = connector_reference.get_connector_url(subpath)
+            else:
+                raise ValueError(
+                    f"Referenced connector instance with UID {self.connector_reference} not found. Please remove reference from field 'connector_reference'."
+                )
+        else:
+            # default: either use locally configured connector URL or fallback to global connector configuration
+            url = self.get_connector_url(subpath)
+
         try:
             return fs.open_fs(url)
         except fs.errors.CreateFailed as e:
