@@ -20,7 +20,7 @@ class IConnectorHandle(Interface):
 
 class IViewDispatcher(Interface):
     """ Marker interface for view dispatcher """
-    def get_url(context):
+    def get_url(self):
         """ Return a redirection URL """
 
 

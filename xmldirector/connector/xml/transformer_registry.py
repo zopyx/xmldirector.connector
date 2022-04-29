@@ -28,20 +28,19 @@ class TransformerRegistry(object):
             Supported ``transformer_type``s so far: 'XSLT1', 'python'
         """
 
-        if transformer_type == 'python':
-            # ``transformer_path`` is Python function here
-            transform = transformer_path
-            if six.PY2:
-                transformer_path = '{}(), {}'.format(transformer_path.__name__, transformer_path.__code__.co_filename)
-            else:
-                transformer_path = '{}(), {}'.format(transformer_path.__name__, transformer_path.__code__.co_filename)
+        if transformer_type != 'python':
+            raise ValueError(f'Unsupported transformer type "{transformer_type}"')
 
-        else:
-            raise ValueError('Unsupported transformer type "{}"'.format(transformer_type))
+        # ``transformer_path`` is Python function here
+        transform = transformer_path
+        transformer_path = f'{transformer_path.__name__}(), {transformer_path.__code__.co_filename}'
 
-        key = '{}::{}'.format(family, transformer_name)
+        key = f'{family}::{transformer_name}'
         if key in self.registry:
-            raise ValueError('Transformation {}/{} already registered'.format(family, transformer_name))
+            raise ValueError(
+                f'Transformation {family}/{transformer_name} already registered'
+            )
+
 
         self.registry[key] = dict(
             transform=transform,
@@ -51,7 +50,7 @@ class TransformerRegistry(object):
             name=transformer_name,
             registered=datetime.datetime.utcnow())
 
-        LOG.debug('Transformer registered ({}, {})'.format(key, transformer_path))
+        LOG.debug(f'Transformer registered ({key}, {transformer_path})')
 
     def entries(self):
         """ Return all entries of the registry sorted by family + name """
@@ -69,14 +68,14 @@ class TransformerRegistry(object):
     def get_transformation(self, family, transformer_name):
         """ Return a transformer by (family, transformer_name) """
 
-        key = '{}::{}'.format(family, transformer_name)
+        key = f'{family}::{transformer_name}'
         if key not in self.registry:
-            raise ValueError('Transformation {}/{} not registered'.format(family, transformer_name))
+            raise ValueError(f'Transformation {family}/{transformer_name} not registered')
         d = self.registry[key]
         if d['type'] == 'python':
             return d['transform']
         else:
-            raise ValueError('Unsupported transformation type "{}"'.format(d['type']))
+            raise ValueError(f"""Unsupported transformation type "{d['type']}\"""")
 
 
 #        elif d['type'] == 'XSLT1':

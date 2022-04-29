@@ -31,15 +31,13 @@ from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 from ZPublisher.Iterators import IStreamIterator
 
-TEXT_MIMETYPES = set(['application/json', 'application/javascript'])
+TEXT_MIMETYPES = {'application/json', 'application/javascript'}
 
 LOG = logging.getLogger('xmldirector.connector')
 
 
 def safe_unicode(s):
-    if not isinstance(s, str):
-        return s.decode("utf8")
-    return s
+    return s if isinstance(s, str) else s.decode("utf8")
 
 
 @implementer(IStreamIterator)
@@ -115,16 +113,18 @@ class RawConnector(BrowserView):
         handle = self.context.get_handle()
         filename = self.subpath
         if not handle.exists(filename):
-            raise zExceptions.NotFound('{} does not exist'.format(filename))
+            raise zExceptions.NotFound(f'{filename} does not exist')
         basename = os.path.basename(filename)
         basename, ext = os.path.splitext(basename)
         mt, encoding = mimetypes.guess_type(filename)
         self.request.response.setHeader('content-type', mt)
         if 'download' in self.request.form or 'filename' in self.request.form:
             fn = self.request.get('filename', os.path.basename(filename))
-            self.request.response.setHeader('content-disposition', 'attachment; filename="{}"'.format(fn))
-        content_length = handle.getsize(filename)
-        if content_length:
+            self.request.response.setHeader(
+                'content-disposition', f'attachment; filename="{fn}"'
+            )
+
+        if content_length := handle.getsize(filename):
             self.request.response.setHeader('content-length', str(content_length))
             return connector_iterator(handle, filename)
         else:
@@ -136,19 +136,18 @@ class RawConnector(BrowserView):
     def get_handle(self, subpath=None, root=False):
         """ Returns a webdav handle for the current subpath """
 
-        if not root:
-            if not subpath:
-                subpath = '/'.join(self.subpath)
+        if not root and not subpath:
+            subpath = '/'.join(self.subpath)
 
         try:
             return self.context.get_handle(subpath)
         except fs.errors.ResourceNotFoundError as e:
-            msg = 'eXist-db path {} does not exist'.format(e.url)
+            msg = f'eXist-db path {e.url} does not exist'
             self.context.plone_utils.addPortalMessage(msg, 'error')
             LOG.debug(msg)
             raise zExceptions.NotFound()
         except fs.errors.PermissionDeniedError as e:
-            msg = 'eXist-db path {} unauthorized access (check credentials)'.format(e.url)
+            msg = f'eXist-db path {e.url} unauthorized access (check credentials)'
             self.context.plone_utils.addPortalMessage(msg, 'error')
             LOG.error(msg)
             raise zExceptions.Unauthorized()
@@ -171,7 +170,7 @@ class RawConnector(BrowserView):
                 except fs.errors.NoMetaError:
                     self.wrapped_meta = None
                 return self
-        raise zExceptions.NotFound('not found: {}'.format(entryname))
+        raise zExceptions.NotFound(f'not found: {entryname}')
 
 
 @implementer(IPublishTraverse)
@@ -211,8 +210,7 @@ class Connector(RawConnector):
         if '@@connector-view' in self.request.URL:
             return self.template()
 
-        dispatcher = queryUtility(IViewDispatcher)
-        if dispatcher:
+        if dispatcher := queryUtility(IViewDispatcher):
             url = None
             try:
                 url = dispatcher(self.context).get_url()
@@ -236,10 +234,9 @@ class Connector(RawConnector):
         """ Breadcrumbs """
 
         current_url = self.context.absolute_url()
-        result = list()
+        result = []
         for i in range(len(self._subpath)):
-            sp = '/'.join(self._subpath[:i + 1])
-            href = '{}/view/{}'.format(current_url, sp)
+            href = f"{current_url}/view/{'/'.join(self._subpath[:i + 1])}"
             result.append(dict(href=href, title=self._subpath[i]))
 
         return result
@@ -400,14 +397,14 @@ class Connector(RawConnector):
             try:
                 handle.move(resource_name, new_resource_name)
             except Exception as e:
-                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                msg = resource_name + _(' could not be moved') + f' ({e})'
                 self.request.response.setStatus(500)
                 return msg
         else:
             try:
                 fs.move.move_dir(handle, resource_name, handle, new_resource_name)
             except Exception as e:
-                msg = resource_name + _(' could not be moved') + ' ({})'.format(e)
+                msg = resource_name + _(' could not be moved') + f' ({e})'
                 self.request.response.setStatus(500)
                 return msg
 
@@ -424,14 +421,14 @@ class Connector(RawConnector):
 
         handle = self.context.get_handle()
         if not handle.exists(resource_name):
-            msg = 'Not found {}'.format(resource_name)
+            msg = f'Not found {resource_name}'
             raise zExceptions.NotFound(msg)
 
         if handle.isdir(resource_name):
             try:
                 handle.removetree(resource_name)
             except Exception as e:
-                msg = resource_name + _(' could not be deleted') + ' ({})'.format(e)
+                msg = resource_name + _(' could not be deleted') + f' ({e})'
                 self.request.response.setStatus(500)
                 return msg
 
@@ -466,18 +463,26 @@ class Connector(RawConnector):
         if handle.exists(name):
             msg = _('{}/{} already exists found').format(subpath, name)
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
+            return self.request.response.redirect(
+                f'{self.context.absolute_url()}/view/{subpath}'
+            )
+
 
         try:
             handle.makedir(name)
         except Exception as e:
             msg = _('{}/{} could not be created ({})').format(subpath, name, str(e))
             self.messages.add(msg, 'error')
-            return self.request.response.redirect(self.context.absolute_url() + '/' + subpath)
+            return self.request.response.redirect(
+                f'{self.context.absolute_url()}/{subpath}'
+            )
+
 
         msg = _('Created {}/{}').format(subpath, name)
         self.messages.add(msg, 'info')
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath + '/' + name)
+        self.request.response.redirect(
+            f'{self.context.absolute_url()}/view/{subpath}/{name}'
+        )
 
     def zip_import_ui(self, zip_file=None, subpath=None, clean_directories=None):
         """ Import WebDAV subfolder from an uploaded ZIP file """
@@ -492,8 +497,11 @@ class Connector(RawConnector):
             LOG.error(msg, exc_info=True)
             return self.redirect(msg, 'error')
 
-        self.logger.log('ZIP file imported ({}, {} files)'.format(zip_file, len(imported_files)),
-                        details=imported_files)
+        self.logger.log(
+            f'ZIP file imported ({zip_file}, {len(imported_files)} files)',
+            details=imported_files,
+        )
+
         return self.redirect(_(u'Uploaded ZIP archive imported'), subpath=subpath)
 
     def zip_import(self, zip_file=None):
@@ -523,14 +531,11 @@ class Connector(RawConnector):
         try:
             with fs.zipfs.ZipFS(zip_file, encoding='utf-8') as zip_handle:
 
-                # import all files from ZIP into WebDAV
-                count = 0
                 dirs_created = set()
-                for i, name in enumerate(zip_handle.walk.files()):
-
+                for name in zip_handle.walk.files():
                     target_filename = unicodedata.normalize('NFC', name).lstrip('/')
                     if self.subpath:
-                        target_filename = u'{}/{}'.format(self.subpath, target_filename)
+                        target_filename = f'{self.subpath}/{target_filename}'
 
                     target_dirname = '/'.join(target_filename.split('/')[:-1])
                     if target_dirname not in dirs_created:
@@ -539,21 +544,19 @@ class Connector(RawConnector):
                             dirs_created.add(target_dirname)
                         except Exception as e:
 
-                            LOG.error('Failed creating {} failed ({})'.format(target_dirname, e))
+                            LOG.error(f'Failed creating {target_dirname} failed ({e})')
 
-                    LOG.info(u'ZIP filename({})'.format(name))
+                    LOG.info(f'ZIP filename({name})')
 
                     out_fp = handle.open(target_filename, 'wb')
                     zip_fp = zip_handle.open(name, 'rb')
                     out_fp.write(zip_fp.read())
                     out_fp.close()
-                    count += 1
-
         except Exception as e:
-            msg = 'Error opening ZIP file: {}'.format(e)
+            msg = f'Error opening ZIP file: {e}'
             raise
 
-        self.request.response.redirect(self.context.absolute_url() + '/view/' + subpath)
+        self.request.response.redirect(f'{self.context.absolute_url()}/view/{subpath}')
 
     def zip_export(self):
         """ export as ZIP """

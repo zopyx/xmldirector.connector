@@ -38,21 +38,19 @@ class Transformer(object):
     @property
     def registry(self):
         """ Return transformer registry """
-        if self.transformer_registry:
-            return self.transformer_registry
-        return getUtility(ITransformerRegistry)
+        return self.transformer_registry or getUtility(ITransformerRegistry)
 
     def verify_steps(self):
         """ Verify all transformation steps before running the transformation """
 
-        errors = list()
+        errors = []
         for family, name in self.steps:
             try:
                 self.registry.get_transformation(family, name)
             except ValueError:
                 errors.append((family, name))
         if errors:
-            raise ValueError('Unknown transformer steps: {}'.format(errors))
+            raise ValueError(f'Unknown transformer steps: {errors}')
 
     def __call__(self,
                  xml_or_node,
@@ -74,21 +72,19 @@ class Transformer(object):
 
         if debug:
             debug_dir = tempfile.mkdtemp(prefix='transformation_debug_')
-            LOG.debug('Transformation debug directory: {}'.format(debug_dir))
+            LOG.debug(f'Transformation debug directory: {debug_dir}')
 
         # Convert XML string into a root node
         if isinstance(xml_or_node, str):
-            if not isinstance(xml_or_node, six.text_type):
-                if not input_encoding:
-                    raise TypeError('Input data must be unicode|str')
-                    xml_or_node = six.text_type(xml_or_node, input_encoding)
+            if not isinstance(xml_or_node, six.text_type) and not input_encoding:
+                raise TypeError('Input data must be unicode|str')
             root = lxml.etree.fromstring(xml_or_node.strip())
 
         elif isinstance(xml_or_node, lxml.etree._Element):
             root = xml_or_node
 
         else:
-            raise TypeError('Unsupported type {}'.format(xml_or_node.__class__))
+            raise TypeError(f'Unsupported type {xml_or_node.__class__}')
 
         # run the transformation chain
         for step_no, step in enumerate(self.steps):
@@ -100,7 +96,7 @@ class Transformer(object):
                 request=getattr(self.context, 'REQUEST', None),
                 destdir=self.destdir,
             )
-            conversion_context.update(self.params)
+            conversion_context |= self.params
 
             if debug:
                 in_data = lxml.etree.tostring(root, encoding='utf8')
@@ -128,7 +124,7 @@ class Transformer(object):
         if return_fragment:
             node = root.find(return_fragment)
             if node is None:
-                raise ValueError('No tag <{}> found in transformed document'.format(return_fragment))
+                raise ValueError(f'No tag <{return_fragment}> found in transformed document')
             return_node = node
 
         if output_encoding == six.text_type:

@@ -43,24 +43,24 @@ class ValidatorRegistry(object):
         """
 
         if directory.startswith('/'):
-            directory = 'file://' + directory
+            directory = f'file://{directory}'
 
         try:
             handle = fs.open_fs(directory)
         except Exception as e:
-            raise IOError('Directory "{}" does not exist ({})'.format(directory, e))
+            raise IOError(f'Directory "{directory}" does not exist ({e})')
 
         for name in handle.listdir('.'):
             fullname = os.path.join(directory, name)
-            LOG.debug('Parsing "{}"'.format(fullname))
+            LOG.debug(f'Parsing "{fullname}"')
             base, ext = os.path.splitext(name)
 
             registered_name = name
             if version_suffix:
                 basename, ext = os.path.splitext(name)
-                registered_name = '{}-{}{}'.format(basename, version_suffix, ext)
+                registered_name = f'{basename}-{version_suffix}{ext}'
 
-            key = '{}::{}'.format(family, registered_name)
+            key = f'{family}::{registered_name}'
             ts = time.time()
             if ext == '.dtd':
                 with handle.open(name, 'rb') as fp:
@@ -72,7 +72,7 @@ class ValidatorRegistry(object):
                         schema_doc = lxml.etree.XML(fp.read())
                         validator = lxml.etree.XMLSchema(schema_doc)
                     except Exception as e:
-                        LOG.error('Unable to parse XML Schema ({}, {})'.format(name, e), exc_info=True)
+                        LOG.error(f'Unable to parse XML Schema ({name}, {e})', exc_info=True)
                         continue
                     validator_type = 'XSD'
             elif ext == '.rng':
@@ -89,7 +89,7 @@ class ValidatorRegistry(object):
                 continue
 
             if key in self.registry:
-                raise ValueError('{} already registered'.format(key))
+                raise ValueError(f'{key} already registered')
 
             duration = time.time() - ts
 
@@ -109,9 +109,9 @@ class ValidatorRegistry(object):
     def get_schema(self, family, name):
         """ Return a pre-validator DTD/schema/RelaxNG/Schematron """
 
-        key = '{}::{}'.format(family, name)
+        key = f'{family}::{name}'
         if key not in self.registry:
-            raise ValueError('Schema/DTD {}/{} not registered'.format(family, name))
+            raise ValueError(f'Schema/DTD {family}/{name} not registered')
         return self.registry[key]['validation']
 
     def get_validator(self, family, name):
@@ -158,7 +158,7 @@ class ValidationResult(object):
         return not self.errors
 
     def __str__(self):
-        return '{}, validator: {}, errors: {}'.format(self.__class__, self.validator, self.errors)
+        return f'{self.__class__}, validator: {self.validator}, errors: {self.errors}'
 
 
 class Validator(object):
@@ -175,23 +175,26 @@ class Validator(object):
             try:
                 root = lxml.etree.fromstring(xml)
             except lxml.etree.XMLSyntaxError as e:
-                return ValidationResult(['Invalid XML ({})'.format(e)])
+                return ValidationResult([f'Invalid XML ({e})'])
 
         elif isinstance(xml, bytes):
             try:
                 root = lxml.etree.parse(io.BytesIO(xml))
             except lxml.etree.XMLSyntaxError as e:
-                return ValidationResult(['Invalid XML ({})'.format(e)])
+                return ValidationResult([f'Invalid XML ({e})'])
 
         elif isinstance(xml, lxml.etree._Element):
             root = xml
 
         else:
-            raise TypeError('Unsupported type {}'.format(type(xml)))
+            raise TypeError(f'Unsupported type {type(xml)}')
 
         validation_result = self.schema.validate(root)
-        validator_key = '{}::{}'.format(self.family, self.name)
-        if not validation_result:
-            return ValidationResult(errors=[self.schema.error_log], validator=validator_key)
-        else:
-            return ValidationResult(validator=validator_key)
+        validator_key = f'{self.family}::{self.name}'
+        return (
+            ValidationResult(validator=validator_key)
+            if validation_result
+            else ValidationResult(
+                errors=[self.schema.error_log], validator=validator_key
+            )
+        )

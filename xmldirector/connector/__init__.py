@@ -15,4 +15,4 @@ if sys.version_info.major < 3:
 # Check filesystem encoding
 fs_enc = sys.getfilesystemencoding()
 if fs_enc.lower() not in ('utf8', 'utf-8'):
-    LOG.error('Filesystem encoding should be UTF-8, not {}'.format(fs_enc))
+    LOG.error(f'Filesystem encoding should be UTF-8, not {fs_enc}')

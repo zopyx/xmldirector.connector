@@ -57,7 +57,7 @@ class PolicyFixture(PloneSandboxLayer):
         setRoles(portal, 'god2', ['Manager'])
         login(portal, 'god')
 
-        self.testing_directory = u'testing-{}'.format(uuid.uuid4())
+        self.testing_directory = f'testing-{uuid.uuid4()}'
 
         self.connector = plone.api.content.create(
             type='xmldirector.connector',
@@ -73,7 +73,7 @@ class PolicyFixture(PloneSandboxLayer):
         handle = self.connector.get_handle()
         handle.makedir(self.testing_directory)
 
-        settings.connector_url = CONNECTOR_URL + '/' + self.testing_directory
+        settings.connector_url = f'{CONNECTOR_URL}/{self.testing_directory}'
 
         if not handle.exists(self.testing_directory):
             handle.makedir(self.testing_directory)
@@ -89,7 +89,7 @@ class PolicyFixture(PloneSandboxLayer):
         try:
             handle.removedir(self.testing_directory)
         except Exception as e:
-            LOG.error('tearDownZope() failed ({})'.format(e))
+            LOG.error(f'tearDownZope() failed ({e})')
         zope.uninstallProduct(app, 'xmldirector.connector')
 
 

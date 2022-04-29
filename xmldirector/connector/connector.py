@@ -28,7 +28,7 @@ from zope.interface import implementer
 
 # determine all entry points
 SUPPORTED_FS_SCHEMAS = fs_opener_registry.protocols
-LOG.info('Supported fs protocols: {}'.format(SUPPORTED_FS_SCHEMAS))
+LOG.info(f'Supported fs protocols: {SUPPORTED_FS_SCHEMAS}')
 
 
 def get_connector_references(context):
@@ -36,9 +36,11 @@ def get_connector_references(context):
 
     catalog = plone.api.portal.get_tool('portal_catalog')
     query = dict(portal_type='xmldirector.connector')
-    items = list()
-    for brain in catalog(**query):
-        items.append(SimpleTerm(brain.UID, brain.UID, brain.Title))
+    items = [
+        SimpleTerm(brain.UID, brain.UID, brain.Title)
+        for brain in catalog(**query)
+    ]
+
     items.sort(key=operator.attrgetter("title"))
     return SimpleVocabulary(items)
 
@@ -78,9 +80,7 @@ class IConnector(model.Schema):
 class Connector(Item):
     def get_connector_url(self, subpath=None, hide_password=False):
 
-        # check local connector URL first
-        connector_url = getattr(self, 'connector_url', None)
-        if connector_url:
+        if connector_url := getattr(self, 'connector_url', None):
             url = connector_url
             username = self.connector_username
             password = self.connector_password
@@ -92,16 +92,13 @@ class Connector(Item):
             username = settings.connector_username
             password = settings.connector_password
 
-        username = username or ''
-        password = password or ''
-
         if not url:
             raise ValueError('No connector URL configured (neither local nor global)')
 
         f = furl.furl(url)
-        if username:
+        if username := username or '':
             f.username = username
-        if password:
+        if password := password or '':
             f.password = 'secret' if hide_password else password
         if self.connector_subpath:
             f.path.add(self.connector_subpath)
@@ -109,7 +106,7 @@ class Connector(Item):
             f.path.add(subpath)
 
         if f.scheme and f.scheme not in SUPPORTED_FS_SCHEMAS:
-            LOG.warning('Unsupported scheme: {} in {}'.format(f.scheme, f.tostr()))
+            LOG.warning(f'Unsupported scheme: {f.scheme} in {f.tostr()}')
         return f.tostr()
 
     def get_handle(self, subpath=None):

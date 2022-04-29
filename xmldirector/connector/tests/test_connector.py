@@ -12,7 +12,7 @@ from zipfile import ZipFile
 from .base import TestBase
 import zExceptions
 
-PREFIX = 'testing-{}'.format(uuid.uuid4())
+PREFIX = f'testing-{uuid.uuid4()}'
 
 is_mac = sys.platform == 'darwin'
 is_mac = False
